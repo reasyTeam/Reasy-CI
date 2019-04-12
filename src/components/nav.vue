@@ -1,7 +1,12 @@
 <template>
   <div class="navigator">
-    <el-menu default-active="2" class="el-menu-vertical" active-text-color="#42b983" :router="true">
-      <el-menu-item v-for="nav in navList" :key="nav.path" :index="nav.path">
+    <el-menu
+      :default-active="$route.path"
+      class="el-menu-vertical"
+      active-text-color="#42b983"
+      :router="true"
+    >
+      <el-menu-item v-for="nav in pathList" :key="nav.path" :index="nav.path">
         <i :class="'el-icon-'+ nav.icon"></i>
         <span slot="title">{{nav.text}}</span>
       </el-menu-item>
@@ -10,41 +15,12 @@
 </template>
         
 <script>
+import { mapState, mapMutations } from "vuex";
+
 export default {
-  name: "HelloWorld",
-  data() {
-    return {
-      navList: [
-        {
-          path: "/",
-          text: "ReadMe",
-          icon: "document"
-        },
-        {
-          path: "/components",
-          text: "组件管理1",
-          icon: "printer"
-        },
-        {
-          path: "/code",
-          text: "代码生成",
-          icon: "setting"
-        },
-        {
-          path: "/modules",
-          text: "模板管理",
-          icon: "menu"
-        },
-        {
-          path: "/others",
-          text: "其它功能",
-          icon: "more"
-        }
-      ]
-    };
-  },
-  props: {
-    msg: String
+  name: "navBar",
+  computed: {
+    ...mapState(["pathList"])
   }
 };
 </script>

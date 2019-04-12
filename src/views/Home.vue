@@ -3,15 +3,20 @@
     <el-container style="height: 100%;">
       <el-aside class="nav" style="width: 220px;">
         <div class="nav-title">
-          <el-select v-model="frameWork" class="nav-select" placeholder="请选择">
-            <el-option v-for="item in options" :key="item" :label="item" :value="item"></el-option>
+          <el-select v-model="currentFWork" class="nav-select" placeholder="请选择">
+            <el-option
+              v-for="item in frameWorks"
+              :key="item.value"
+              :label="item.text"
+              :value="item.value"
+            ></el-option>
           </el-select>
         </div>
         <nav-bar></nav-bar>
       </el-aside>
       <el-container>
         <el-header class="header">
-          <div class="title">标题</div>
+          <div class="title">{{title}}</div>
         </el-header>
         <el-main class="content">
           <slot></slot>
@@ -22,6 +27,8 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
+import { mapMutations } from "vuex";
 // @ is an alias to /src
 import navBar from "@/components/nav.vue";
 
@@ -29,10 +36,25 @@ export default {
   name: "home",
   components: { navBar },
   data() {
-    return {
-      options: ["Vue", "Jquery", "React"],
-      frameWork: "Vue"
-    };
+    return {};
+  },
+  computed: {
+    ...mapState(["frameWorks"]),
+    ...mapGetters(["pathToTitle"]),
+    currentFWork: {
+      get() {
+        return this.$store.state.currentFWork;
+      },
+      set(value) {
+        this.setFWork(value);
+      }
+    },
+    title() {
+      return this.pathToTitle[this.$route.path];
+    }
+  },
+  methods: {
+    ...mapMutations(["setFWork"])
   }
 };
 </script>
