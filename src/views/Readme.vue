@@ -1,10 +1,22 @@
 <template>
-  <div class="readme">readme</div>
+  <div class="markdown-body" v-html="html"></div>
 </template>
 
 <script>
+import showdown from "showdown";
+import md from "../../README.md";
+
 export default {
-  name: "home"
+  name: "home",
+  data() {
+    return {
+      html: ""
+    };
+  },
+  mounted() {
+    let converter = new showdown.Converter();
+    this.html = converter.makeHtml(md);
+  }
 };
 </script>
 
