@@ -45,17 +45,14 @@ Name string not-null
 ID int not-null pk auto-increment  
 Name string not-null
 Description string 
-Value string
 ValueType string (Number, String, Boolean, Array, Object) 用于最后生成的代码传入的值区分
 
 ### ParameterToValidate 
 ID int not-null pk auto-increment  
 ValidateID int not-null fk
 ParameterID int not-null fk
-Value string
 
-### 模版表
+### 模版表 Module
 ID int not-null pk auto-increment
-GroupID int not-null fk(Groups) 删除该字段，配置与最后生成的代码不能耦合，同一配置可以根据不同框架生成不同的代码
-Name string 
+Name string  
 Url string
