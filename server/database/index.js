@@ -1,1 +1,0 @@
-const dbModel = require('./dataBaseModel');

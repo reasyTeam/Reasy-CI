@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
-const Model = Sequelize.Model;
-const config = require('../config/index');
+const config = require('../config/mysql');
 
 class DatabaseModel {
     constructor() {
@@ -11,11 +10,10 @@ class DatabaseModel {
         this.checkConnection = this.checkConnection.bind(this);
         this.initTable = this.initTable.bind(this);
         this.createTable = this.createTable.bind(this);
-        this.init();
     }
 
     init() {
-        this.connectDatabase()
+        return this.connectDatabase()
             .then(this.checkConnection)
             .then(this.initTable)
             .then(this.createTable)
