@@ -12,12 +12,16 @@ import {
     Menu,
     Message,
     Table,
+    TableColumn,
     Dropdown,
     // DropdownItem,
     // DropdownMenu,
     Select,
     Option,
-    MenuItem
+    MenuItem,
+    Collapse,
+    CollapseItem
+
 } from 'element-ui'
 
 Vue.use(Row)
@@ -32,9 +36,12 @@ Vue.use(Footer)
 Vue.use(Menu)
 Vue.use(Message)
 Vue.use(Table)
+Vue.use(TableColumn)
 Vue.use(Dropdown)
 // Vue.use(DropdownItem)
 // Vue.use(DropdownMenu)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(MenuItem)
+Vue.use(Collapse)
+Vue.use(CollapseItem)
