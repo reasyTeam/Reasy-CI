@@ -20,8 +20,10 @@ import {
     Option,
     MenuItem,
     Collapse,
-    CollapseItem
-
+    CollapseItem,
+    Form,
+    FormItem,
+    Dialog
 } from 'element-ui'
 
 Vue.use(Row)
@@ -45,3 +47,6 @@ Vue.use(Option)
 Vue.use(MenuItem)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Dialog)

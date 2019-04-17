@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from 'vue';
 const axios = require('axios');
 const GO_TO = {
@@ -28,7 +29,7 @@ $http.getDataCros = function() {
 function request(data, url, method = 'post', responseType = 'json') {
     let option = {
         method,
-        url,
+        url: `http://localhost:8888/${url}`,
         responseType
     };
 

@@ -44,18 +44,23 @@ function zhuru(midwares, tableModel) {
                 pros.push(midware.apply(this, args));
             });
 
-            return Promise.all(pros).catch(err => {
+            return Promise.all(pros).then(data => {
+                res.json(data)
+            }).catch(err => {
                 console.log(err);
-                return -1;
+                res.json(-1);
             });
         } else {
             let t = midwares.apply(this, args);
             if (t instanceof Promise) {
-                return t.catch(err => {
+                return t.then(data => {
+                    res.json(data)
+                }).catch(err => {
                     console.log(err);
-                    return -1;
+                    res.json(-1);
                 });
             }
+            res.json(t);
             return Promise.resolve(t);
         }
     };

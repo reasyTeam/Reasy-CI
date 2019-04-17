@@ -1,6 +1,5 @@
 class TableHandle {
     constructor(tabelModel, idField) {
-        console.log(tabelModel);
         this.tabelModel = tabelModel;
         this.idField = idField || 'id';
     }

@@ -20,6 +20,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.markdown-body {
+  padding: 12px;
+  background-color: $bg-color-light;
+}
 </style>
 

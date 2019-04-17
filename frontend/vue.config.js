@@ -25,13 +25,12 @@ module.exports = {
                 data: `@import "@/assets/css/variable.scss";`
             }
         }
-    },
-    devServer: {
-        proxy: {
-            '/api/**': {
-                target: '<url>',
-                pathRewrite: { "^/api": "" }
-            }
-        }
     }
+    // devServer: {
+    //     proxy: {
+    //         '/http://localhost:': {
+    //             target: 'http://localhost:8888'
+    //         }
+    //     }
+    // }
 }

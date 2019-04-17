@@ -18,7 +18,7 @@
         <el-header class="header">
           <div class="title">{{title}}</div>
         </el-header>
-        <el-main :class="$route.path === '/code' ? 'padding-0':''" class="content">
+        <el-main class="content">
           <slot></slot>
         </el-main>
       </el-container>
@@ -100,10 +100,8 @@ export default {
 }
 
 .content {
-  background-color: $bg-color-light;
-  &.padding-0 {
-    padding: 0;
-  }
+  background-color: $bg-color;
+  padding: 0;
 }
 
 .nav-select .el-input .el-input__inner {

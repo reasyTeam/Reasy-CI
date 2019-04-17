@@ -7,5 +7,5 @@ module.exports = {
     // 服务器端口号
     port: 8888,
     // 是否打开浏览器
-    openBrowser: true
+    openBrowser: false
 }

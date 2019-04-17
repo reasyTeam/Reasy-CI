@@ -18,7 +18,7 @@ class ExpressModel {
         // for parsing application/x-www-form-urlencoded
         this.app.use(bodyParser.urlencoded({ extended: true }));
         // 启用静态文件的访问 todo by xc 完善地址信息
-        this.app.use(Express.static(path.join(process.cwd(), CONFIG.context)));
+        this.app.use(express.static(path.join(process.cwd(), CONFIG.context)));
 
         /**
          * 处理所有的请求，中间件
@@ -53,7 +53,7 @@ class ExpressModel {
             this.afterInit();
             // 处理接下来的逻辑
             this.run();
-        })
+        });
     }
 
     initMidware() {
