@@ -29,10 +29,8 @@ class ExpressModel {
             res.header("Access-Control-Allow-Headers", "X-Requested-With");
             res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,CONFIG");
 
-            if (showLog) {
-                let reqData = req.body;
-                global.console.log(`请求：${req.path}, 内容：${JSON.stringify(reqData, 2)}`);
-            }
+            let reqData = req.body;
+            global.console.log(`请求：${req.path}, 内容：${JSON.stringify(reqData, 2)}`);
             next();
         });
 
