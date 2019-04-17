@@ -18,7 +18,7 @@ export default {
   methods: {
     ...mapMutations(["setFWorks"]),
     fetchData() {
-      this.$http.getData("", "getDependences").then(data => {
+      this.$http.getData("", "api/getDependences").then(data => {
         data = data.map(item => {
           return { value: item.id, text: item.name };
         });

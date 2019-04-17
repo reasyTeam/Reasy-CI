@@ -5,6 +5,7 @@ const fs = require('fs');
 const Midware = require('./midware/midware');
 const dbModel = require('./database/modelHandle');
 const CONFIG = require('./config/server');
+const opn = require('opn');
 class ExpressModel {
     constructor() {
         this.app = express();

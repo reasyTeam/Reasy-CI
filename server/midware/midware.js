@@ -1,4 +1,7 @@
 const store = require('./store');
+const CONFIG = require('../config/server');
+
+let api = CONFIG.dev ? CONFIG.devAPi : '';
 
 class Midware {
     constructor(app, tableModel) {
@@ -6,12 +9,14 @@ class Midware {
         this.tableModel = tableModel;
         this.midwares = {};
         this.generateStore();
+        this.init();
     }
 
     init() {
         let midwares = this.midwares;
         for (let key in midwares) {
-            this.app.use(key, zhuru(midwares[key], this.tableModel));
+            let apikey = api + '/' + key.replace(/^\/+/, '');
+            this.app.use(apikey, zhuru(midwares[key], this.tableModel));
         }
     }
 
