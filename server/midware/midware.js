@@ -36,7 +36,7 @@ class Midware {
         let storeApi = CONFIG.noMysql ? storeNoMysql : store;
         // 初始化store
         for (let key in storeApi) {
-            this.add(key, store[key]);
+            this.add(key, storeApi[key]);
         }
     }
 }

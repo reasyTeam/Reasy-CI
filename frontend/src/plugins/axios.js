@@ -1,8 +1,8 @@
 /* eslint-disable */
 import Vue from 'vue';
 const axios = require('axios');
-const API = 'http://localhost:8888/api/';
-// const API = '/api/';
+// const API = 'http://localhost:8888/api/';
+const API = 'api/';
 
 let $http = {};
 

@@ -1,16 +1,19 @@
 const api = {
     'getGroups': function(tableModel) {
-        return tableModel.Group.query();
+        return [
+            { id: 1, name: 'reasy-ui', depedence_id: 2, description: '基于jquery的组建' },
+            { id: 2, name: 'reasy-ui-vue', depedence_id: 1, description: '基于Vue的组建' }
+        ];
     },
     'delGroups': function(tableModel, req) {
         let data = req.body;
-        return tableModel.Group.delete(data);
+        return { ok: 1 };
     },
     'updateGroups': function(tableModel, req) {
-        return tableModel.Group.update();
+        return { ok: 1 };
     },
     'createGroups': function(tableModel, req) {
-        return tableModel.Group.create();
+        return { ok: 1 };
     },
     'getDependences': function(tableModel) {
         return [
@@ -19,7 +22,7 @@ const api = {
         ];
     },
     'getModels': function(tableModel) {
-        return tableModel.Module.query();
+        return { ok: 1 };
     }
 };
 
