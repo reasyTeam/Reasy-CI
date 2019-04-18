@@ -21,6 +21,15 @@ const api = {
             { id: 2, name: 'jQuery', version: 'V1.13.14' }
         ];
     },
+    'delDependences': function(tableModel, req) {
+        return { ok: 1 };
+    },
+    'updateDependences': function(tableModel, req) {
+        return { ok: 1 };
+    },
+    'createDependences': function(tableModel, req) {
+        return { ok: 1 };
+    },
     'getModels': function(tableModel) {
         return { ok: 1 };
     }
