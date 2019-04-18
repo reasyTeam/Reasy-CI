@@ -8,7 +8,7 @@
 
 <script>
 import Home from "@/views/Home.vue";
-import { mapMutations } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "app",
@@ -16,20 +16,10 @@ export default {
     Home
   },
   methods: {
-    ...mapMutations(["setFWorks"]),
-    fetchData() {
-      this.$http.getData("", "api/getDependences").then(data => {
-        data = data.map(item => {
-          return { value: item.id, text: item.name };
-        });
-        this.setFWorks(data);
-      });
-    }
+    ...mapActions(["getFrameWorks"])
   },
   created() {
-    // 组件创建完后获取数据，
-    // 此时 data 已经被 observed 了
-    this.fetchData();
+    this.getFrameWorks();
   }
 };
 </script>

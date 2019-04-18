@@ -1,7 +1,8 @@
 const store = require('./store');
+const storeNoMysql = require('./storeNoMysql');
 const CONFIG = require('../config/server');
 
-let api = CONFIG.dev ? CONFIG.devAPi : '';
+let api = CONFIG.api || '';
 
 class Midware {
     constructor(app, tableModel) {
@@ -15,7 +16,7 @@ class Midware {
     init() {
         let midwares = this.midwares;
         for (let key in midwares) {
-            let apikey = api + '/' + key.replace(/^\/+/, '');
+            let apikey = api + key.replace(/^\/+/, '');
             this.app.use(apikey, zhuru(midwares[key], this.tableModel));
         }
     }
@@ -32,8 +33,9 @@ class Midware {
     }
 
     generateStore() {
+        let storeApi = CONFIG.noMysql ? storeNoMysql : store;
         // 初始化store
-        for (let key in store) {
+        for (let key in storeApi) {
             this.add(key, store[key]);
         }
     }
@@ -57,7 +59,7 @@ function zhuru(midwares, tableModel) {
             });
         } else {
             let t = midwares.apply(this, args);
-            if (t instanceof Promise) {
+            if (t && typeof t === 'object' && t.then) {
                 return t.then(data => {
                     res.json(data)
                 }).catch(err => {

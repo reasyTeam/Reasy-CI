@@ -3,11 +3,11 @@
     <el-container style="height: 100%;">
       <el-aside class="nav" style="width: 220px;">
         <div class="nav-title">
-          <el-select v-model="currentFWork" class="nav-select" placeholder="请选择">
+          <el-select v-model="currentFWork" @change="log" class="nav-select" placeholder="请选择">
             <el-option
-              v-for="item in frameWorks"
+              v-for="item in frames"
               :key="item.value"
-              :label="item.text"
+              :label="item.name"
               :value="item.value"
             ></el-option>
           </el-select>
@@ -27,8 +27,9 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
-import { mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
+import * as types from "@/store/types.js";
+
 // @ is an alias to /src
 import navBar from "@/components/nav.vue";
 
@@ -39,8 +40,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["frameWorks"]),
-    ...mapGetters(["pathToTitle"]),
+    ...mapGetters(["pathToTitle", "frames"]),
     currentFWork: {
       get() {
         return this.$store.state.currentFWork;
@@ -54,7 +54,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["setFWork"])
+    ...mapMutations({
+      setFWork: types.SET_CUR_FRAMEWORK
+    }),
+    log() {
+      console.log(this.currentFWork);
+    }
   }
 };
 </script>
