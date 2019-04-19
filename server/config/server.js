@@ -6,7 +6,7 @@ module.exports = {
     writePath: 'serverdata/',
     // 服务器端口号
     port: 8888,
-    noMysql: true,
+    noMysql: false,
     api: '/api/',
     // 是否打开浏览器
     openBrowser: false
