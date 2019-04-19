@@ -63,6 +63,22 @@ class DatabaseModel {
 
     initTable() {
         /**
+         * 文件地址表，用来存储所有的附件
+         * @id 唯一标识
+         * @depedence_id 依赖的框架
+         * @name 组建库名称
+         * @description 描述信息
+         * @url 当前组建的配置文件地址
+         */
+        this.tables.File = this.sequelize.define('file', {
+            id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true, allowNull: false },
+            name: { type: Sequelize.STRING, allowNull: true },
+            url: { type: Sequelize.STRING, allowNull: false }
+        }, {
+            freezeTableName: true
+        });
+
+        /**
          * 组件库表
          * @id 唯一标识
          * @depedence_id 依赖的框架
@@ -74,8 +90,8 @@ class DatabaseModel {
             id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true, allowNull: false },
             depedence_id: { type: Sequelize.INTEGER, allowNull: false },
             name: { type: Sequelize.STRING, allowNull: false },
-            description: { type: Sequelize.STRING, allowNull: true },
-            url: { type: Sequelize.STRING, allowNull: false }
+            file_id: { type: Sequelize.INTEGER, allowNull: false },
+            description: { type: Sequelize.STRING, allowNull: true }
         }, {
             freezeTableName: true
         });
@@ -167,6 +183,11 @@ class DatabaseModel {
             as: 'depedence_id'
         });
 
+        this.tables.File.hasOne(this.tables.Group, {
+            foreignKey: 'id',
+            as: 'file_id'
+        });
+
         this.tables.Validate.hasOne(this.tables.ParameterToValidate, {
             foreignKey: 'id',
             as: 'validate_id'
@@ -185,7 +206,8 @@ class DatabaseModel {
                     this.tables.Dependence.sync({ force }),
                     this.tables.Module.sync({ force }),
                     this.tables.Validate.sync({ force }),
-                    this.tables.Parameter.sync({ force })
+                    this.tables.Parameter.sync({ force }),
+                    this.tables.File.sync({ force })
                 ])
                 .then(() => {
                     return Promise.all([

@@ -2,9 +2,10 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class TableHandle {
-    constructor(tabelModel, idField) {
+    constructor(tabelModel, option = {}) {
         this.tabelModel = tabelModel;
-        this.idField = idField || 'id';
+        this.idField = option.idField || 'id';
+        this.beforeDelete = option.beforeDelete;
     }
 
     create(data) {
@@ -12,8 +13,13 @@ class TableHandle {
         return this.tabelModel.create(data);
     }
 
-    query() {
-        return this.tabelModel.findAll();
+    query(data) {
+        // data must be an object
+        if (data) {
+            return this.tabelModel.findAll({ where: data });
+        } else {
+            return this.tabelModel.findAll();
+        }
     }
 
     update(data) {
@@ -28,10 +34,14 @@ class TableHandle {
     }
 
     delete(id) {
+        id = (id && typeof id === 'object') ? id.id : [];
         // 当前参数不为数组时，转成数组
         if (!Array.isArray(id)) {
             id = [id];
         }
+
+        this.beforeDelete && this.beforeDelete(id);
+
         return this.tabelModel.destroy({
             where: {
                 [this.idField]: {

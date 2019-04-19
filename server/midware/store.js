@@ -1,36 +1,45 @@
+const Sequelize = require('sequelize');
 const api = {
-    'getGroups': function(tableModel) {
-        return tableModel.Group.query();
+    'getGroups': function(models) {
+        return models.Group.query();
     },
-    'delGroups': function(tableModel, req) {
+    'delGroups': function(models, req) {
         let data = req.body;
-        return tableModel.Group.delete(data);
+        return models.Group.delete(data);
     },
-    'updateGroups': function(tableModel, req) {
+    'updateGroups': function(models, req) {
         let data = req.body;
-        return tableModel.Group.update(data);
+        return models.Group.update(data);
     },
-    'createGroups': function(tableModel, req) {
+    'createGroups': function(models, req) {
         let data = req.body;
-        return tableModel.Group.create(data);
+
+        // models.File.update({
+        //     id: data.file_id,
+        //     name: data.name
+        // });
+
+        return models.Group.create(data);
     },
-    'getDependences': function(tableModel) {
-        return tableModel.Dependence.query();
+    'getDependences': function(models) {
+        // 关联查询
+        // Sequelize.query("SELECT * from `` join `` on ")
+        return models.Dependence.query();
     },
-    'delDependences': function(tableModel, req) {
+    'delDependences': function(models, req) {
         let data = req.body;
-        return tableModel.Dependence.delete(data);
+        return models.Dependence.delete(data);
     },
-    'updateDependences': function(tableModel, req) {
+    'updateDependences': function(models, req) {
         let data = req.body;
-        return tableModel.Dependence.update(data);
+        return models.Dependence.update(data);
     },
-    'createDependences': function(tableModel, req) {
+    'createDependences': function(models, req) {
         let data = req.body;
-        return tableModel.Dependence.create(data);
+        return models.Dependence.create(data);
     },
-    'getModels': function(tableModel) {
-        return tableModel.Module.query();
+    'getModels': function(models) {
+        return models.Module.query();
     }
 };
 

@@ -2,7 +2,7 @@ const store = require('./store');
 const storeNoMysql = require('./storeNoMysql');
 const CONFIG = require('../config/server');
 
-let api = CONFIG.api || '';
+let api = CONFIG.api || '/';
 
 class Midware {
     constructor(app, tableModel) {

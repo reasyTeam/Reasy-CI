@@ -6,9 +6,14 @@ const Midware = require('./midware/midware');
 const dbModel = require('./database/modelHandle');
 const CONFIG = require('./config/server');
 const opn = require('opn');
+const util = require('util');
+const multiparty = require('multiparty');
+let api = CONFIG.api || '/';
+
 class ExpressModel {
     constructor() {
         this.app = express();
+        this.tableModel = {};
         this.midware = '';
         this.init();
     }
@@ -39,6 +44,9 @@ class ExpressModel {
         this.app.get('/', (req, res) => {
             res.redirect(301, 'index.html');
         });
+
+        //上传中间件
+        this.initUploadMidware();
     }
 
     init() {
@@ -65,7 +73,91 @@ class ExpressModel {
         //区分不同的请求返回不同的页面内容
         this.app.all('*', (req, res) => {
             // 其它get请求返回404
-            res.status(404).end();
+            res.writeHead(404, { 'content-type': 'text/plain' });
+            res.end('404');
+        });
+    }
+
+    initUploadMidware() {
+        let uploadDir = path.join(process.cwd(), './uploads');
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir);
+        }
+
+        this.app.use(`${api}upload`, (req, res, ) => {
+            let form = new multiparty.Form({ uploadDir });
+
+            form.parse(req, (err, fields, files) => {
+                if (err) {
+                    res.writeHead(400, { 'content-type': 'text/plain' });
+                    res.end("invalid request: " + err.message);
+                    return;
+                }
+
+                try {
+
+
+                    if (!files.file || files.file.length === 0) {
+                        res.writeHead(200, { 'content-type': 'application/json' });
+                        res.end(JSON.stringify({ error: 'need a file' }));
+                        return;
+                    }
+
+                    let inputFile = files.file[0],
+                        uploadedPath = inputFile.path,
+                        dstPath = path.join(uploadDir, inputFile.originalFilename);
+
+                    fs.rename(uploadedPath, dstPath, function(err) {
+                        if (err) {
+                            console.log('rename error: ' + err);
+                        }
+                    });
+                    files.file[0].path = dstPath;
+
+                    res.writeHead(200, { 'content-type': 'application/json' });
+
+                    // todo by xc 同时将数据写入数据库
+                    let ids = fields.id,
+                        url = './uploads/' + inputFile.originalFilename;
+
+                    if (ids && ids.length > 0) {
+                        this.tableModel.File.query({ id: +ids[0] }).then(data => {
+                            if (data.length > 0 && url !== data[0]['url']) {
+                                this.tableModel.File.update({
+                                    id: +data[0],
+                                    url
+                                });
+                                // 删除原有的文件
+                                fs.unlink(path.join(process.cwd(), data[0]['url']), (err) => {
+                                    if (err) throw err;
+                                });
+                            }
+                            res.end(JSON.stringify({
+                                filePath: +ids[0]
+                            }));
+                        });
+                    } else {
+                        // 添加资源
+                        this.tableModel.File.create({
+                            name: inputFile.originalFilename,
+                            url
+                        }).then(data => {
+                            // todo by xc验证最后是否返回新增的数据
+                            res.end(JSON.stringify({
+                                filePath: data.id,
+                                fileName: data.name
+                            }));
+                        });
+                    }
+                } catch (err) {
+                    res.writeHead(200, { 'content-type': 'application/json' });
+                    res.end(JSON.stringify({
+                        error: err
+                    }));
+                    return;
+                }
+
+            });
         });
     }
 
