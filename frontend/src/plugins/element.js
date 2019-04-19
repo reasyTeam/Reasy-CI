@@ -23,7 +23,9 @@ import {
     CollapseItem,
     Form,
     FormItem,
-    Dialog
+    Dialog,
+    Upload,
+    Tag
 } from 'element-ui'
 
 Vue.use(Row)
@@ -36,7 +38,6 @@ Vue.use(Aside)
 Vue.use(Main)
 Vue.use(Footer)
 Vue.use(Menu)
-Vue.use(Message)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Dropdown)
@@ -50,3 +51,7 @@ Vue.use(CollapseItem)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Dialog)
+Vue.use(Upload)
+Vue.use(Tag)
+
+Vue.prototype.$message = Message;

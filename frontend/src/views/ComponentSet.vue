@@ -49,7 +49,7 @@
       </el-collapse-item>
     </el-collapse>
 
-    <el-dialog title="新增框架" :visible.sync="dialogFrameVisible">
+    <el-dialog title="新增框架" :visible.sync="dialogFrameVisible" class="pop-dialog">
       <el-form :model="frameForm" :rules="frameRules" ref="framework" class="pop-form">
         <el-form-item label="框架名称" prop="name">
           <el-input v-model="frameForm.name"></el-input>
@@ -64,7 +64,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="新增组件库" :visible.sync="dialogComVisible">
+    <el-dialog title="新增组件库" :visible.sync="dialogComVisible" class="pop-dialog">
       <el-form :model="comForm" :rules="comRules" ref="component" class="pop-form">
         <el-form-item label="框架名称" prop="name">
           <el-input v-model="comForm.name"></el-input>
@@ -82,6 +82,20 @@
         <el-form-item label="备注" prop="description">
           <el-input v-model="comForm.description"></el-input>
         </el-form-item>
+        <el-form-item label="配置文件" prop="file_id">
+          <el-upload
+            class="upload-demo"
+            action="/api/upload"
+            :limit="1"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <el-tag>{{comForm.file_name||'未上传'}}</el-tag>
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传js文件，且不超过500kb</div>
+          </el-upload>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogComVisible=false">取 消</el-button>
@@ -93,6 +107,7 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
+import { constants } from "crypto";
 const TYPE = {
   FRAMEWORK: "framework",
   GROUP: "component"
@@ -102,30 +117,34 @@ export default {
   data() {
     var checkFrame = (rule, value, callback) => {
       let frames = this.frames,
-        isEdit = !!this.frameForm.id || this.frameForm.id === 0;
+        isEdit = !!this.frameForm.id || this.frameForm.id === 0,
+        reg = new RegExp("^" + value + "$", "i");
 
       for (let i = 0, l = frames.length; i < l; i++) {
-        if (frames[i].name === value) {
+        if (reg.test(frames[i].name)) {
           if (isEdit && this.frameForm.id === frames[i].value) {
             return callback();
           }
           return callback(new Error("框架名称不能重复"));
         }
       }
+      callback();
     };
 
     var checkCom = (rule, value, callback) => {
       let comData = this.comData,
-        isEdit = !!this.comForm.id || this.comForm.id === 0;
+        isEdit = !!this.comForm.id || this.comForm.id === 0,
+        reg = new RegExp("^" + value + "$", "i");
 
       for (let i = 0, l = comData.length; i < l; i++) {
-        if (comData[i].name === value) {
+        if (reg.test(comData[i].name)) {
           if (isEdit && this.comForm.id === comData[i].value) {
             return callback();
           }
           return callback(new Error("组件库名称不能重复"));
         }
       }
+      callback();
     };
     return {
       dialogFrameVisible: false,
@@ -136,8 +155,11 @@ export default {
         version: ""
       },
       comForm: {
+        id: "",
         name: "",
-        version: ""
+        file_id: "",
+        file_name: "",
+        depedence_id: ""
       },
       frameRules: {
         name: [
@@ -165,6 +187,9 @@ export default {
           },
           { validator: checkCom, trigger: "blur" }
         ],
+        depedence_id: [
+          { required: true, message: "请选择依赖的框架", trigger: "change" }
+        ],
         description: [
           { min: 0, max: 50, message: "长度在 0 到 50 个字符", trigger: "blur" }
         ]
@@ -187,7 +212,12 @@ export default {
       "updateFrameWorks",
       "createFrameWorks"
     ]),
-    ...mapActions("group", ["getGroups"]),
+    ...mapActions("group", [
+      "getGroups",
+      "delGroups",
+      "updateGroups",
+      "createGroups"
+    ]),
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -198,8 +228,8 @@ export default {
             this.dialogFrameVisible = false;
           } else {
             this.comForm.id
-              ? this.updateFraks(this.frameForm)
-              : this.createDepces(this.frameForm);
+              ? this.updateGroups(this.comForm)
+              : this.createGroups(this.comForm);
             this.dialogComVisible = false;
           }
         } else {
@@ -256,9 +286,27 @@ export default {
     },
     deleteData(data, type) {
       if (type === TYPE.FRAMEWORK) {
-        this.delDependences(data.id);
+        this.delFrameWorks({ id: data.id });
       } else {
+        this.delGroups({ id: data.id });
       }
+    },
+    handleAvatarSuccess(res, file) {
+      this.comForm.file_id = res.filePath;
+      this.comForm.file_name = res.fileName;
+      // this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJS = file.type === "text/javascript";
+      const isLess = file.size / 1024 < 500;
+
+      if (!isJS) {
+        this.$message.error("上传配置文件只能是 JS 格式!");
+      }
+      if (!isLess) {
+        this.$message.error("上传配置文件大小不能超过 500kb!");
+      }
+      return isJS && isLess;
     }
   },
   created() {

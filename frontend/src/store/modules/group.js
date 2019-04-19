@@ -18,6 +18,21 @@ export default {
             $http.getData("getGroups").then(data => {
                 commit(types.SET_GROUPS, data);
             });
+        },
+        delGroups({ dispatch }, data) {
+            $http.setData("delGroups", data).then(data => {
+                dispatch('getGroups');
+            });
+        },
+        updateGroups({ dispatch }, data) {
+            $http.setData("updateGroups", data).then(data => {
+                dispatch('getGroups');
+            });
+        },
+        createGroups({ dispatch }, data) {
+            $http.setData("createGroups", data).then(data => {
+                dispatch('getGroups');
+            });
         }
     }
 }
