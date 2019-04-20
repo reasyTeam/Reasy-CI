@@ -4,8 +4,10 @@ const CONFIG = {
     //账户名
     username: "root",
     user: "root",
+    //公司电脑mysql密码
+    // password: "123456",
     //密码
-    password: "123456",
+    password: "12345678",
     //数据库名
     database: "reasy-ci",
     //数据库端口

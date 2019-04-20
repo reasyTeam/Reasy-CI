@@ -22,40 +22,7 @@
 1. 读取配置
 2. 
 
-## 数据表
-
-### 组件库表 Groups 用于储存现有的组建相关信息
-ID int not-null pk auto-increment  唯一标示
-DependenceID int not-null fk  依赖的框架
-Name string  组建库名称
-Description string 描述信息
-Url string not-null 当前组建的配置文件地址 
-
-### 依赖表 Dependence (可选值：Vue，Jquery, React)
-ID int not-null pk auto-increment  唯一标识
-Name string not-null 框架名称
-Version string 版本
-Url string 地址，可删除该字段
-
-### 数据校验表 Validate  
-ID int not-null pk auto-increment  
-Name string not-null
-
-### 参数表 Parameter  
-ID int not-null pk auto-increment  
-Name string not-null
-Description string 
-Value string
-ValueType string (Number, String, Boolean, Array, Object) 用于最后生成的代码传入的值区分
-
-### ParameterToValidate 
-ID int not-null pk auto-increment  
-ValidateID int not-null fk
-ParameterID int not-null fk
-Value string
-
-### 模版表
-ID int not-null pk auto-increment
-GroupID int not-null fk(Groups) 删除该字段，配置与最后生成的代码不能耦合，同一配置可以根据不同框架生成不同的代码
-Name string 
-Url string
+## 代办
+1. 验证组建配置文件的正确性
+2. 配置文件生成代码规则文件
+3. group表中

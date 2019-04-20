@@ -104,27 +104,27 @@ class ExpressModel {
                     }
 
                     let inputFile = files.file[0],
-                        uploadedPath = inputFile.path,
-                        dstPath = path.join(uploadDir, inputFile.originalFilename);
+                        // uploadedPath = inputFile.path,
+                        // dstPath = path.join(uploadDir, inputFile.originalFilename),
+                        ids = fields.id,
+                        name = inputFile.originalFilename,
+                        url = inputFile.path;
 
-                    fs.rename(uploadedPath, dstPath, function(err) {
-                        if (err) {
-                            console.log('rename error: ' + err);
-                        }
-                    });
-                    files.file[0].path = dstPath;
+                    // fs.rename(uploadedPath, dstPath, function(err) {
+                    //     if (err) {
+                    //         console.log('rename error: ' + err);
+                    //     }
+                    // });
+                    // files.file[0].path = dstPath;
 
                     res.writeHead(200, { 'content-type': 'application/json' });
 
-                    // todo by xc 同时将数据写入数据库
-                    let ids = fields.id,
-                        url = './uploads/' + inputFile.originalFilename;
-
                     if (ids && ids.length > 0) {
                         this.tableModel.File.query({ id: +ids[0] }).then(data => {
-                            if (data.length > 0 && url !== data[0]['url']) {
+                            if (data.length > 0) {
                                 this.tableModel.File.update({
                                     id: +data[0],
+                                    name,
                                     url
                                 });
                                 // 删除原有的文件
@@ -139,7 +139,7 @@ class ExpressModel {
                     } else {
                         // 添加资源
                         this.tableModel.File.create({
-                            name: inputFile.originalFilename,
+                            name,
                             url
                         }).then(data => {
                             // todo by xc验证最后是否返回新增的数据
