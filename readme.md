@@ -19,40 +19,11 @@
 3. 存储的配置，也存储配置文件，数据库记录配置名称和配置文件的地址
 
 ## 代码生成思路
-1. 读取配置
-2. 
+1. 读取页面配置信息
+2. 根据页面的生命周期生成对应的代码
+3. 如何做到同一份配置根据不同组件库生成不同的代码（目前应该是做不到的，不同的库拥有的组件不一样配置也不一样，无法做到，除非找到对应的映射关系，才能共用一套配置）
 
-## 数据表
-
-### 组件库表 Groups 用于储存现有的组建相关信息
-ID int not-null pk auto-increment  唯一标示
-DependenceID int not-null fk  依赖的框架
-Name string  组建库名称
-Description string 描述信息
-Url string not-null 当前组建的配置文件地址 
-
-### 依赖表 Dependence (可选值：Vue，Jquery, React)
-ID int not-null pk auto-increment  唯一标识
-Name string not-null 框架名称
-Version string 版本
-Url string 地址，可删除该字段
-
-### 数据校验表 Validate  
-ID int not-null pk auto-increment  
-Name string not-null
-
-### 参数表 Parameter  
-ID int not-null pk auto-increment  
-Name string not-null
-Description string 
-ValueType string (Number, String, Boolean, Array, Object) 用于最后生成的代码传入的值区分
-
-### ParameterToValidate 
-ID int not-null pk auto-increment  
-ValidateID int not-null fk
-ParameterID int not-null fk
-
-### 模版表 Module
-ID int not-null pk auto-increment
-Name string  
-Url string
+## todo
+1. 每天定时跑一遍程序删除没有使用的的配置文件，对应的file表中的数据也进行清空
+2. 验证上传的属性配置文件的正确性（必填属性是否填写，枚举值是否存在）
+3. 验证上传的代码生成文件的正确性

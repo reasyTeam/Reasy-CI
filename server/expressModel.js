@@ -96,7 +96,6 @@ class ExpressModel {
 
                 try {
 
-
                     if (!files.file || files.file.length === 0) {
                         res.writeHead(200, { 'content-type': 'application/json' });
                         res.end(JSON.stringify({ error: 'need a file' }));
@@ -104,18 +103,9 @@ class ExpressModel {
                     }
 
                     let inputFile = files.file[0],
-                        // uploadedPath = inputFile.path,
-                        // dstPath = path.join(uploadDir, inputFile.originalFilename),
-                        ids = fields.id,
+                        ids = fields.file_id,
                         name = inputFile.originalFilename,
                         url = inputFile.path;
-
-                    // fs.rename(uploadedPath, dstPath, function(err) {
-                    //     if (err) {
-                    //         console.log('rename error: ' + err);
-                    //     }
-                    // });
-                    // files.file[0].path = dstPath;
 
                     res.writeHead(200, { 'content-type': 'application/json' });
 
@@ -123,30 +113,32 @@ class ExpressModel {
                         this.tableModel.File.query({ id: +ids[0] }).then(data => {
                             if (data.length > 0) {
                                 this.tableModel.File.update({
-                                    id: +data[0],
+                                    id: +data[0]['id'],
                                     name,
                                     url
                                 });
                                 // 删除原有的文件
-                                fs.unlink(path.join(process.cwd(), data[0]['url']), (err) => {
+                                fs.unlink(data[0]['url'], (err) => {
                                     if (err) throw err;
                                 });
+
+                                res.end(JSON.stringify({
+                                    filePath: +ids[0],
+                                    fileName: name
+                                }));
+                            } else {
+                                // 添加资源
+                                this.tableModel.File.create({
+                                    name,
+                                    url
+                                }).then(data => {
+                                    // todo by xc验证最后是否返回新增的数据
+                                    res.end(JSON.stringify({
+                                        filePath: data.id,
+                                        fileName: data.name
+                                    }));
+                                });
                             }
-                            res.end(JSON.stringify({
-                                filePath: +ids[0]
-                            }));
-                        });
-                    } else {
-                        // 添加资源
-                        this.tableModel.File.create({
-                            name,
-                            url
-                        }).then(data => {
-                            // todo by xc验证最后是否返回新增的数据
-                            res.end(JSON.stringify({
-                                filePath: data.id,
-                                fileName: data.name
-                            }));
                         });
                     }
                 } catch (err) {

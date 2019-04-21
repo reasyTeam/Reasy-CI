@@ -44,31 +44,35 @@ class Midware {
 function zhuru(midwares, tableModel) {
     return function(req, res, next) {
         let args = [tableModel, ...arguments];
+        try {
+            if (Array.isArray(midwares)) {
+                let pros = [];
+                midwares.forEach(midware => {
+                    pros.push(midware.apply(this, args));
+                });
 
-        if (Array.isArray(midwares)) {
-            let pros = [];
-            midwares.forEach(midware => {
-                pros.push(midware.apply(this, args));
-            });
-
-            return Promise.all(pros).then(data => {
-                res.json(data)
-            }).catch(err => {
-                console.log(err);
-                res.json(-1);
-            });
-        } else {
-            let t = midwares.apply(this, args);
-            if (t && typeof t === 'object' && t.then) {
-                return t.then(data => {
+                return Promise.all(pros).then(data => {
                     res.json(data)
                 }).catch(err => {
                     console.log(err);
                     res.json(-1);
                 });
+            } else {
+                let t = midwares.apply(this, args);
+                if (t && typeof t === 'object' && t.then) {
+                    return t.then((data, t) => {
+                        res.json(data)
+                    }).catch(err => {
+                        console.log(err);
+                        res.json(-1);
+                    });
+                }
+                res.json(t);
+                return Promise.resolve(t);
             }
-            res.json(t);
-            return Promise.resolve(t);
+        } catch (err) {
+            console.log(err);
+            res.json({ error: 1 })
         }
     };
 }

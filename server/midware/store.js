@@ -1,7 +1,8 @@
-const Sequelize = require('sequelize');
 const api = {
     'getGroups': function(models) {
-        return models.Group.query();
+        return models.sequelize.query('SELECT `group`.*, `file`.name as file_name, `dependence`.name as depedence_name FROM `group` LEFT JOIN `file` ON `file`.id = `group`.file_id LEFT JOIN `dependence` ON `dependence`.id = `group`.depedence_id', { type: models.sequelize.QueryTypes.SELECT }).then(data => {
+            return data;
+        });
     },
     'delGroups': function(models, req) {
         let data = req.body;
@@ -22,8 +23,6 @@ const api = {
         return models.Group.create(data);
     },
     'getDependences': function(models) {
-        // 关联查询
-        // Sequelize.query("SELECT * from `` join `` on ")
         return models.Dependence.query();
     },
     'delDependences': function(models, req) {

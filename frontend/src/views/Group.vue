@@ -6,10 +6,11 @@
           <el-button type="primary" icon="el-icon-plus" size="small" @click="openDialog()">新增</el-button>
           <el-table :data="comData" style="width: 100%">
             <el-table-column prop="name" label="组件库"></el-table-column>
-            <el-table-column prop="depedence_id" label="框架"></el-table-column>
+            <el-table-column prop="depedence_name" label="框架"></el-table-column>
             <el-table-column prop="description" label="备注"></el-table-column>
+            <el-table-column prop="file_name" label="配置文件名称"></el-table-column>
             <el-table-column prop="createdAt" label="创建日期"></el-table-column>
-            <el-table-column fixed="right" width="200" label="操作">
+            <el-table-column fixed="right" width="150" label="操作">
               <template v-slot="scope">
                 <el-button @click="editData(scope.row)" size="small">编辑</el-button>
                 <el-button type="danger" @click="deleteData(scope.row)" size="small">删除</el-button>
@@ -42,13 +43,13 @@
           <el-upload
             class="upload-demo"
             action="/api/upload"
-            :limit="1"
+            :data="comForm"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <el-tag>{{comForm.file_name||'未上传'}}</el-tag>
-            <el-button size="small" type="primary">点击上传</el-button>
+            <el-input placeholder="请上传文件" :disabled="true" v-model="comForm.file_name"></el-input>
+            <el-button type="primary">{{comForm.file_name ? '点击更新':'点击上传'}}</el-button>
             <div slot="tip" class="el-upload__tip">只能上传js文件，且不超过500kb</div>
           </el-upload>
         </el-form-item>
@@ -75,7 +76,7 @@ export default {
 
       for (let i = 0, l = comData.length; i < l; i++) {
         if (reg.test(comData[i].name)) {
-          if (isEdit && this.comForm.id === comData[i].value) {
+          if (isEdit && this.comForm.id === comData[i].id) {
             return callback();
           }
           return callback(new Error("组件库名称不能重复"));
@@ -90,6 +91,7 @@ export default {
         id: "",
         name: "",
         file_id: "",
+        description: "",
         file_name: "",
         depedence_id: ""
       },
@@ -109,6 +111,9 @@ export default {
         ],
         description: [
           { min: 0, max: 50, message: "长度在 0 到 50 个字符", trigger: "blur" }
+        ],
+        file_id: [
+          { required: true, message: "请上传组件配置文件", trigger: "change" }
         ]
       }
     };
@@ -156,13 +161,16 @@ export default {
         this.comForm.name = data.name;
         this.comForm.description = data.description;
         this.comForm.depedence_id = data.depedence_id;
+        this.comForm.file_id = data.file_id;
+        this.comForm.file_name = data.file_name;
       });
       this.dialogComVisible = true;
     },
     openDialog() {
       this.resetForm();
-
+      this.comForm.file_name = "";
       this.comForm.id = "";
+      this.comForm.file_id = "";
       this.dialogComVisible = true;
     },
     deleteData(data) {
@@ -190,3 +198,11 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.el-upload {
+  .el-input {
+    width: 200px;
+    margin-right: 22px;
+  }
+}
+</style>

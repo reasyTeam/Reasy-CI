@@ -11,7 +11,8 @@ function init() {
         .then(() => {
             return {
                 Dependence: new TableHandle(dbModel.tables.Dependence),
-                File: new TableHandle(dbModel.tables.File, {
+                File: new TableHandle(dbModel.tables.File),
+                Group: new TableHandle(dbModel.tables.Group, {
                     beforeDelete(ids) {
                         // 查找所有需要的数据，逐条删除对应的文件
                         this.query({
@@ -26,11 +27,11 @@ function init() {
                         })
                     }
                 }),
-                Group: new TableHandle(dbModel.tables.Group),
                 Validate: new TableHandle(dbModel.tables.Validate),
                 Parameter: new TableHandle(dbModel.tables.Parameter),
                 ParameterToValidate: new TableHandle(dbModel.tables.ParameterToValidate),
-                Module: new TableHandle(dbModel.tables.Module)
+                Module: new TableHandle(dbModel.tables.Module),
+                sequelize: dbModel.sequelize
             };
         }).catch(() => {
             console.log('数据库初始化出错！');

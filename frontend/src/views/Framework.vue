@@ -8,7 +8,7 @@
             <el-table-column prop="name" label="框架名"></el-table-column>
             <el-table-column prop="version" label="版本号"></el-table-column>
             <el-table-column prop="createdAt" label="创建日期"></el-table-column>
-            <el-table-column float="right" width="200" label="操作">
+            <el-table-column float="right" width="150" label="操作">
               <template v-slot="scope">
                 <el-button @click="editData(scope.row)" size="small">编辑</el-button>
                 <el-button type="danger" @click="deleteData(scope.row)" size="small">删除</el-button>
