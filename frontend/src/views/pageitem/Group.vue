@@ -4,7 +4,7 @@
       <el-collapse-item title="组件库" name="1">
         <div>
           <el-button type="primary" icon="el-icon-plus" size="small" @click="openDialog()">新增</el-button>
-          <el-table :data="comData" style="width: 100%">
+          <el-table :data="groups" style="width: 100%">
             <el-table-column prop="name" label="组件库"></el-table-column>
             <el-table-column prop="depedence_name" label="框架"></el-table-column>
             <el-table-column prop="description" label="备注"></el-table-column>
@@ -26,8 +26,8 @@
         <el-form-item label="框架名称" prop="name">
           <el-input v-model="comForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="依赖的框架" prop="depedence_id">
-          <el-select v-model="comForm.depedence_id" placeholder="请选择">
+        <el-form-item label="依赖的框架" prop="dependence_id">
+          <el-select v-model="comForm.dependence_id" placeholder="请选择">
             <el-option
               v-for="item in frames"
               :key="item.value"
@@ -70,13 +70,13 @@ const REF_FORM = "component";
 export default {
   data() {
     let checkCom = (rule, value, callback) => {
-      let comData = this.comData,
+      let groups = this.groups,
         isEdit = !!this.comForm.id || this.comForm.id === 0,
         reg = new RegExp("^" + value + "$", "i");
 
-      for (let i = 0, l = comData.length; i < l; i++) {
-        if (reg.test(comData[i].name)) {
-          if (isEdit && this.comForm.id === comData[i].id) {
+      for (let i = 0, l = groups.length; i < l; i++) {
+        if (reg.test(groups[i].name)) {
+          if (isEdit && this.comForm.id === groups[i].id) {
             return callback();
           }
           return callback(new Error("组件库名称不能重复"));
@@ -93,7 +93,7 @@ export default {
         file_id: "",
         description: "",
         file_name: "",
-        depedence_id: ""
+        dependence_id: ""
       },
       comRules: {
         name: [
@@ -106,7 +106,7 @@ export default {
           },
           { validator: checkCom, trigger: "blur" }
         ],
-        depedence_id: [
+        dependence_id: [
           { required: true, message: "请选择依赖的框架", trigger: "change" }
         ],
         description: [
@@ -119,24 +119,26 @@ export default {
     };
   },
   computed: {
-    ...mapState("group", {
-      comData: "comData"
+    ...mapState({
+      groups: "groups"
     }),
-    ...mapGetters(["frames"])
+    ...mapGetters("framework", {
+      frames: "frames"
+    })
   },
   methods: {
-    ...mapActions("group", [
-      "getGroups",
-      "delGroups",
-      "updateGroups",
-      "createGroups"
-    ]),
+    ...mapActions("framework", ["getFrameWorks"]),
+    ...mapActions(["getGroups", "delGroups", "updateGroups", "createGroups"]),
     submitForm() {
       this.$refs[REF_FORM].validate(valid => {
         if (valid) {
           this.comForm.id
-            ? this.updateGroups(this.comForm)
-            : this.createGroups(this.comForm);
+            ? this.updateGroups(this.comForm).finally(() => {
+                this.getFrameWorks();
+              })
+            : this.createGroups(this.comForm).finally(() => {
+                this.getFrameWorks();
+              });
           this.dialogComVisible = false;
         } else {
           this.$message({
@@ -160,7 +162,7 @@ export default {
         this.comForm.id = data.id;
         this.comForm.name = data.name;
         this.comForm.description = data.description;
-        this.comForm.depedence_id = data.depedence_id;
+        this.comForm.dependence_id = data.dependence_id;
         this.comForm.file_id = data.file_id;
         this.comForm.file_name = data.file_name;
       });
@@ -174,7 +176,9 @@ export default {
       this.dialogComVisible = true;
     },
     deleteData(data) {
-      this.delGroups({ id: data.id });
+      this.delGroups({ id: data.id }).finally(() => {
+        this.getFrameWorks();
+      });
     },
     handleAvatarSuccess(res) {
       this.comForm.file_id = res.filePath;

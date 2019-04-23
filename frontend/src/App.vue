@@ -8,18 +8,11 @@
 
 <script>
 import Home from "@/views/Home.vue";
-import { mapActions } from "vuex";
 
 export default {
   name: "app",
   components: {
     Home
-  },
-  methods: {
-    ...mapActions(["getFrameWorks"])
-  },
-  created() {
-    this.getFrameWorks();
   }
 };
 </script>

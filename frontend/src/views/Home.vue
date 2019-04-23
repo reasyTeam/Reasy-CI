@@ -3,9 +3,9 @@
     <el-container style="height: 100%;">
       <el-aside class="nav" style="width: 220px;">
         <div class="nav-title">
-          <el-select v-model="currentFWork" @change="log" class="nav-select" placeholder="请选择">
+          <el-select v-model="currentGroup" @change="log" class="nav-select" placeholder="请选择组件库">
             <el-option
-              v-for="item in frames"
+              v-for="item in groupNames"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import * as types from "@/store/types.js";
 
 // @ is an alias to /src
@@ -40,10 +40,10 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["pathToTitle", "frames"]),
-    currentFWork: {
+    ...mapGetters(["pathToTitle", "groupNames"]),
+    currentGroup: {
       get() {
-        return this.$store.state.currentFWork;
+        return this.$store.state.currentGroup;
       },
       set(value) {
         this.setFWork(value);
@@ -55,11 +55,15 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setFWork: types.SET_CUR_FRAMEWORK
+      setFWork: types.SET_CUR_GROUP
     }),
     log() {
-      console.log(this.currentFWork);
-    }
+      // console.log(this.currentGroup);
+    },
+    ...mapActions(["getGroups"])
+  },
+  created() {
+    this.getGroups();
   }
 };
 </script>

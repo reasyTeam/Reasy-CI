@@ -1,4 +1,4 @@
-const 代码生成配置 = {
+const generate = {
     htmlModels: {
         FormInput: '<input data-key="FormInput" type="{type}">'
     },
@@ -73,7 +73,7 @@ const components = {
             dataOptions: { // 重点考虑项如何配置
                 title: '数据校验项',
                 valueType: 'array',
-                itemType: 'object',
+                itemType: 'validate',
                 required: false,
                 defaultValue: []
             },
@@ -242,7 +242,7 @@ const components = {
             dataOptions: {
                 title: '数据校验项',
                 valueType: 'array',
-                itemType: 'object',
+                itemType: 'validate',
                 required: false,
                 defaultValue: ''
             },
@@ -335,7 +335,7 @@ const components = {
             dataOptions: {
                 title: '数据校验项',
                 valueType: 'array',
-                itemType: 'object',
+                itemType: 'validate',
                 required: false,
                 defaultValue: ''
             },
@@ -432,7 +432,7 @@ const components = {
             dataOptions: { // 重点考虑项如何配置
                 title: '数据校验项',
                 valueType: 'array',
-                itemType: 'object',
+                itemType: 'validate',
                 required: false,
                 defaultValue: []
             },
@@ -865,3 +865,245 @@ const components = {
         }
     }
 };
+
+const validate = {
+    len: {
+        title: '字符长度',
+        args: [{
+            title: '最小值',
+            required: false,
+            valueType: 'number'
+        }, {
+            title: '最大值',
+            required: false,
+            valueType: 'number'
+        }]
+    },
+    byteLen: {
+        title: '字节长度',
+        args: [{
+            title: '最小值',
+            required: false,
+            valueType: 'number'
+        }, {
+            title: '最大值',
+            required: false,
+            valueType: 'number'
+        }]
+    },
+    num: {
+        title: '数值大小',
+        args: [{
+            title: '最小值',
+            required: false,
+            valueType: 'number'
+        }, {
+            title: '最大值',
+            required: false,
+            valueType: 'number'
+        }]
+    },
+    ap: {
+        title: 'AP名称'
+    },
+    apPwd: {
+        title: 'AP密码'
+    },
+    float: {
+        title: '浮点数大小',
+        args: [{
+            title: '最小值',
+            required: false,
+            valueType: 'number'
+        }, {
+            title: '最大值',
+            required: false,
+            valueType: 'number'
+        }]
+    },
+    url: {
+        title: 'URL'
+    },
+    normalDomain: {
+        title: '通用域名'
+    },
+    authUrl: {
+        title: '认证URL'
+    },
+    phoneNumber: {
+        title: '电话号码',
+        args: [{
+            title: '号码长度',
+            required: false,
+            valueType: 'number'
+        }]
+    },
+    messageUrl: {
+        title: 'SMS-URL'
+    },
+    specailText: {
+        title: '特殊字符串',
+        args: [{
+            title: '被包含的字符串',
+            required: false,
+            valueType: 'string'
+        }, {
+            title: '错误提示信息',
+            required: true,
+            valueType: 'string'
+        }]
+    },
+    domain_special: {
+        title: 'dns定向转发域名'
+    },
+    domainName: {
+        title: 'dns劫持域名'
+    },
+    'mac.all': {
+        title: 'Mac地址'
+    },
+    'ip.all': { title: 'All IP' },
+    'ip.ipnet': { title: 'IPNET' },
+    'ip.specific': { title: 'Specific IP' },
+    privateIP: {
+        title: 'privateIP'
+    },
+    'ipSegment.all': {
+        title: "ipSegment"
+    },
+    //判断输入IP地址与lanIP是否在同一个网段
+    'netSegmentCheck.all': {
+        title: 'IP地址与lanIP是否在同一个网段'
+    },
+    mask: {
+        title: 'Mask'
+    },
+    // 可以输入全255.255.255.255
+    allMask: {
+        title: 'all Mask'
+    },
+    email: {
+        title: '邮箱'
+    },
+    smtpAccount: {
+        title: 'smtpAccount'
+    },
+    time: {
+        title: '时间验证'
+    },
+    hex: {
+        title: 'hex'
+    },
+    /**
+     * 检测是否包含全角字符
+     * @param  {[type]} str [待检测字符串]
+     * @return {[type]}     [true：包含全角字符 false:不包含]
+     */
+    chkHalf: {
+        title: '是否包含全角字符'
+    },
+    ascii: {
+        title: 'ascii',
+        args: [{
+            title: '最小字节长度',
+            required: false,
+            valueType: 'number'
+        }, {
+            title: '最大字节长度',
+            required: false,
+            valueType: 'number'
+        }]
+    },
+    pwd: {
+        title: '密码',
+        args: [{
+            title: '最小长度',
+            required: false,
+            valueType: 'number'
+        }, {
+            title: '最大长度',
+            required: false,
+            valueType: 'number'
+        }]
+    },
+    username: {
+        title: '用户名',
+        args: [{
+            title: '最小字节长度',
+            required: false,
+            valueType: 'number'
+        }, {
+            title: '最大字节长度',
+            required: false,
+            valueType: 'number'
+        }]
+    },
+    ssidPasword: {
+        title: 'SSID密码',
+        args: [{
+            title: '最小长度',
+            required: false,
+            valueType: 'number'
+        }, {
+            title: '最大长度',
+            required: false,
+            valueType: 'number'
+        }]
+    },
+    specialChar: {
+        title: '特殊字符',
+        args: [{
+            title: '不允许输入字符集合',
+            required: false,
+            valueType: 'string'
+        }]
+    },
+    remarkTxt: {
+        title: '备注',
+        args: [{
+            title: '最小字节长度',
+            required: false,
+            valueType: 'number'
+        }, {
+            title: '最大字节长度',
+            required: false,
+            valueType: 'number'
+        }]
+    },
+    noBlank: {
+        title: '不允许包含空格'
+    },
+    charTxt: {
+        title: '只允许包含数字和字母'
+    },
+    startEndNoBlank: {
+        title: '首尾不允许包含空格'
+    },
+    hostName: {
+        title: '主机名称'
+    },
+    serverName: {
+        title: '服务器名称',
+        args: [{
+            title: '最小长度',
+            required: false,
+            valueType: 'number'
+        }, {
+            title: '最大长度',
+            required: false,
+            valueType: 'number'
+        }]
+    },
+    lanMask: {
+        title: 'lan Mask'
+    },
+    nospace: {
+        title: '不允许包含空格'
+    },
+};
+
+module.exports = {
+    generate,
+    components,
+    validate
+}

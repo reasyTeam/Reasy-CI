@@ -1,5 +1,4 @@
 const store = require('./store');
-const storeNoMysql = require('./storeNoMysql');
 const CONFIG = require('../config/server');
 
 let api = CONFIG.api || '/';
@@ -33,7 +32,7 @@ class Midware {
     }
 
     generateStore() {
-        let storeApi = CONFIG.noMysql ? storeNoMysql : store;
+        let storeApi = store;
         // 初始化store
         for (let key in storeApi) {
             this.add(key, storeApi[key]);

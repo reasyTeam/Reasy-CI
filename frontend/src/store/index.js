@@ -2,17 +2,19 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import $http from '@/plugins/axios.js'
 import * as types from './types'
-import group from './modules/group'
+import components from './modules/components.js'
+import framework from './modules/framework.js'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     modules: {
-        group
+        framework,
+        components
     },
     state: {
-        frameWorks: [],
-        currentFWork: '',
+        currentGroup: '',
+        groups: [],
         pathList: [{
                 path: "/",
                 text: "README",
@@ -48,8 +50,8 @@ export default new Vuex.Store({
                 return val;
             }, {});
         },
-        frames: state => {
-            return state.frameWorks.map((item) => {
+        groupNames: state => {
+            return state.groups.map((item) => {
                 return {
                     value: item.id,
                     name: item.name
@@ -58,36 +60,36 @@ export default new Vuex.Store({
         }
     },
     mutations: {
-        [types.SET_FRAMEWORKS](state, frameWorks) {
-            state.frameWorks = frameWorks;
+        [types.SET_CUR_GROUP](state, currentGroup) {
+            state.currentGroup = currentGroup;
         },
-        [types.SET_CUR_FRAMEWORK](state, currentFWork) {
-            state.currentFWork = currentFWork;
+        [types.SET_GROUPS](state, data) {
+            state.groups = data;
         },
         [types.SET_TITLE](state, title) {
             state.title = title;
         }
     },
     actions: {
-        getFrameWorks({ commit }) {
-            $http.getData("getDependences").then(data => {
-                commit(types.SET_FRAMEWORKS, data);
-                commit(types.SET_CUR_FRAMEWORK, data.length > 0 ? data[0]['id'] : '');
+        getGroups({ commit }) {
+            $http.getData("getGroups").then(data => {
+                commit(types.SET_GROUPS, data);
+                commit(types.SET_CUR_GROUP, data.length > 0 ? data[0]['id'] : '');
             });
         },
-        delFrameWorks({ dispatch }, data) {
-            $http.setData("delDependences", data).then(data => {
-                dispatch('getFrameWorks');
+        delGroups({ dispatch }, data) {
+            $http.setData("delGroups", data).then(() => {
+                dispatch('getGroups');
             });
         },
-        updateFrameWorks({ dispatch }, data) {
-            $http.setData("updateDependences", data).then(data => {
-                dispatch('getFrameWorks');
+        updateGroups({ dispatch }, data) {
+            $http.setData("updateGroups", data).then(() => {
+                dispatch('getGroups');
             });
         },
-        createFrameWorks({ dispatch }, data) {
-            $http.setData("createDependences", data).then(data => {
-                dispatch('getFrameWorks');
+        createGroups({ dispatch }, data) {
+            $http.setData("createGroups", data).then(() => {
+                dispatch('getGroups');
             });
         }
     }

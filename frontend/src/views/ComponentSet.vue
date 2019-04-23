@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import GroupItem from "./Group.vue";
-import Framework from "./Framework.vue";
+import GroupItem from "./pageitem/Group.vue";
+import Framework from "./pageitem/Framework.vue";
 
 export default {
   components: {

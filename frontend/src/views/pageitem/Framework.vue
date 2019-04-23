@@ -84,23 +84,28 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState("framework", {
       frameData: "frameWorks"
     }),
-    ...mapGetters(["frames"])
+    ...mapGetters("framework", {
+      frames: "frames"
+    })
   },
   methods: {
-    ...mapActions([
+    ...mapActions("framework", [
       "getFrameWorks",
       "delFrameWorks",
       "updateFrameWorks",
       "createFrameWorks"
     ]),
+    ...mapActions(["getGroups"]),
     submitForm() {
       this.$refs[REF_FORM].validate(valid => {
         if (valid) {
           this.frameForm.id
-            ? this.updateFrameWorks(this.frameForm)
+            ? this.updateFrameWorks(this.frameForm).finally(() => {
+                this.getGroups();
+              })
             : this.createFrameWorks(this.frameForm);
           this.dialogFrameVisible = false;
         } else {
@@ -134,6 +139,14 @@ export default {
       this.dialogFrameVisible = true;
     },
     deleteData(data) {
+      if (data.used > 0) {
+        this.$message({
+          message: "该框架正在被使用，不能被删除！",
+          type: "error"
+        });
+        return false;
+      }
+
       this.delFrameWorks({ id: data.id });
     }
   },
