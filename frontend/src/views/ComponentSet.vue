@@ -2,17 +2,20 @@
   <div class="table-box">
     <framework></framework>
     <group-item></group-item>
+    <component-list></component-list>
   </div>
 </template>
 
 <script>
 import GroupItem from "./pageitem/Group.vue";
 import Framework from "./pageitem/Framework.vue";
+import ComponentList from "./pageitem/components.vue";
 
 export default {
   components: {
     GroupItem,
-    Framework
+    Framework,
+    ComponentList
   }
 };
 </script>

@@ -75,6 +75,7 @@ class Database {
             url: { type: Sequelize.STRING, allowNull: false }
         }, {
             freezeTableName: true
+            // todo by xc 更新列表时，更新getcomponents
         });
 
         /**
@@ -222,7 +223,6 @@ class Database {
         return new Promise((resolve, reject) => {
             //同步实例与DB
             const force = this.force;
-            // if (this.isFirst) {
             Promise.all([
                     this.tables.Dependence.sync({ force }),
                     this.tables.Module.sync({ force }),
@@ -238,12 +238,8 @@ class Database {
                 })
                 .then(resolve)
                 .catch(err => {
-                    console.info("初始化数据库结构时出现错误");
                     reject(err);
                 });
-            //     } else {
-            //         resolve();
-            //     }
         });
     }
 }

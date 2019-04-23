@@ -48,8 +48,9 @@ const api = {
 
     // 组件库库对应的组件操作 
     // 获取
-    'getComponents': function(models) {
-        return models.Dependence.query();
+    'getComponents': function(models, req) {
+        let data = req.body;
+        return models.FileDataBase.getComponents(data.id);
     },
     // 删除
     'delComponents': function(models, req) {

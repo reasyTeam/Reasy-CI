@@ -76,6 +76,9 @@ export default {
   computed: {
     ...mapState("components", {
       components: "components"
+    }),
+    ...mapState({
+      currentGroup: "currentGroup"
     })
   },
   methods: {
@@ -148,7 +151,9 @@ export default {
     }
   },
   created() {
-    this.getComponents();
+    this.getComponents({
+      id: this.currentGroup
+    });
   }
 };
 </script>

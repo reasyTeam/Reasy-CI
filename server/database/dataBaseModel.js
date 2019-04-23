@@ -40,8 +40,8 @@ function init() {
                 sequelize: dataBase.sequelize,
                 FileDataBase: new FileDataBase(dataBase)
             };
-        }).catch(() => {
-            console.log('数据库初始化出错！');
+        }).catch((error) => {
+            console.log('数据库初始化出错！' + error);
         });
 }
 

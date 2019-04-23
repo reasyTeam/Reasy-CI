@@ -3,7 +3,12 @@
     <el-container style="height: 100%;">
       <el-aside class="nav" style="width: 220px;">
         <div class="nav-title">
-          <el-select v-model="currentGroup" @change="log" class="nav-select" placeholder="请选择组件库">
+          <el-select
+            v-model="currentGroup"
+            @change="changeGroup"
+            class="nav-select"
+            placeholder="请添加组件库"
+          >
             <el-option
               v-for="item in groupNames"
               :key="item.value"
@@ -46,7 +51,7 @@ export default {
         return this.$store.state.currentGroup;
       },
       set(value) {
-        this.setFWork(value);
+        this.setCurGroup(value);
       }
     },
     title() {
@@ -55,12 +60,14 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setFWork: types.SET_CUR_GROUP
+      setCurGroup: types.SET_CUR_GROUP
     }),
-    log() {
-      // console.log(this.currentGroup);
+    changeGroup() {
+      // 重新获取组件列表
+      this.getComponents({ id: this.currentGroup });
     },
-    ...mapActions(["getGroups"])
+    ...mapActions(["getGroups"]),
+    ...mapActions("components", ["getComponents"])
   },
   created() {
     this.getGroups();

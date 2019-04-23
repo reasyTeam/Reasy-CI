@@ -14,23 +14,23 @@ export default {
         }
     },
     actions: {
-        getComponents({ commit }) {
-            $http.getData("getComponents").then(data => {
+        getComponents({ commit }, querydata) {
+            $http.getData("getComponents", querydata).then(data => {
                 commit(types.SET_COMPONENTS, data);
             });
         },
         delComponents({ dispatch }, data) {
-            $http.setData("delComponents", data).then(data => {
+            $http.setData("delComponents", data).then(() => {
                 dispatch('getComponents');
             });
         },
         updateComponents({ dispatch }, data) {
-            $http.setData("updateComponents", data).then(data => {
+            $http.setData("updateComponents", data).then(() => {
                 dispatch('getComponents');
             });
         },
         createComponents({ dispatch }, data) {
-            $http.setData("createComponents", data).then(data => {
+            $http.setData("createComponents", data).then(() => {
                 dispatch('getComponents');
             });
         }
