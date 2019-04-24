@@ -8,12 +8,14 @@ const CONFIG = require('./config/server');
 const opn = require('opn');
 const util = require('util');
 const multiparty = require('multiparty');
+const FileCheck = require('./generator/fileCheck');
 let api = CONFIG.api || '/';
 
 class ExpressModel {
     constructor() {
         this.app = express();
         this.tableModel = {};
+        this.fileCheck = new FileCheck();
         this.midware = '';
         this.init();
     }
@@ -109,36 +111,51 @@ class ExpressModel {
 
                     res.writeHead(200, { 'content-type': 'application/json' });
 
-                    if (ids && ids.length > 0) {
-                        this.tableModel.File.query({ id: +ids[0] }).then(data => {
-                            if (data.length > 0) {
-                                this.tableModel.File.update({
-                                    id: +data[0]['id'],
-                                    name,
-                                    url
-                                });
-                                // 删除原有的文件
-                                fs.unlink(data[0]['url'], (err) => {
-                                    if (err) throw err;
-                                });
+                    let errors = this.fileCheck.startCheck(url);
+                    if (errors.length > 0) {
+                        res.end(JSON.stringify({
+                            errors
+                        }));
+                        return;
+                    }
 
-                                res.end(JSON.stringify({
-                                    filePath: +ids[0],
-                                    fileName: name
-                                }));
-                            } else {
-                                // 添加资源
-                                this.tableModel.File.create({
-                                    name,
-                                    url
-                                }).then(data => {
-                                    // todo by xc验证最后是否返回新增的数据
+                    if (ids && ids.length > 0) {
+                        if (ids[0] === '') {
+                            createFileData.call(this);
+                        } else {
+                            this.tableModel.File.query({ id: +ids[0] }).then(data => {
+                                if (data.length > 0) {
+                                    this.tableModel.File.update({
+                                        id: +data[0]['id'],
+                                        name,
+                                        url
+                                    });
+                                    // 删除原有的文件
+                                    fs.unlink(data[0]['url'], (err) => {
+                                        if (err) throw err;
+                                    });
+
                                     res.end(JSON.stringify({
-                                        filePath: data.id,
-                                        fileName: data.name
+                                        filePath: +ids[0],
+                                        fileName: name
                                     }));
-                                });
-                            }
+                                } else {
+                                    // 添加资源
+                                    createFileData.call(this);
+                                }
+                            });
+                        }
+                    }
+
+                    function createFileData() {
+                        this.tableModel.File.create({
+                            name,
+                            url
+                        }).then(data => {
+                            res.end(JSON.stringify({
+                                filePath: data.id,
+                                fileName: data.name
+                            }));
                         });
                     }
                 } catch (err) {

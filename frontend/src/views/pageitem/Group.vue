@@ -22,6 +22,13 @@
     </el-collapse>
 
     <el-dialog title="新增组件库" :visible.sync="dialogComVisible" class="pop-dialog">
+      <el-dialog title="组件配置文件错误信息" :visible.sync="dialogErrorVisible">
+        如下是组件配置文件存在的错误信息，请修正：
+        <div v-for="(error, index) in errors" :key="index">
+          <label for>{{error.type}}</label>
+          <div>{{error.content}}</div>
+        </div>
+      </el-dialog>
       <el-form :model="comForm" :rules="comRules" ref="component" class="pop-form">
         <el-form-item label="框架名称" prop="name">
           <el-input v-model="comForm.name"></el-input>
@@ -45,8 +52,9 @@
             action="/api/upload"
             :data="comForm"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
+            :on-success="onSuccess"
+            :on-progress="onProgress"
+            :before-upload="beforeUpload"
           >
             <el-input placeholder="请上传文件" :disabled="true" v-model="comForm.file_name"></el-input>
             <el-button type="primary">{{comForm.file_name ? '点击更新':'点击上传'}}</el-button>
@@ -87,6 +95,7 @@ export default {
 
     return {
       dialogComVisible: false,
+      dialogErrorVisible: false,
       comForm: {
         id: "",
         name: "",
@@ -115,7 +124,8 @@ export default {
         file_id: [
           { required: true, message: "请上传组件配置文件", trigger: "change" }
         ]
-      }
+      },
+      errors: []
     };
   },
   computed: {
@@ -180,11 +190,28 @@ export default {
         this.getFrameWorks();
       });
     },
-    handleAvatarSuccess(res) {
-      this.comForm.file_id = res.filePath;
-      this.comForm.file_name = res.fileName;
+    onSuccess(res) {
+      // todo by xc 添加文件解析错误判断
+      if (res.errors) {
+        this.dialogErrorVisible = true;
+        this.errors = res.errors;
+        this.$refs[REF_FORM].clearFiles();
+      } else {
+        this.comForm.file_id = res.filePath;
+        this.comForm.file_name = res.fileName;
+      }
+      setTimeout(() => {
+        this.loading.close();
+      }, 1000);
     },
-    beforeAvatarUpload(file) {
+    onProgress() {
+      this.loading = this.$loading({
+        lock: true,
+        text: "正在解析文件...",
+        background: "rgba(255,255,255,0.5)"
+      });
+    },
+    beforeUpload(file) {
       const isJS = file.type === "text/javascript";
       const isLess = file.size / 1024 < 500;
 

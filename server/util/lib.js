@@ -68,10 +68,15 @@ function deepClone(obj, res) {
     return data;
 }
 
+function getType(obj) {
+    return Object.prototype.toString.call(obj).slice(8, -1);
+}
+
 module.exports = {
     log,
     LOG_TYPE,
     arrayToObject,
     objectToArray,
-    deepClone
+    deepClone,
+    getType
 }

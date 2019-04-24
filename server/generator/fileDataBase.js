@@ -20,24 +20,24 @@ class FileDataBase {
     }
 
     getJsData(id) {
-        return this.dataBase.tables.File.findAll({
-            where: {
-                id: id
-            }
-        }).then(data => {
-            if (data.length > 0) {
-                this._filePaht[id] = data[0].url;
-                // 数据处理
-                return fo.readJs(data[0].url);
-            } else {
-                log(`file_id[${id}]找不到对应的文件数据`, LOG_TYPE.WARNING);
+        return this.dataBase.sequelize
+            .query('SELECT url FROM `file` JOIN `group` WHERE `group`.file_id = `file`.id AND `group`.id = ' + id, {
+                type: this.dataBase.sequelize.QueryTypes.SELECT
+            })
+            .then(data => {
+                if (data.length > 0) {
+                    this._filePaht[id] = data[0].url;
+                    // 数据处理
+                    return fo.readJs(data[0].url);
+                } else {
+                    log(`file_id[${id}]找不到对应的文件数据`, LOG_TYPE.WARNING);
+                    return -1;
+                }
+            }).catch(e => {
+                // 错误处理
+                log(`获取File表数据出错，${LOG_TYPE}`, LOG_TYPE.ERROR);
                 return -1;
-            }
-        }).catch(e => {
-            // 错误处理
-            log(`获取File表数据出错，${LOG_TYPE}`, LOG_TYPE.ERROR);
-            return -1;
-        });
+            });
     }
 
     getData() {
@@ -85,6 +85,5 @@ class FileDataBase {
         return outData;
     }
 }
-
 
 module.exports = FileDataBase;

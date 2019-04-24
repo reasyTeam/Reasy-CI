@@ -103,7 +103,7 @@ const components = {
             },
             maxLength: {
                 title: '最大输入字符数',
-                valueType: 'num',
+                valueType: 'number',
                 required: false,
                 defaultValue: null
             },

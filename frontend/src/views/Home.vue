@@ -64,10 +64,15 @@ export default {
     }),
     changeGroup() {
       // 重新获取组件列表
-      this.getComponents({ id: this.currentGroup });
+      // this.getComponents({ id: this.currentGroup });
     },
     ...mapActions(["getGroups"]),
     ...mapActions("components", ["getComponents"])
+  },
+  watch: {
+    currentGroup() {
+      this.getComponents({ id: this.currentGroup });
+    }
   },
   created() {
     this.getGroups();

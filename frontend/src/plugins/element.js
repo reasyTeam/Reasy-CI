@@ -25,7 +25,8 @@ import {
     FormItem,
     Dialog,
     Upload,
-    Tag
+    Tag,
+    Loading
 } from 'element-ui'
 
 Vue.use(Row)
@@ -55,3 +56,4 @@ Vue.use(Upload)
 Vue.use(Tag)
 
 Vue.prototype.$message = Message;
+Vue.prototype.$loading = Loading.service;

@@ -71,10 +71,13 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        getGroups({ commit }) {
+        getGroups({ commit, state }) {
             $http.getData("getGroups").then(data => {
                 commit(types.SET_GROUPS, data);
-                commit(types.SET_CUR_GROUP, data.length > 0 ? data[0]['id'] : '');
+
+                if (state.currentGroup === '' || !data.some(item => item.id === state.currentGroup)) {
+                    commit(types.SET_CUR_GROUP, data.length > 0 ? data[0]['id'] : '');
+                }
             });
         },
         delGroups({ dispatch }, data) {
