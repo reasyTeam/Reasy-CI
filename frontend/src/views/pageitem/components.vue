@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-collapse value="1">
+    <el-collapse value="1" v-show="!!currentGroup || currentGroup === 0">
       <el-collapse-item title="组件实例" name="1">
         <div>
           <el-button type="primary" icon="el-icon-plus" size="small" @click="openDialog()">新增</el-button>

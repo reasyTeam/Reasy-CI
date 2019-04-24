@@ -8,6 +8,8 @@ const {
     deepClone
 } = require('../util/lib');
 
+const DEFAULT_CONFIG = {}
+
 class FileDataBase {
     constructor(dataBase) {
         this.dataBase = dataBase;
@@ -18,7 +20,7 @@ class FileDataBase {
     }
 
     getJsData(id) {
-        this.dataBase.tables.File.findAll({
+        return this.dataBase.tables.File.findAll({
             where: {
                 id: id
             }
@@ -43,13 +45,13 @@ class FileDataBase {
         if (this.cacheData[id]) {
             return Promise.resolve();
         }
-        this.getJsData(id)
+        return this.getJsData(id)
             .then(data => {
                 if (data === -1) {
                     return -1;
                 } else {
                     this.cacheData[id] = data;
-                    this.cacheData[id].component_list = this.formatComponents(data.components);
+                    this.cacheData[id].components_list = this.formatComponents(data.components);
                 }
             });
     }
@@ -61,8 +63,13 @@ class FileDataBase {
     getComponents(id) {
         this._id = id;
         return this.getData()
-            .then(() => {
-                return this.cacheData[id].component_list;
+            .then((data) => {
+                if (data === -1) {
+                    return {
+                        error: -1
+                    };
+                }
+                return this.cacheData[id].components_list;
             });
     }
 
@@ -70,7 +77,7 @@ class FileDataBase {
         let outData = [];
 
         if (components && components.commonAttrs) {
-            outData = components.map(item => {
+            outData = components.components.map(item => {
                 item.attrs = Object.assign(deepClone(components.commonAttrs), item.attrs);
                 return item;
             });

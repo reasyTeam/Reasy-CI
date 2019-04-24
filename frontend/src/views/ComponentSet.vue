@@ -25,7 +25,7 @@ export default {
   border-radius: 4px;
   padding: 12px;
   max-width: 1200px;
-  margin: 20px auto 0;
+  margin: 0 auto;
 }
 
 .table-box {

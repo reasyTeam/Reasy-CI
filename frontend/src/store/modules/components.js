@@ -15,6 +15,10 @@ export default {
     },
     actions: {
         getComponents({ commit }, querydata) {
+            if (!querydata || querydata.id === '' || querydata.id === undefined) {
+                return;
+            }
+
             $http.getData("getComponents", querydata).then(data => {
                 commit(types.SET_COMPONENTS, data);
             });

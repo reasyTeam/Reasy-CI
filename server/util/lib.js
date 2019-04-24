@@ -8,6 +8,10 @@ const LOG_TYPE = {
 };
 
 const log = function(mess, type = LOG_TYPE.NORMAL) {
+    if (type === LOG_TYPE.ERROR && mess.message) {
+        mess = mess.message + '\n' + mess.stack;
+    }
+
     mess = `[${LOG_TYPE[type]}]-[${mess}]`;
 
     switch (type) {

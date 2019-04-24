@@ -1,6 +1,6 @@
 const generate = {
     htmlModels: {
-        FormInput: '<input data-key="FormInput" type="{type}">'
+        'v-Input': '<input data-key="v-Input" type="{type}">'
     },
     // 好像不需要喔，直接根据内容去选择即可
     jsModels: {},
@@ -19,7 +19,7 @@ const generate = {
 // },
 const components = {
     components: [{
-        name: 'FormInput',
+        name: 'v-Input',
         title: '文本框',
         isContainer: false,
         attrs: {
@@ -94,76 +94,10 @@ const components = {
                 valueType: 'string',
                 required: false,
                 defaultValue: ''
-            },
-            regExp: {
-                title: '允许输入项的正则',
-                valueType: 'regexp',
-                required: false,
-                defaultValue: null
-            },
-            maxLength: {
-                title: '最大输入字符数',
-                valueType: 'num',
-                required: false,
-                defaultValue: null
-            },
-            maxCallBack: {
-                title: '值大于max回调',
-                valueType: 'function',
-                required: false,
-                defaultValue: null
-            },
-            switchCallBack: {
-                title: '切换模式回调',
-                valueType: 'function',
-                required: false,
-                defaultValue: null
-            },
-            focusCallBack: {
-                title: '聚焦回调',
-                valueType: 'function',
-                required: false,
-                defaultValue: null
-            },
-            blurCallBack: {
-                title: '失焦回调',
-                valueType: 'function',
-                required: false,
-                defaultValue: null
             }
         }
     }, {
-        name: 'FormCalendar',
-        title: '日期',
-        isContainer: false,
-        attrs: {
-            hasWeekday: {
-                title: '是否显示星期',
-                valueType: 'bool',
-                required: false,
-                defaultValue: false
-            },
-            startYear: {
-                title: '开始年份',
-                valueType: 'number',
-                required: true,
-                defaultValue: 1970
-            },
-            endYear: {
-                title: '结束年份',
-                valueType: 'number',
-                required: true,
-                defaultValue: 2037
-            },
-            scanAble: {
-                title: '是否可进行输入',
-                valueType: 'bool',
-                required: false,
-                defaultValue: true
-            }
-        }
-    }, {
-        name: 'FormCheckbox',
+        name: 'v-Checkbox',
         title: '复选框',
         isContainer: false,
         attrs: {
@@ -175,7 +109,7 @@ const components = {
             }
         }
     }, {
-        name: 'FormCheckList',
+        name: 'v-CheckList',
         title: '多选框',
         isContainer: false,
         attrs: {
@@ -216,75 +150,7 @@ const components = {
             }
         }
     }, {
-        name: 'FormDropDownList',
-        title: '下拉框',
-        isContainer: false,
-        attrs: {
-            selectArray: {
-                title: '选项列表',
-                valueType: 'array',
-                itemType: 'object',
-                required: false,
-                defaultValue: []
-            },
-            customText: {
-                title: '自定义值，不为空则表明可手动输入',
-                valueType: 'string',
-                required: false,
-                defaultValue: ''
-            },
-            customTextSync: {
-                title: '自定义选项的文本与自定义的值保持一致',
-                valueType: 'bool',
-                required: false,
-                defaultValue: false
-            },
-            dataOptions: {
-                title: '数据校验项',
-                valueType: 'array',
-                itemType: 'validate',
-                required: false,
-                defaultValue: ''
-            },
-            maxLength: {
-                title: '最大输入字符个数',
-                valueType: 'number',
-                required: false,
-                defaultValue: null
-            },
-            switchCallBack: {
-                title: 'xxxxx',
-                valueType: 'function',
-                required: false,
-                defaultValue: ''
-            },
-            clickCallBack: {
-                title: 'xxxxx',
-                valueType: 'function',
-                required: false,
-                defaultValue: ''
-            },
-            hideCallBack: {
-                title: 'xxxxx',
-                valueType: 'function',
-                required: false,
-                defaultValue: ''
-            },
-            blurCallBack: {
-                title: 'xxxxx',
-                valueType: 'function',
-                required: false,
-                defaultValue: ''
-            },
-            focusCallBack: {
-                title: 'xxxxx',
-                valueType: 'function',
-                required: false,
-                defaultValue: ''
-            }
-        }
-    }, {
-        name: 'FormRadioList',
+        name: 'v-RadioList',
         title: '单选框',
         isContainer: false,
         attrs: {
@@ -303,65 +169,8 @@ const components = {
             }
         }
     }, {
-        name: 'FormMultiInput',
-        title: '多文本输入框',
-        isContainer: false,
-        attrs: {
-            text: {
-                title: '文本框前面显示的文本',
-                valueType: 'string',
-                required: false,
-                defaultValue: ''
-            },
-            maxLength: {
-                title: '最大输入字符数',
-                valueType: 'number',
-                required: false,
-                defaultValue: null
-            },
-            regExp: {
-                title: '输入校验正则',
-                valueType: 'regexp',
-                required: false,
-                defaultValue: null
-            },
-            valueType: {
-                title: '值类型',
-                valueType: 'enum',
-                selectArray: [{ text: '字符串', value: 1 }, { text: '数组', value: 2 }],
-                required: false,
-                defaultValue: 1
-            },
-            dataOptions: {
-                title: '数据校验项',
-                valueType: 'array',
-                itemType: 'validate',
-                required: false,
-                defaultValue: ''
-            },
-            inputCfg: {
-                title: '文本输入框的的配置信息',
-                valueType: 'array',
-                itemType: 'object',
-                required: false,
-                defaultValue: ''
-            },
-            inputCount: {
-                title: '文本框个数',
-                valueType: 'number',
-                required: false,
-                defaultValue: 0
-            },
-            joiner: {
-                title: '数据连接符',
-                valueType: 'string',
-                required: false,
-                defaultValue: '.'
-            }
-        }
-    }, {
-        name: 'FormPercent',
-        title: '',
+        name: 'v-Percent',
+        title: '百分比滑块',
         isContainer: false,
         attrs: {
             start: {
@@ -390,30 +199,7 @@ const components = {
             }
         }
     }, {
-        name: 'FormTab',
-        title: 'Tab页签',
-        isContainer: false,
-        attrs: {
-            selectArray: {
-                title: '选项列表',
-                valueType: 'array',
-                itemType: 'object',
-                required: false,
-                defaultValue: []
-            },
-            theme: {
-                title: '显示主题',
-                valueType: 'enum',
-                selectItem: [{
-                    text: '线条显示',
-                    value: 'line-theme'
-                }, { text: '色块显示', value: 'bg-theme' }],
-                required: false,
-                defaultValue: 'line-theme'
-            }
-        }
-    }, {
-        name: 'FormTextarea',
+        name: 'v-Textarea',
         title: '多行文本框',
         isContainer: false,
         attrs: {
@@ -468,7 +254,7 @@ const components = {
             }
         }
     }, {
-        name: 'FormUpload',
+        name: 'v-Upload',
         title: '上传',
         isContainer: false,
         attrs: {
@@ -544,7 +330,7 @@ const components = {
             }
         }
     }, {
-        name: 'FormTable',
+        name: 'v-Table',
         title: '表格',
         isContainer: false,
         ignorCommon: true,
@@ -765,345 +551,22 @@ const components = {
             required: false,
             defaultValue: true
         },
-        ignore: {
-            title: '是否忽略组件',
-            valueType: 'enum',
-            selectArray: [true, false, undefined],
-            required: false,
-            defaultValue: undefined
-        },
-        sync: {
-            title: '是否同步',
-            valueType: 'string',
-            required: false,
-            defaultValue: ''
-        },
-        css: {
-            title: '自定义样式类',
-            valueType: 'string',
-            required: false,
-            defaultValue: ''
-        },
-        needWrap: {
-            title: '组件最外层是否需要容器包裹',
-            valueType: 'bool',
-            required: false,
-            defaultValue: true
-        },
         required: {
             title: '是否必填',
             valueType: 'bool',
             required: false,
             defaultValue: true
         },
-        autoValidate: {
-            title: '是否自动进行数据校验',
-            valueType: 'bool',
-            required: false,
-            defaultValue: true
-        },
-        autoChange: {
-            title: 'setValue是否自动执行change事件',
-            valueType: 'bool',
-            required: false,
-            defaultValue: true
-        },
-        defaultValue: {
-            title: '默认值',
-            valueType: this.dataValueType.valueType,
-            required: false,
-            defaultValue: ''
-        },
-        dataValueType: {
-            title: '值类型',
-            valueType: 'enum', // bool, num, float, string
-            selectArray: ['bool', 'num', 'float', 'string'],
-            required: false,
-            defaultValue: 'string'
-        },
         description: {
             title: '描述信息',
             valueType: 'string',
             required: false,
             defaultValue: ''
-        },
-        desClass: {
-            title: '描述信息css类',
-            valueType: 'string',
-            required: false,
-            defaultValue: ''
-        },
-        validateCustom: {
-            title: '自定义错误信息提示方式',
-            valueType: 'function',
-            required: false,
-            defaultValue: null
-        },
-        changeCallBack: {
-            title: '组件值改变回调函数',
-            valueType: 'function',
-            required: false,
-            defaultValue: null
-        },
-        validateCallBack: {
-            title: '数据校验回调函数',
-            valueType: 'function',
-            required: false,
-            defaultValue: null
-        },
-        afterChangeCallBack: {
-            title: '组值改变后回调',
-            valueType: 'function',
-            required: false,
-            defaultValue: null
-        },
-        renderedCallBack: {
-            title: '组件渲染完成后的回调',
-            valueType: 'function',
-            required: false,
-            defaultValue: null
         }
     }
 };
 
-const validate = {
-    len: {
-        title: '字符长度',
-        args: [{
-            title: '最小值',
-            required: false,
-            valueType: 'number'
-        }, {
-            title: '最大值',
-            required: false,
-            valueType: 'number'
-        }]
-    },
-    byteLen: {
-        title: '字节长度',
-        args: [{
-            title: '最小值',
-            required: false,
-            valueType: 'number'
-        }, {
-            title: '最大值',
-            required: false,
-            valueType: 'number'
-        }]
-    },
-    num: {
-        title: '数值大小',
-        args: [{
-            title: '最小值',
-            required: false,
-            valueType: 'number'
-        }, {
-            title: '最大值',
-            required: false,
-            valueType: 'number'
-        }]
-    },
-    ap: {
-        title: 'AP名称'
-    },
-    apPwd: {
-        title: 'AP密码'
-    },
-    float: {
-        title: '浮点数大小',
-        args: [{
-            title: '最小值',
-            required: false,
-            valueType: 'number'
-        }, {
-            title: '最大值',
-            required: false,
-            valueType: 'number'
-        }]
-    },
-    url: {
-        title: 'URL'
-    },
-    normalDomain: {
-        title: '通用域名'
-    },
-    authUrl: {
-        title: '认证URL'
-    },
-    phoneNumber: {
-        title: '电话号码',
-        args: [{
-            title: '号码长度',
-            required: false,
-            valueType: 'number'
-        }]
-    },
-    messageUrl: {
-        title: 'SMS-URL'
-    },
-    specailText: {
-        title: '特殊字符串',
-        args: [{
-            title: '被包含的字符串',
-            required: false,
-            valueType: 'string'
-        }, {
-            title: '错误提示信息',
-            required: true,
-            valueType: 'string'
-        }]
-    },
-    domain_special: {
-        title: 'dns定向转发域名'
-    },
-    domainName: {
-        title: 'dns劫持域名'
-    },
-    'mac.all': {
-        title: 'Mac地址'
-    },
-    'ip.all': { title: 'All IP' },
-    'ip.ipnet': { title: 'IPNET' },
-    'ip.specific': { title: 'Specific IP' },
-    privateIP: {
-        title: 'privateIP'
-    },
-    'ipSegment.all': {
-        title: "ipSegment"
-    },
-    //判断输入IP地址与lanIP是否在同一个网段
-    'netSegmentCheck.all': {
-        title: 'IP地址与lanIP是否在同一个网段'
-    },
-    mask: {
-        title: 'Mask'
-    },
-    // 可以输入全255.255.255.255
-    allMask: {
-        title: 'all Mask'
-    },
-    email: {
-        title: '邮箱'
-    },
-    smtpAccount: {
-        title: 'smtpAccount'
-    },
-    time: {
-        title: '时间验证'
-    },
-    hex: {
-        title: 'hex'
-    },
-    /**
-     * 检测是否包含全角字符
-     * @param  {[type]} str [待检测字符串]
-     * @return {[type]}     [true：包含全角字符 false:不包含]
-     */
-    chkHalf: {
-        title: '是否包含全角字符'
-    },
-    ascii: {
-        title: 'ascii',
-        args: [{
-            title: '最小字节长度',
-            required: false,
-            valueType: 'number'
-        }, {
-            title: '最大字节长度',
-            required: false,
-            valueType: 'number'
-        }]
-    },
-    pwd: {
-        title: '密码',
-        args: [{
-            title: '最小长度',
-            required: false,
-            valueType: 'number'
-        }, {
-            title: '最大长度',
-            required: false,
-            valueType: 'number'
-        }]
-    },
-    username: {
-        title: '用户名',
-        args: [{
-            title: '最小字节长度',
-            required: false,
-            valueType: 'number'
-        }, {
-            title: '最大字节长度',
-            required: false,
-            valueType: 'number'
-        }]
-    },
-    ssidPasword: {
-        title: 'SSID密码',
-        args: [{
-            title: '最小长度',
-            required: false,
-            valueType: 'number'
-        }, {
-            title: '最大长度',
-            required: false,
-            valueType: 'number'
-        }]
-    },
-    specialChar: {
-        title: '特殊字符',
-        args: [{
-            title: '不允许输入字符集合',
-            required: false,
-            valueType: 'string'
-        }]
-    },
-    remarkTxt: {
-        title: '备注',
-        args: [{
-            title: '最小字节长度',
-            required: false,
-            valueType: 'number'
-        }, {
-            title: '最大字节长度',
-            required: false,
-            valueType: 'number'
-        }]
-    },
-    noBlank: {
-        title: '不允许包含空格'
-    },
-    charTxt: {
-        title: '只允许包含数字和字母'
-    },
-    startEndNoBlank: {
-        title: '首尾不允许包含空格'
-    },
-    hostName: {
-        title: '主机名称'
-    },
-    serverName: {
-        title: '服务器名称',
-        args: [{
-            title: '最小长度',
-            required: false,
-            valueType: 'number'
-        }, {
-            title: '最大长度',
-            required: false,
-            valueType: 'number'
-        }]
-    },
-    lanMask: {
-        title: 'lan Mask'
-    },
-    nospace: {
-        title: '不允许包含空格'
-    },
-};
-
 module.exports = {
     generate,
-    components,
-    validate
+    components
 }
