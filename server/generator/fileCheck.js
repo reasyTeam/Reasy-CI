@@ -92,8 +92,7 @@ class FileCheck {
 
         components.components.forEach(cmpt => {
             let propertys = required.components.propertys;
-            let _name = cmpt.name,
-                _attrs = required.components.attrs;
+            let _name = cmpt.name || '未知';
 
             // 组件属性验证 propertys
             propertys.forEach(pro => {
@@ -108,6 +107,7 @@ class FileCheck {
     }
 
     checkAttrs(attrs, name) {
+        let _attrs = required.components.attrs;
         for (let key in attrs) {
             let _propertys = attrs[key];
 
@@ -127,7 +127,7 @@ class FileCheck {
             }
 
             if (!reg_valuetype.test(_valueType)) {
-                this.addError('组件属性配置错误', `[${name}]属性配置项[${pro}]只能为[enum|number|function|string|bool|array|regexp|sync]中的一个`);
+                this.addError('组件属性配置错误', `[${name}]属性配置项[valueType]只能为[enum|number|function|string|bool|array|regexp|sync]中的一个`);
             } else if (_dep = _deps[_valueType]) {
                 // 属性值依赖验证
                 if (_propertys[_dep.name] === undefined || _propertys[_dep.name] === null) {

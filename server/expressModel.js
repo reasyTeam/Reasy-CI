@@ -97,7 +97,6 @@ class ExpressModel {
                 }
 
                 try {
-
                     if (!files.file || files.file.length === 0) {
                         res.writeHead(200, { 'content-type': 'application/json' });
                         res.end(JSON.stringify({ error: 'need a file' }));
@@ -109,13 +108,16 @@ class ExpressModel {
                         name = inputFile.originalFilename,
                         url = inputFile.path;
 
-                    res.writeHead(200, { 'content-type': 'application/json' });
-
                     let errors = this.fileCheck.startCheck(url);
                     if (errors.length > 0) {
+                        res.writeHead(200, { 'content-type': 'application/json' });
                         res.end(JSON.stringify({
                             errors
                         }));
+                        // 删除原有的文件
+                        fs.unlink(url, (err) => {
+                            if (err) throw err;
+                        });
                         return;
                     }
 
@@ -134,7 +136,7 @@ class ExpressModel {
                                     fs.unlink(data[0]['url'], (err) => {
                                         if (err) throw err;
                                     });
-
+                                    res.writeHead(200, { 'content-type': 'application/json' });
                                     res.end(JSON.stringify({
                                         filePath: +ids[0],
                                         fileName: name
@@ -152,6 +154,7 @@ class ExpressModel {
                             name,
                             url
                         }).then(data => {
+                            res.writeHead(200, { 'content-type': 'application/json' });
                             res.end(JSON.stringify({
                                 filePath: data.id,
                                 fileName: data.name

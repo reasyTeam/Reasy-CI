@@ -22,13 +22,6 @@
     </el-collapse>
 
     <el-dialog title="新增组件库" :visible.sync="dialogComVisible" class="pop-dialog">
-      <el-dialog title="组件配置文件错误信息" :visible.sync="dialogErrorVisible">
-        如下是组件配置文件存在的错误信息，请修正：
-        <div v-for="(error, index) in errors" :key="index">
-          <label for>{{error.type}}</label>
-          <div>{{error.content}}</div>
-        </div>
-      </el-dialog>
       <el-form :model="comForm" :rules="comRules" ref="component" class="pop-form">
         <el-form-item label="框架名称" prop="name">
           <el-input v-model="comForm.name"></el-input>
@@ -65,6 +58,14 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogComVisible=false">取 消</el-button>
         <el-button type="primary" @click="submitForm()">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="组件配置文件错误信息" :visible.sync="dialogErrorVisible" width="60%">
+      <h3 style="margin-top:0;">如下是组件配置文件存在的错误信息，请修正：</h3>
+      <div v-for="(error, index) in errors" :key="index" style="line-height:24px;">
+        <label style="font-weight: bold;">{{error.type}}</label>:
+        <label>{{error.content}}</label>
       </div>
     </el-dialog>
   </div>
@@ -195,7 +196,7 @@ export default {
       if (res.errors) {
         this.dialogErrorVisible = true;
         this.errors = res.errors;
-        this.$refs[REF_FORM].clearFiles();
+        // this.$refs[REF_FORM].clearFiles();
       } else {
         this.comForm.file_id = res.filePath;
         this.comForm.file_name = res.fileName;
