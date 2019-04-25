@@ -56,4 +56,5 @@ Vue.use(Upload)
 Vue.use(Tag)
 
 Vue.prototype.$message = Message;
+Vue.myMess = Message;
 Vue.prototype.$loading = Loading.service;

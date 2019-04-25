@@ -19,7 +19,7 @@
       </el-collapse-item>
     </el-collapse>
 
-    <el-dialog title="新增框架" :visible.sync="dialogFrameVisible" class="pop-dialog">
+    <el-dialog :title="title" :visible.sync="dialogFrameVisible" class="pop-dialog">
       <el-form :model="frameForm" :rules="frameRules" ref="framework" class="pop-form">
         <el-form-item label="框架名称" prop="name">
           <el-input v-model="frameForm.name"></el-input>
@@ -61,6 +61,7 @@ export default {
 
     return {
       dialogFrameVisible: false,
+      title: "",
       frameForm: {
         id: "",
         name: "",
@@ -126,6 +127,7 @@ export default {
     },
     editData(data) {
       this.resetForm();
+      this.title = "修改框架";
       this.dialogFrameVisible = true;
       this.$nextTick(function() {
         this.frameForm.id = data.id;
@@ -135,6 +137,7 @@ export default {
     },
     openDialog() {
       this.resetForm();
+      this.title = "新增框架";
       this.frameForm.id = "";
       this.dialogFrameVisible = true;
     },

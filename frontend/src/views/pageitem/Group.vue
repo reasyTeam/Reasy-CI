@@ -21,7 +21,7 @@
       </el-collapse-item>
     </el-collapse>
 
-    <el-dialog title="新增组件库" :visible.sync="dialogComVisible" class="pop-dialog">
+    <el-dialog :title="title" :visible.sync="dialogComVisible" class="pop-dialog">
       <el-form :model="comForm" :rules="comRules" ref="component" class="pop-form">
         <el-form-item label="框架名称" prop="name">
           <el-input v-model="comForm.name"></el-input>
@@ -61,10 +61,10 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="组件配置文件错误信息" :visible.sync="dialogErrorVisible" width="60%">
-      <h3 style="margin-top:0;">如下是组件配置文件存在的错误信息，请修正：</h3>
+    <el-dialog title="组件配置文件错误信息" :visible.sync="dialogErrorVisible" width="700px" class="error">
+      <h3 class="head">以下是组件配置文件存在的错误信息，请修正后重新上传：</h3>
       <div v-for="(error, index) in errors" :key="index" style="line-height:24px;">
-        <label style="font-weight: bold;">{{error.type}}</label>:
+        <label class="title">{{index+1}}. {{error.type}}</label>:
         <label>{{error.content}}</label>
       </div>
     </el-dialog>
@@ -97,6 +97,7 @@ export default {
     return {
       dialogComVisible: false,
       dialogErrorVisible: false,
+      title: "新增组件库",
       comForm: {
         id: "",
         name: "",
@@ -169,6 +170,7 @@ export default {
     },
     editData(data) {
       this.resetForm();
+      this.title = "修改组件库";
       this.$nextTick(function() {
         this.comForm.id = data.id;
         this.comForm.name = data.name;
@@ -181,6 +183,7 @@ export default {
     },
     openDialog() {
       this.resetForm();
+      this.title = "新增组件库";
       this.comForm.file_name = "";
       this.comForm.id = "";
       this.comForm.file_id = "";
@@ -192,18 +195,26 @@ export default {
       });
     },
     onSuccess(res) {
-      // todo by xc 添加文件解析错误判断
-      if (res.errors) {
-        this.dialogErrorVisible = true;
-        this.errors = res.errors;
-        // this.$refs[REF_FORM].clearFiles();
-      } else {
-        this.comForm.file_id = res.filePath;
-        this.comForm.file_name = res.fileName;
-      }
       setTimeout(() => {
         this.loading.close();
-      }, 1000);
+        if (res.errors) {
+          this.dialogErrorVisible = true;
+          this.errors = res.errors;
+          // this.$refs[REF_FORM].clearFiles();
+        } else if (res.error) {
+          this.$message({
+            message: res.error,
+            type: "error"
+          });
+        } else {
+          this.comForm.file_id = res.filePath;
+          this.comForm.file_name = res.fileName;
+          this.$message({
+            message: "配置上传成功",
+            type: "success"
+          });
+        }
+      }, 100);
     },
     onProgress() {
       this.loading = this.$loading({
@@ -235,6 +246,16 @@ export default {
   .el-input {
     width: 200px;
     margin-right: 22px;
+  }
+}
+.error {
+  .head {
+    color: red;
+    margin: -20px 0 10px;
+  }
+
+  .title {
+    font-weight: bold;
   }
 }
 </style>

@@ -42,7 +42,11 @@ function request(url, data = '', method = 'post', responseType = 'json') {
         .then(response => {
             let data = response.data;
 
-            if (data && data.error === -1) {
+            if (data === -1 || data.error === -1) {
+                Vue.myMess({
+                    message: '服务器错误，请稍后再试',
+                    type: "error"
+                });
                 return -1;
             }
             return data;
@@ -54,6 +58,11 @@ function request(url, data = '', method = 'post', responseType = 'json') {
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
             }
+
+            Vue.myMess({
+                message: '服务器错误，请稍后再试',
+                type: "error"
+            });
             return -1;
         });
 }
