@@ -79,10 +79,10 @@ const fo = {
         let outStream = JSON.stringify(data, null, 4);
 
         if (needModule) {
-            outStream += `module.exports = {\r\n\t${outStream}\r\n}`;
+            outStream = `module.exports = ${outStream}`;
         }
         try {
-            fs.writeFileSync(src, data);
+            fs.writeFileSync(src, outStream);
         } catch (e) {
             log(e, LOG_TYPE.ERROR);
         }

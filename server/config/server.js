@@ -3,7 +3,7 @@ module.exports = {
     // context: '../frontend'
     context: '',
     // 写入文件根目录
-    writePath: './upload',
+    writePath: './uploads',
     // 服务器端口号
     port: 8888,
     api: '/api/',

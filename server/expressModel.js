@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-// const fs = require('fs');
+const fs = require('fs');
 const Midware = require('./midware/midware');
 const dbModel = require('./database/dataBaseModel');
 const CONFIG = require('./config/server');
@@ -68,6 +68,7 @@ class ExpressModel {
         dbModel().then((data) => {
             this.tableModel = data;
             this.initMidware();
+            this.initDownloadMidware();
         }).then(() => {
             this.afterInit();
             // 处理接下来的逻辑
@@ -92,7 +93,7 @@ class ExpressModel {
 
     initUploadMidware() {
 
-        this.app.use(`${api}upload`, (req, res, ) => {
+        this.app.use(`${api}upload`, (req, res) => {
             let form = new multiparty.Form({ uploadDir });
 
             form.parse(req, (err, fields, files) => {
@@ -174,6 +175,32 @@ class ExpressModel {
 
             });
         });
+    }
+
+    initDownloadMidware() {
+        this.app.use(`${api}download`, (req, res) => {
+            let id = req.query.id,
+                fileName = req.query.fileName;
+
+            this.tableModel.File.query({
+                id: id
+            }).then(data => {
+                if (data.length > 0) {
+                    res.set({
+                        "Content-type": "application/octet-stream",
+                        "Content-Disposition": "attachment;filename=" + encodeURI(fileName)
+                    });
+                    let fReadStream = fs.createReadStream(path.join(fo.cwd, data[0]['url']));
+                    fReadStream.on("data", function(chunk) { res.write(chunk, "binary") });
+                    fReadStream.on("end", function() {
+                        res.end();
+                    });
+                    // res.status(200).download(path.join(fo.cwd, data[0]['url']), fileName);
+                } else {
+                    res.status(404).end();
+                }
+            });
+        })
     }
 
     run() {

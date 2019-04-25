@@ -8,7 +8,14 @@
             <el-table-column prop="name" label="组件库"></el-table-column>
             <el-table-column prop="depedence_name" label="框架"></el-table-column>
             <el-table-column prop="description" label="备注"></el-table-column>
-            <el-table-column prop="file_name" label="配置文件名称"></el-table-column>
+            <el-table-column prop="file_name" label="配置文件名称">
+              <template v-slot="scope">
+                <a
+                  href="#"
+                  @click="download(scope.row.file_id, scope.row.file_name)"
+                >{{scope.row.file_name}}</a>
+              </template>
+            </el-table-column>
             <el-table-column prop="createdAt" label="创建日期"></el-table-column>
             <el-table-column fixed="right" width="150" label="操作">
               <template v-slot="scope">
@@ -234,6 +241,9 @@ export default {
         this.$message.error("上传配置文件大小不能超过 500kb!");
       }
       return isJS && isLess;
+    },
+    download(id, fileName) {
+      this.$http.getData("/download", { id, fileName }, "get");
     }
   },
   created() {
