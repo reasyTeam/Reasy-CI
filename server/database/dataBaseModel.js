@@ -3,9 +3,8 @@ const DataBase = require('./dataBase');
 const Sequelize = require('sequelize');
 const FileDataBase = require('../generator/fileDataBase');
 const Op = Sequelize.Op;
-const fs = require('fs');
-const path = require('path');
-const cwd = process.cwd();
+const util = require('../util/lib');
+const fo = require('../util/fileOperation');
 
 function init() {
     let dataBase = new DataBase();
@@ -27,9 +26,7 @@ function init() {
                             }
                         }).then(data => {
                             // 删除对应的文件
-                            fs.unlink(data[0]['url'], (err) => {
-                                if (err) throw err;
-                            });
+                            fo.unlink(data[0]['url']);
                         })
                     }
                 }),
@@ -41,7 +38,7 @@ function init() {
                 FileDataBase: new FileDataBase(dataBase)
             };
         }).catch((error) => {
-            console.log('数据库初始化出错！' + error);
+            util.log('数据库初始化出错！' + error, util.LOG_TYPE.ERROR);
         });
 }
 

@@ -3,8 +3,6 @@ const fo = require('../util/fileOperation');
 const {
     log,
     LOG_TYPE,
-    arrayToObject,
-    objectToArray,
     deepClone
 } = require('../util/lib');
 

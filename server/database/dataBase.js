@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const config = require('../config/mysql');
 const Op = Sequelize.Op;
+const util = require('../util/lib');
 
 class Database {
     constructor() {
@@ -19,17 +20,17 @@ class Database {
             .then(this.initTable)
             .then(this.createTable)
             .then(() => {
-                console.log("数据库初始化完毕!");
+                util.log("数据库初始化完毕!");
             })
             .catch(err => {
-                console.log(err);
+                util.log(err, util.LOG_TYPE.ERROR);
             });
 
     }
 
     connectDatabase() {
         return new Promise((resolve, reject) => {
-            console.log('数据库连接...')
+            util.log('数据库连接...')
             this.sequelize = new Sequelize({
                 database: config.database,
                 username: config.username,
@@ -52,11 +53,11 @@ class Database {
             this.sequelize
                 .authenticate()
                 .then(() => {
-                    console.log('数据库连接成功！');
+                    util.log('数据库连接成功！');
                     resolve();
                 })
                 .catch(err => {
-                    console.error('数据库连接失败！');
+                    util.log('数据库连接失败！', util.LOG_TYPE.ERROR);
                     reject(err);
                 });
         });

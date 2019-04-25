@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const LOG_TYPE = {
     ERROR: 'ERROR',
     WARNING: 'WARNING',
-    NORMAL: '',
+    NORMAL: 'LOG',
     MESSAGE: 'MESSAGE'
 };
 
@@ -12,7 +12,7 @@ const log = function(mess, type = LOG_TYPE.NORMAL) {
         mess = mess.message + '\n' + mess.stack;
     }
 
-    mess = `[${LOG_TYPE[type]}]-[${mess}]`;
+    mess = `[${type}]-[${mess}]`;
 
     switch (type) {
         case LOG_TYPE.ERROR:

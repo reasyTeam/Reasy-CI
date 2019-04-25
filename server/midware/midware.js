@@ -1,5 +1,6 @@
 const store = require('./store');
 const CONFIG = require('../config/server');
+const util = require('../util/lib');
 
 let api = CONFIG.api || '/';
 
@@ -53,7 +54,7 @@ function zhuru(midwares, tableModel) {
                 return Promise.all(pros).then(data => {
                     res.json(data)
                 }).catch(err => {
-                    console.log(err);
+                    util.log(err, util.LOG_TYPE.ERROR);
                     res.json(-1);
                 });
             } else {
@@ -62,7 +63,7 @@ function zhuru(midwares, tableModel) {
                     return t.then((data, t) => {
                         res.json(data)
                     }).catch(err => {
-                        console.log(err);
+                        util.log(err, util.LOG_TYPE.ERROR);
                         res.json(-1);
                     });
                 }
@@ -70,7 +71,7 @@ function zhuru(midwares, tableModel) {
                 return Promise.resolve(t);
             }
         } catch (err) {
-            console.log(err);
+            util.log(err, util.LOG_TYPE.ERROR);
             res.json({ error: 1 })
         }
     };

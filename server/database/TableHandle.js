@@ -52,8 +52,4 @@ class TableHandle {
     }
 }
 
-function log(table, type, data) {
-    console.log(`[${table}] [${type}] [${JSON.stringify(data)}] success`);
-}
-
 module.exports = TableHandle;

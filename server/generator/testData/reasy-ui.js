@@ -404,7 +404,7 @@ const components = {
             theme: {
                 title: '显示主题',
                 valueType: 'enum',
-                selectItem: [{
+                selectArray: [{
                     text: '线条显示',
                     value: 'line-theme'
                 }, { text: '色块显示', value: 'bg-theme' }],
@@ -444,7 +444,7 @@ const components = {
             },
             maxLength: {
                 title: '最大输入字符数',
-                valueType: 'num',
+                valueType: 'number',
                 required: false,
                 defaultValue: null
             },
@@ -470,7 +470,7 @@ const components = {
     }, {
         name: 'FormUpload',
         title: '上传',
-        isContainer: false,
+        isContainer: true,
         attrs: {
             submitUrl: {
                 title: '提交地址',
@@ -571,7 +571,7 @@ const components = {
             data: {
                 title: '表格数据',
                 valueType: 'array',
-                arrayItem: 'object',
+                itemType: 'object',
                 required: false,
                 defaultValue: []
             },
@@ -684,7 +684,7 @@ const components = {
             columns: {
                 title: '列配置',
                 valueType: 'array',
-                arrayItem: {
+                itemType: {
                     field: {
                         title: '单元格对应的字段',
                         valueType: 'string',

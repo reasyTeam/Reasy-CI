@@ -1,15 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs');
 const Midware = require('./midware/midware');
 const dbModel = require('./database/dataBaseModel');
 const CONFIG = require('./config/server');
 const opn = require('opn');
-const util = require('util');
 const multiparty = require('multiparty');
 const FileCheck = require('./generator/fileCheck');
+const util = require('./util/lib');
+const fo = require('./util/fileOperation');
+
 let api = CONFIG.api || '/';
+let uploadDir = path.join(fo.cwd, CONFIG.writePath);
 
 class ExpressModel {
     constructor() {
@@ -26,7 +29,14 @@ class ExpressModel {
         // for parsing application/x-www-form-urlencoded
         this.app.use(bodyParser.urlencoded({ extended: true }));
         // 启用静态文件的访问 todo by xc 完善地址信息
-        this.app.use(express.static(path.join(process.cwd(), CONFIG.context)));
+        this.app.use(express.static(path.join(fo.cwd, CONFIG.context)));
+        // if (!fs.existsSync(uploadDir)) {
+        //     fs.mkdirSync(uploadDir);
+        // }
+        if (!fo.existsSync(uploadDir)) {
+            fo.mkdirSync(uploadDir);
+        }
+        this.app.use(express.static(path.join(fo.cwd, CONFIG.writePath)));
 
         /**
          * 处理所有的请求，中间件
@@ -38,7 +48,7 @@ class ExpressModel {
             res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,CONFIG");
 
             let reqData = req.body;
-            global.console.log(`请求：${req.path}, 内容：${JSON.stringify(reqData, 2)}`);
+            util.log(`请求：${req.path}, 内容：${JSON.stringify(reqData, 2)}`);
             next();
         });
 
@@ -81,10 +91,6 @@ class ExpressModel {
     }
 
     initUploadMidware() {
-        let uploadDir = path.join(process.cwd(), './uploads');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir);
-        }
 
         this.app.use(`${api}upload`, (req, res, ) => {
             let form = new multiparty.Form({ uploadDir });
@@ -115,9 +121,7 @@ class ExpressModel {
                             errors
                         }));
                         // 删除原有的文件
-                        fs.unlink(url, (err) => {
-                            if (err) throw err;
-                        });
+                        fo.unlink(url);
                         return;
                     }
 
@@ -130,12 +134,10 @@ class ExpressModel {
                                     this.tableModel.File.update({
                                         id: +data[0]['id'],
                                         name,
-                                        url
+                                        url: path.relative(fo.cwd, url)
                                     });
                                     // 删除原有的文件
-                                    fs.unlink(data[0]['url'], (err) => {
-                                        if (err) throw err;
-                                    });
+                                    fo.unlink(data[0]['url']);
                                     res.writeHead(200, { 'content-type': 'application/json' });
                                     res.end(JSON.stringify({
                                         filePath: +ids[0],
@@ -152,7 +154,7 @@ class ExpressModel {
                     function createFileData() {
                         this.tableModel.File.create({
                             name,
-                            url
+                            url: path.relative(fo.cwd, url)
                         }).then(data => {
                             res.writeHead(200, { 'content-type': 'application/json' });
                             res.end(JSON.stringify({
@@ -162,9 +164,10 @@ class ExpressModel {
                         });
                     }
                 } catch (err) {
+                    util.log(err, util.LOG_TYPE.ERROR);
                     res.writeHead(200, { 'content-type': 'application/json' });
                     res.end(JSON.stringify({
-                        error: err
+                        error: '服务器错误，请稍后再试'
                     }));
                     return;
                 }
@@ -178,7 +181,7 @@ class ExpressModel {
             port = CONFIG.port;
 
         let server = this.app.listen(port, () => {
-            global.console.log(`Server Listenig At http://localhost:${port}`);
+            console.log(`Server Listenig At http://localhost:${port}`);
             openBrowser && opn(`http://127.0.0.1:${port}`);
         });
 
@@ -186,7 +189,7 @@ class ExpressModel {
 
         server.on('error', (e) => {
             if (e.code === 'EADDRINUSE') {
-                console.log(`端口[${port}]已被占用，请使用其他端口`);
+                util.log(`端口[${port}]已被占用，请使用其他端口`, util.LOG_TYPE.WARNING);
                 setTimeout(() => {
                     server.close();
                 }, 1000);
