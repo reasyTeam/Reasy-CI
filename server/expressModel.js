@@ -191,7 +191,9 @@ class ExpressModel {
                         "Content-Disposition": "attachment;filename=" + encodeURI(fileName)
                     });
                     let fReadStream = fs.createReadStream(path.join(fo.cwd, data[0]['url']));
-                    fReadStream.on("data", function(chunk) { res.write(chunk, "binary") });
+                    fReadStream.on("data", function(chunk) {
+                        res.write(chunk, "binary");
+                    });
                     fReadStream.on("end", function() {
                         res.end();
                     });
@@ -199,6 +201,9 @@ class ExpressModel {
                 } else {
                     res.status(404).end();
                 }
+            }).catch(err => {
+                res.writeHead(200, { 'content-type': 'application/json' });
+                res.end();
             });
         })
     }

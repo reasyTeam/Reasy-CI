@@ -1,27 +1,120 @@
 <template>
   <div class="h-100">
-    <el-row class="h-100">
-      <el-col :span="6" class="grid-content bg-purple h-100">
-        <div>选择当前的组建库，比如说Vue下面有Element-UI，reasy-team/reasy-ui-vue库可供选择</div>
-        <div>组件选择栏</div>
-      </el-col>
-      <el-col :span="12" class="grid-content bg-purple-mid h-100">
-        <div>配置内容栏</div>
-      </el-col>
-      <el-col :span="6" class="grid-content bg-purple h-100">
-        <div>属性配置栏</div>
-      </el-col>
-    </el-row>
+    <header class="clear-fix header">
+      <div class="float-r tool-bar">
+        <el-button plain size="small" @click="reset">重置</el-button>
+        <el-button plain type="primary" size="small">预览</el-button>
+        <el-button plain type="primary" size="small">保存</el-button>
+      </div>
+    </header>
+    <div class="h-100 config">
+      <div class="config-aside h-100">
+        <div class="pro-title">组件列表</div>
+        <com-list :group="group"></com-list>
+      </div>
+      <div class="config-main h-100">
+        <cfg-list :cfgList="cfgList" :group="group"></cfg-list>
+      </div>
+      <div class="config-aside h-100">
+        <pro-list></pro-list>
+      </div>
+    </div>
   </div>
 </template>
+
+<script>
+import { mapActions, mapState, mapGetters } from "vuex";
+import draggable from "vuedraggable";
+import comList from "./pageitem/comList.vue";
+import cfgList from "./pageitem/configList.vue";
+import proList from "./pageitem/propertyList.vue";
+
+let idGlobal = 0;
+export default {
+  data() {
+    return {
+      group: "component",
+      cfgList: []
+    };
+  },
+  computed: {
+    ...mapState({
+      currentGroup: "currentGroup"
+    })
+  },
+  components: {
+    draggable,
+    cfgList,
+    comList,
+    proList
+  },
+  methods: {
+    ...mapActions("components", ["getComponents"]),
+    reset() {
+      this.$confirm("此操作将重置配置, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$message({
+          type: "success",
+          message: "重置成功!"
+        });
+        this.cfgList = [];
+      });
+    }
+  },
+  created() {
+    this.getComponents({
+      id: this.currentGroup
+    });
+  }
+};
+</script>
+
 <style lang="scss" scoped>
-.grid-content {
-  background-color: $bg-color-light;
-  padding: 12px;
-  overflow: auto;
+$padding-left: 12px;
+$padding-top: 8px;
+
+.h-100 {
+  background-color: #fff;
+  position: relative;
 }
-.bg-purple-mid {
-  background-color: $bg-color-mid;
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+.tool-bar {
+  padding: 6px 24px;
+}
+
+.config {
+  padding-top: 44px;
+  display: flex;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  font-size: 14px;
+
+  .h-100 {
+    box-sizing: border-box;
+  }
+
+  .config-aside {
+    width: 250px;
+    overflow: auto;
+  }
+
+  .config-main {
+    flex: 1;
+    border: 1px solid #e0e0e0;
+    border-width: 0 1px;
+    overflow: auto;
+  }
 }
 </style>
 

@@ -470,7 +470,7 @@ const components = {
     }, {
         name: 'FormUpload',
         title: '上传',
-        isContainer: true,
+        isContainer: false,
         attrs: {
             submitUrl: {
                 title: '提交地址',
@@ -546,7 +546,7 @@ const components = {
     }, {
         name: 'FormTable',
         title: '表格',
-        isContainer: false,
+        isContainer: true,
         ignorCommon: true,
         attrs: {
             requestUrl: {

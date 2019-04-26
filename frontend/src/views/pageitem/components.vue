@@ -11,12 +11,12 @@
             <el-table-column label="容器组件">
               <template v-slot="scope">{{scope.row.isContainer}}</template>
             </el-table-column>
-            <el-table-column fixed="right" width="150" label="操作">
+            <!-- <el-table-column fixed="right" width="150" label="操作">
               <template v-slot="scope">
                 <el-button @click="editData(scope.row)" size="small">编辑</el-button>
-                <!-- <el-button type="danger" @click="deleteData(scope.row)" size="small">删除</el-button> -->
+                <el-button type="danger" @click="deleteData(scope.row)" size="small">删除</el-button>
               </template>
-            </el-table-column>
+            </el-table-column>-->
           </el-table>
         </div>
       </el-collapse-item>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 const REF_FORM = "component";
 

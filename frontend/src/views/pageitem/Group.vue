@@ -11,7 +11,8 @@
             <el-table-column prop="file_name" label="配置文件名称">
               <template v-slot="scope">
                 <a
-                  href="#"
+                  title="点击下载配置文件"
+                  class="download"
                   @click="download(scope.row.file_id, scope.row.file_name)"
                 >{{scope.row.file_name}}</a>
               </template>
@@ -243,14 +244,18 @@ export default {
       return isJS && isLess;
     },
     download(id, fileName) {
-      this.$http.getData("/download", { id, fileName }, "get");
+      this.$http.download({ id, fileName });
     }
+    // download(url) {
+    //   window.open(url);
+    // }
   },
   created() {
     this.getGroups();
   }
 };
 </script>
+
 <style lang="scss" scoped>
 .el-upload {
   .el-input {
@@ -267,5 +272,12 @@ export default {
   .title {
     font-weight: bold;
   }
+}
+
+.download {
+  cursor: pointer;
+  padding: 12px 0;
+  color: #3a8ee6;
+  text-decoration: underline;
 }
 </style>

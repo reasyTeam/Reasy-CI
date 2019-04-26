@@ -76,7 +76,9 @@ class FileDataBase {
 
         if (components && components.commonAttrs) {
             outData = components.components.map(item => {
-                item.attrs = Object.assign(deepClone(components.commonAttrs), item.attrs);
+                if (!item.ignorCommon) {
+                    item.attrs = Object.assign(deepClone(components.commonAttrs), item.attrs);
+                }
                 return item;
             });
         }

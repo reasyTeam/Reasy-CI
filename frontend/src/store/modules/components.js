@@ -7,7 +7,30 @@ export default {
     state: {
         components: []
     },
-    getters: {},
+    getters: {
+        components: state => {
+            let res = {
+                container: {
+                    text: '容器组件',
+                    list: []
+                },
+                basic: {
+                    text: '基础组件',
+                    list: []
+                }
+            };
+
+            state.components.forEach(component => {
+                if (component.isContainer) {
+                    res.container.list.push(component);
+                } else {
+                    res.basic.list.push(component);
+                }
+            });
+
+            return res;
+        }
+    },
     mutations: {
         [types.SET_COMPONENTS](state, data) {
             state.components = data;

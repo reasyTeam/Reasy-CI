@@ -2,7 +2,7 @@ const api = {
     // 组件库操作
     // 获取
     'getGroups': function(models) {
-        return models.sequelize.query('SELECT `group`.*, `file`.name as file_name, `dependence`.name as depedence_name FROM `group` LEFT JOIN `file` ON `file`.id = `group`.file_id LEFT JOIN `dependence` ON `dependence`.id = `group`.dependence_id', { type: models.sequelize.QueryTypes.SELECT }).then(data => {
+        return models.sequelize.query('SELECT `group`.*, `file`.name as file_name, `file`.url as file_url, `dependence`.name as depedence_name FROM `group` LEFT JOIN `file` ON `file`.id = `group`.file_id LEFT JOIN `dependence` ON `dependence`.id = `group`.dependence_id', { type: models.sequelize.QueryTypes.SELECT }).then(data => {
             return data;
         });
     },

@@ -19,6 +19,40 @@ $http.setJson = function(url, data, method, responseType) {
     return request(url, data, method, responseType)
 };
 
+$http.download = function(data, url = 'download') {
+    return axios({
+        url: `${API}${url}`,
+        params: data,
+        method: 'get',
+        responseType: 'blob'
+    }).then(res => {
+        if (!res.data) {
+            return;
+        }
+        if (res.data.type === "application/json") {
+            Vue.myMess({
+                type: "error",
+                message: "文件下载失败"
+            });
+        } else {
+            let blob = new Blob([res.data]);
+            if (window.navigator.msSaveOrOpenBlob) {
+                navigator.msSaveBlob(blob, data.fileName);
+            } else {
+                let link = document.createElement("a");
+                let evt = document.createEvent("HTMLEvents");
+                evt.initEvent("click", false, false);
+                link.href = URL.createObjectURL(blob);
+                link.download = data.fileName;
+                link.style.display = "none";
+                document.body.appendChild(link);
+                link.click();
+                window.URL.revokeObjectURL(link.href);
+            }
+        }
+    })
+}
+
 // 跨域请求
 // CORS跨域content-type只能为text/plain, multipart/form-data, application/x-www-form-urlencoded中的一个，否则就是非简单请求
 $http.getDataCros = function() {

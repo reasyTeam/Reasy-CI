@@ -26,7 +26,8 @@ import {
     Dialog,
     Upload,
     Tag,
-    Loading
+    Loading,
+    MessageBox
 } from 'element-ui'
 
 Vue.use(Row)
@@ -56,5 +57,6 @@ Vue.use(Upload)
 Vue.use(Tag)
 
 Vue.prototype.$message = Message;
+Vue.prototype.$confirm = MessageBox.confirm;
 Vue.myMess = Message;
 Vue.prototype.$loading = Loading.service;
