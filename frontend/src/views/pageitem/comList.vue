@@ -39,11 +39,12 @@ export default {
     draggable
   },
   methods: {
-    cloneDog({ name, title }) {
+    cloneDog(component) {
       return {
         id: idGlobal++,
-        name,
-        title
+        name: component.name,
+        title: component.title,
+        type: component.showType
       };
     }
   }

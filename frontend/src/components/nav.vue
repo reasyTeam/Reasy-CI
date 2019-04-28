@@ -3,7 +3,7 @@
     <el-menu
       :default-active="$route.path"
       class="el-menu-vertical"
-      active-text-color="#42b983"
+      active-text-color="#1989fa"
       :router="true"
     >
       <el-menu-item v-for="nav in pathList" :key="nav.path" :index="nav.path">
@@ -43,16 +43,24 @@ export default {
 
 .el-menu-item {
   font-size: 16px;
-  color: $font-color;
+  color: $font-main-color-active;
+  border-left: 6px solid transparent;
+
+  &.is-active {
+    border-left-color: $font-main-color;
+  }
 }
 
 .el-menu-item i {
-  color: $font-color;
+  color: $font-main-color-active;
   font-size: 22px;
 }
 
 .el-menu-item:focus,
 .el-menu-item:hover {
-  background-color: $bg-color-light;
+  color: $font-main-color;
+  i {
+    color: $font-main-color;
+  }
 }
 </style>

@@ -85,7 +85,8 @@ $padding-top: 8px;
   top: 0;
   left: 0;
   right: 0;
-  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.15);
+  // box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid $border-color;
   z-index: 2;
 }
 
@@ -111,7 +112,7 @@ $padding-top: 8px;
 
   .config-main {
     flex: 1;
-    border: 1px solid #e0e0e0;
+    border: 1px solid $border-color;
     border-width: 0 1px;
     overflow: auto;
   }

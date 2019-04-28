@@ -27,7 +27,16 @@ import {
     Upload,
     Tag,
     Loading,
-    MessageBox
+    MessageBox,
+    DatePicker,
+    Checkbox,
+    CheckboxGroup,
+    Switch,
+    Slider,
+    Radio,
+    RadioGroup,
+    Tabs,
+    TabPane
 } from 'element-ui'
 
 Vue.use(Row)
@@ -55,6 +64,15 @@ Vue.use(FormItem)
 Vue.use(Dialog)
 Vue.use(Upload)
 Vue.use(Tag)
+Vue.use(DatePicker)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
+Vue.use(Switch)
+Vue.use(Slider)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(Tabs)
+Vue.use(TabPane)
 
 Vue.prototype.$message = Message;
 Vue.prototype.$confirm = MessageBox.confirm;

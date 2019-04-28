@@ -139,6 +139,8 @@ class ExpressModel {
                                     });
                                     // 删除原有的文件
                                     fo.unlink(data[0]['url']);
+                                    // 清空数据缓存
+                                    this.tableModel.FileDataBase.updateData(+data[0]['id']);
                                     res.writeHead(200, { 'content-type': 'application/json' });
                                     res.end(JSON.stringify({
                                         filePath: +ids[0],

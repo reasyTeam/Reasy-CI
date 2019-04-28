@@ -29,6 +29,6 @@ export default {
 }
 
 .table-box {
-  background-color: $bg-color-light;
+  // background-color: $bg-color-light;
 }
 </style>

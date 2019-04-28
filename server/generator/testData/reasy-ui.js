@@ -1,26 +1,60 @@
 const generate = {
-    htmlModels: {
-        FormInput: '<input data-key="FormInput" type="{type}">'
+    // models: {
+    FormInput: {
+        htmlModel: '<input type="{type}" data-key="FormInput">'
     },
-    // 好像不需要喔，直接根据内容去选择即可
-    jsModels: {},
-    // 框架 vue, jquery, react
-    // 通过框架来决定最后生成文件的格式
-    framework: 'vue',
-
+    FormCalendar: {
+        showType: 'datepicker',
+        htmlModel: ''
+    },
+    FormCheckbox: {
+        showType: 'switch',
+        htmlModel: ''
+    },
+    FormCheckList: {
+        showType: 'checkbox',
+        htmlModel: ''
+    },
+    FormDropDownList: {
+        showType: 'select',
+        htmlModel: ''
+    },
+    FormRadioList: {
+        showType: 'radio',
+        htmlModel: ''
+    },
+    FormMultiInput: {
+        showType: 'input',
+        htmlModel: ''
+    },
+    FormPercent: {
+        showType: 'slider',
+        htmlModel: ''
+    },
+    FormTab: {
+        showType: '',
+        htmlModel: ''
+    },
+    FormTextarea: {
+        showType: 'textarea',
+        htmlModel: ''
+    },
+    FormUpload: {
+        showType: 'upload',
+        htmlModel: ''
+    },
+    FormTable: {
+        showType: 'table',
+        htmlModel: ''
+    }
+    // }
 }
 
-// // 默认的属性配置值
-// defaultKey: {
-//     title: 'xxx', // 描述信息，必须提供
-//     valueType: 'string', // 必须提供[string,number,bool,array,object,enum]，根据不同的值类型渲染不同的配置组件
-//     required: false, // 保存配置信息时验证必填项是否填写
-//     defaultValue: null
-// },
 const components = {
     components: [{
         name: 'FormInput',
         title: '文本框',
+        showType: 'input', // input, select, checkbox, radio, checkbox, switch, slider, datepicker, label, upload
         isContainer: false,
         attrs: {
             placeholder: {
@@ -135,6 +169,7 @@ const components = {
     }, {
         name: 'FormCalendar',
         title: '日期',
+        showType: 'datepicker',
         isContainer: false,
         attrs: {
             hasWeekday: {
@@ -164,7 +199,8 @@ const components = {
         }
     }, {
         name: 'FormCheckbox',
-        title: '复选框',
+        title: '开关',
+        showType: 'switch',
         isContainer: false,
         attrs: {
             text: {
@@ -177,6 +213,7 @@ const components = {
     }, {
         name: 'FormCheckList',
         title: '多选框',
+        showType: 'checkbox',
         isContainer: false,
         attrs: {
             selectArray: {
@@ -218,6 +255,7 @@ const components = {
     }, {
         name: 'FormDropDownList',
         title: '下拉框',
+        showType: 'select',
         isContainer: false,
         attrs: {
             selectArray: {
@@ -286,6 +324,7 @@ const components = {
     }, {
         name: 'FormRadioList',
         title: '单选框',
+        showType: 'radio',
         isContainer: false,
         attrs: {
             selectArray: {
@@ -305,6 +344,7 @@ const components = {
     }, {
         name: 'FormMultiInput',
         title: '多文本输入框',
+        showType: 'input',
         isContainer: false,
         attrs: {
             text: {
@@ -362,6 +402,7 @@ const components = {
     }, {
         name: 'FormPercent',
         title: '百分比滑块',
+        showType: 'slider',
         isContainer: false,
         attrs: {
             start: {
@@ -392,6 +433,7 @@ const components = {
     }, {
         name: 'FormTab',
         title: 'Tab页签',
+        showType: 'input',
         isContainer: false,
         attrs: {
             selectArray: {
@@ -415,6 +457,7 @@ const components = {
     }, {
         name: 'FormTextarea',
         title: '多行文本框',
+        showType: 'input',
         isContainer: false,
         attrs: {
             placeholder: {
@@ -470,6 +513,7 @@ const components = {
     }, {
         name: 'FormUpload',
         title: '上传',
+        showType: 'upload',
         isContainer: false,
         attrs: {
             submitUrl: {
@@ -546,6 +590,7 @@ const components = {
     }, {
         name: 'FormTable',
         title: '表格',
+        showType: 'table',
         isContainer: true,
         ignorCommon: true,
         attrs: {

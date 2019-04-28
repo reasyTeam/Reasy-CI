@@ -11,9 +11,23 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from "vuex";
+import { deepClone } from "@/assets/lib.js";
+
 export default {
   data() {
-    return {};
+    return {
+      attrs: {}
+    };
+  },
+  computed: {
+    ...mapState("components", { selected: "selected" }),
+    ...mapGetters("components", { attrList: "attrList" })
+  },
+  methods: {
+    getAttr(name) {
+      this.attrs[name] = deepClone(this.attrList[name]);
+    }
   }
 };
 </script>
@@ -27,7 +41,7 @@ $padding-top: 8px;
 }
 
 .cfg-item {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid $border-color;
   margin-bottom: $padding-top;
   padding-bottom: $padding-top;
 }

@@ -140,7 +140,8 @@ export default {
   },
   computed: {
     ...mapState({
-      groups: "groups"
+      groups: "groups",
+      currentGroup: "currentGroup"
     }),
     ...mapGetters("framework", {
       frames: "frames"
@@ -148,6 +149,7 @@ export default {
   },
   methods: {
     ...mapActions("framework", ["getFrameWorks"]),
+    ...mapActions("components", ["getComponents"]),
     ...mapActions(["getGroups", "delGroups", "updateGroups", "createGroups"]),
     submitForm() {
       this.$refs[REF_FORM].validate(valid => {
@@ -221,6 +223,12 @@ export default {
             message: "配置上传成功",
             type: "success"
           });
+          // 更新组件数据
+          if (this.comForm.id !== "" && this.comForm.id === this.currentGroup) {
+            this.getComponents({
+              id: this.currentGroup
+            });
+          }
         }
       }, 100);
     },

@@ -5,7 +5,12 @@ import $http from '@/plugins/axios.js'
 export default {
     namespaced: true,
     state: {
-        components: []
+        components: [],
+        selected: -1,
+        validates: [],
+        attrList: {},
+        cfgList: {},
+        cfgSortList: []
     },
     getters: {
         components: state => {
@@ -20,20 +25,26 @@ export default {
                 }
             };
 
+            let attrList = {};
             state.components.forEach(component => {
                 if (component.isContainer) {
                     res.container.list.push(component);
                 } else {
                     res.basic.list.push(component);
                 }
+                attrList[component.name] = component.attrs;
             });
 
+            state.attrList = attrList;
             return res;
         }
     },
     mutations: {
         [types.SET_COMPONENTS](state, data) {
             state.components = data;
+        },
+        [types.SET_ACTIVE_KEY](state, data) {
+            state.selected = data;
         }
     },
     actions: {

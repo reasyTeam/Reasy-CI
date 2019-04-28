@@ -84,6 +84,11 @@ class FileDataBase {
         }
         return outData;
     }
+
+    updateData(id) {
+        this.cacheData[id] = null;
+        // this.getComponents(id);
+    }
 }
 
 module.exports = FileDataBase;

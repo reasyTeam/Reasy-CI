@@ -22,8 +22,7 @@ export default {
 
 <style lang="scss" scoped>
 .markdown-body {
-  padding: 12px;
-  background-color: $bg-color-light;
+  padding: 32px;
 }
 </style>
 

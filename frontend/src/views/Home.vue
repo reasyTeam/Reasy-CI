@@ -20,7 +20,7 @@
         <nav-bar></nav-bar>
       </el-aside>
       <el-container>
-        <el-header class="header">
+        <el-header class="header" height="68px">
           <div class="title">{{title}}</div>
         </el-header>
         <el-main class="content">
@@ -95,15 +95,14 @@ export default {
   flex-direction: column;
 }
 .header {
-  padding: 16px;
-  display: -ms-flexbox;
+  padding: 16px 32px;
   display: flex;
   flex-direction: row;
   align-items: center;
   position: relative;
-  height: 32px;
   z-index: 1;
-  background: $bg-color;
+  color: #1989fa;
+  border-bottom: 1px solid $border-color;
 }
 
 .header .title {
