@@ -6,6 +6,7 @@
     <el-col :span="title?18:24">
       <component :is="curComponent"></component>
     </el-col>
+    <slot></slot>
   </el-row>
 </template>
 <script>
@@ -46,6 +47,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  position: relative;
 
   .el-input,
   .el-slider {

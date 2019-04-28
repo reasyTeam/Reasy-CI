@@ -9,6 +9,7 @@ export default {
         selected: -1,
         validates: [],
         attrList: {},
+        // 用于存储id:cfg键值对
         cfgList: {},
         cfgSortList: []
     },

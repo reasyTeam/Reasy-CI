@@ -20,15 +20,20 @@ export default {
       attrs: {}
     };
   },
+  clones: {},
   computed: {
-    ...mapState("components", { selected: "selected" }),
-    ...mapGetters("components", { attrList: "attrList" })
-  },
-  methods: {
-    getAttr(name) {
-      this.attrs[name] = deepClone(this.attrList[name]);
+    ...mapState("components", { selected: "selected", cfgList: "cfgList" }),
+    ...mapGetters("components", { attrList: "attrList" }),
+    currentAttr() {
+      let name = this.cfgList[this.selected]["id"];
+
+      if (!this.clones[name]) {
+        this.attrs[name] = deepClone(this.attrList[name]);
+      }
+      return this.clones[name];
     }
-  }
+  },
+  methods: {}
 };
 </script>
 

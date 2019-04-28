@@ -7,7 +7,12 @@
       :class="selected === element.id ? 'active':''"
       @click.stop="selectCom(element.id)"
     >
-      <f-group :title="element.title" :component="element.type"></f-group>
+      <f-group :title="element.title" :component="element.type">
+        <div class="fix-icon" v-show="selected === element.id">
+          <i class="el-icon-document-copy" @click="deleteCfg(element.id)" title="复制"></i>
+          <i class="el-icon-delete" @click="copyCfg(element.id)" title="删除"></i>
+        </div>
+      </f-group>
     </div>
   </draggable>
 </template>
@@ -25,11 +30,11 @@ export default {
     };
   },
   computed: {
-    idToName(){
-      return this.cfgList.reduce((res, item)=>{
-          res[item.id] = item.name;
+    idToName() {
+      return this.cfgList.reduce((res, item) => {
+        res[item.id] = item.name;
         return res;
-      }, {})
+      }, {});
     }
   },
   props: {
@@ -50,7 +55,9 @@ export default {
   methods: {
     selectCom(index) {
       this.selected = index;
-    }
+    },
+    deleteCfg() {},
+    copyCfg() {}
   }
 };
 </script>
@@ -71,6 +78,26 @@ export default {
   &.active {
     background-color: $bg-color-light;
     border-color: $bg-color-main;
+  }
+}
+
+.fix-icon {
+  position: absolute;
+  bottom: -16px;
+  right: -13px;
+  z-index: 1;
+
+  i {
+    cursor: pointer;
+    padding: 1px 3px;
+  }
+
+  .el-icon-document-copy {
+    color: $main-color;
+  }
+
+  .el-icon-delete {
+    color: red;
   }
 }
 </style>
