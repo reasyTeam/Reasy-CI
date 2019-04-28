@@ -5,13 +5,19 @@ import $http from '@/plugins/axios.js'
 export default {
     namespaced: true,
     state: {
+        // 提供的组件列表
         components: [],
+        // 当前处于active状态的组件
         selected: -1,
+        // 存储预设的校验规则
         validates: [],
+        // 存储不同的组件包含的配置项
         attrList: {},
-        // 用于存储id:cfg键值对
-        cfgList: {},
-        cfgSortList: []
+        // 用于存储id:cfg键值对存储组件的自定义配置
+        cfgList: [],
+        cfgSortList: [],
+        // 记录是否点击重制按钮，重置时需要同时将formList清空，在configList.vue中定义，用来存储已排序的组件
+        hasReset: false
     },
     getters: {
         components: state => {
@@ -46,6 +52,16 @@ export default {
         },
         [types.SET_ACTIVE_KEY](state, data) {
             state.selected = data;
+        },
+        [type.RESET_CFG_LIST](state) {
+            state.cfgList = {};
+            state.hasReset = true;
+        },
+        [type.ADD_CFG](state, data) {
+            state.cfgList[data.id] = data;
+        },
+        [type.REMOVE_CFG](state, id) {
+            delete state.cfgList[id];
         }
     },
     actions: {

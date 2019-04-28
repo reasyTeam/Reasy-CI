@@ -33,8 +33,7 @@ let idGlobal = 0;
 export default {
   data() {
     return {
-      group: "component",
-      cfgList: []
+      group: "component"
     };
   },
   computed: {

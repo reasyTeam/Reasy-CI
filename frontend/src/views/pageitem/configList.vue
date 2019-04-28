@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import draggable from "vuedraggable";
 import fGroup from "../../components/formDemo/fgroup.vue";
 
@@ -25,11 +26,11 @@ let idGlobal = 0;
 export default {
   data() {
     return {
-      attrList: [],
-      selected: -1
+      attrList: []
     };
   },
   computed: {
+    ...mapState(["cfgList"]),
     idToName() {
       return this.cfgList.reduce((res, item) => {
         res[item.id] = item.name;
@@ -38,11 +39,6 @@ export default {
     }
   },
   props: {
-    cfgList: {
-      type: Array,
-      default: [],
-      required: true
-    },
     group: {
       type: String,
       required: true
