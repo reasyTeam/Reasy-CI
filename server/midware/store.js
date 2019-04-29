@@ -69,7 +69,8 @@ const api = {
     },
     // 获取组件属性列表
     'getValidates': function(models) {
-        return models.Dependence.query();
+        let data = req.body;
+        return models.FileDataBase.getValidates(data.id);
     },
 
     // 获取模板

@@ -71,6 +71,19 @@ class FileDataBase {
             });
     }
 
+    getValidates(id) {
+        this._id = id;
+        return this.getData()
+            .then((data) => {
+                if (data === -1) {
+                    return {
+                        error: -1
+                    };
+                }
+                return this.cacheData[id].validate;
+            });
+    }
+
     formatComponents(components) {
         let outData = [];
 
