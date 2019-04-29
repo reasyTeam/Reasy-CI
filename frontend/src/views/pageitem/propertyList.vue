@@ -2,38 +2,60 @@
   <div>
     <div class="pro-title">组件属性</div>
     <div class="cfg-content">
-      <section class="cfg-item">
-        <div class="cfg-title">标题</div>
-        <div>内容部分</div>
-      </section>
+      <fgroup
+        v-for="(val, key) in currentAttrs"
+        :key="key"
+        :value="currentCfg[key]"
+        :attr="val"
+        @setValue="setValue"
+      ></fgroup>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters, mapState, mapMutations } from "vuex";
 import { deepClone } from "@/assets/lib.js";
+import fgroup from "@/components/group.vue";
+import * as types from "@/store/types.js";
 
 export default {
   data() {
-    return {
-      attrs: {}
-    };
+    this.clones = {};
+    return {};
   },
-  clones: {},
   computed: {
-    ...mapState("components", { selected: "selected", cfgList: "cfgList" }),
-    ...mapGetters("components", { attrList: "attrList" }),
-    currentAttr() {
-      let name = this.cfgList[this.selected]["id"];
+    ...mapState("components", ["selected", "cfgList", "attrList"]),
+    currentAttrs() {
+      if (this.cfgList[this.selected] === undefined) {
+        return {};
+      }
+
+      let name = this.cfgList[this.selected]["name"];
 
       if (!this.clones[name]) {
-        this.attrs[name] = deepClone(this.attrList[name]);
+        this.clones[name] = deepClone(this.attrList[name]);
       }
       return this.clones[name];
+    },
+    currentCfg() {
+      if (this.cfgList[this.selected] === undefined) {
+        return {};
+      }
+
+      return this.cfgList[this.selected]["attrs"];
     }
   },
-  methods: {}
+  watch: {
+    selected(newV, oldV) {}
+  },
+  methods: {
+    ...mapMutations("components", [types.UPDATE_CFG_ATTR]),
+    setValue(attr, value) {
+      this[types.UPDATE_CFG_ATTR](attr, value);
+    }
+  },
+  components: { fgroup }
 };
 </script>
 

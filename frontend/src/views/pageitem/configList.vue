@@ -1,8 +1,8 @@
 <template>
-  <draggable class="cfg-list" :sortable="false" :list="cfgList" :group="group">
+  <draggable class="cfg-list" :sortable="false" :list="formList" :group="group">
     <div
       class="list-item"
-      v-for="element in cfgList"
+      v-for="element in formList"
       :key="element.id"
       :class="selected === element.id ? 'active':''"
       @click.stop="selectCom(element.id)"
@@ -18,19 +18,20 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import draggable from "vuedraggable";
-import fGroup from "../../components/formDemo/fgroup.vue";
+import fGroup from "@/components/formDemo/fgroup.vue";
+import * as types from "@/store/types.js";
+import { deepClone } from "@/assets/lib.js";
 
-let idGlobal = 0;
 export default {
   data() {
     return {
-      attrList: []
+      formList: []
     };
   },
   computed: {
-    ...mapState(["cfgList"]),
+    ...mapState("components", ["selected", "idGlobal", "hasReset"]),
     idToName() {
       return this.cfgList.reduce((res, item) => {
         res[item.id] = item.name;
@@ -49,11 +50,33 @@ export default {
     fGroup
   },
   methods: {
+    ...mapMutations("components", [
+      types.REMOVE_CFG,
+      types.ADD_CFG,
+      types.SET_SELECTED
+    ]),
     selectCom(index) {
-      this.selected = index;
+      this[types.SET_SELECTED](index);
     },
-    deleteCfg() {},
-    copyCfg() {}
+    deleteCfg(index) {
+      let data = this.formList[index];
+      this[types.REMOVE_CFG](data.id);
+
+      this.formList.splice(index, 1);
+    },
+    copyCfg(index) {
+      let data = deepClone(this.formList[index]);
+      data.id = this.idGlobal;
+      this[types.ADD_CFG](data);
+      this.formList.push(data);
+    }
+  },
+  watch: {
+    hasReset(val) {
+      if (val) {
+        this.formList = [];
+      }
+    }
   }
 };
 </script>

@@ -36,7 +36,8 @@ import {
     Radio,
     RadioGroup,
     Tabs,
-    TabPane
+    TabPane,
+    InputNumber
 } from 'element-ui'
 
 Vue.use(Row)
@@ -73,6 +74,7 @@ Vue.use(Radio)
 Vue.use(RadioGroup)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(InputNumber)
 
 Vue.prototype.$message = Message;
 Vue.prototype.$confirm = MessageBox.confirm;

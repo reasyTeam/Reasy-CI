@@ -13,7 +13,7 @@
         <com-list :group="group"></com-list>
       </div>
       <div class="config-main h-100">
-        <cfg-list :cfgList="cfgList" :group="group"></cfg-list>
+        <cfg-list :group="group"></cfg-list>
       </div>
       <div class="config-aside h-100">
         <pro-list></pro-list>
@@ -23,13 +23,13 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from "vuex";
+import { mapActions, mapState, mapMutations } from "vuex";
 import draggable from "vuedraggable";
 import comList from "./pageitem/comList.vue";
 import cfgList from "./pageitem/configList.vue";
 import proList from "./pageitem/propertyList.vue";
+import * as types from "@/store/types.js";
 
-let idGlobal = 0;
 export default {
   data() {
     return {
@@ -49,6 +49,7 @@ export default {
   },
   methods: {
     ...mapActions("components", ["getComponents"]),
+    ...mapMutations("components", [types.RESET_CFG_LIST]),
     reset() {
       this.$confirm("此操作将重置配置, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -59,7 +60,7 @@ export default {
           type: "success",
           message: "重置成功!"
         });
-        this.cfgList = [];
+        this[types.RESET_CFG_LIST]();
       });
     }
   },

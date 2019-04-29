@@ -7,7 +7,7 @@
         :list="item.list"
         :sortable="false"
         :group="{ name: group, pull: 'clone', put: false }"
-        :clone="cloneDog"
+        :clone="clone"
         tag="ul"
       >
         <li class="group-item" v-for="element in item.list" :key="element.name">
@@ -19,10 +19,10 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations, mapState } from "vuex";
 import draggable from "vuedraggable";
+import * as types from "@/store/types.js";
 
-let idGlobal = 0;
 export default {
   props: {
     group: {
@@ -31,21 +31,23 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("components", {
-      components: "components"
-    })
+    ...mapState("components", ["idGlobal"]),
+    ...mapGetters("components", ["components"])
   },
   components: {
     draggable
   },
   methods: {
-    cloneDog(component) {
-      return {
-        id: idGlobal++,
+    ...mapMutations("components", [types.ADD_CFG]),
+    clone(component) {
+      let data = {
+        id: this.idGlobal,
         name: component.name,
         title: component.title,
         type: component.showType
       };
+      this[types.ADD_CFG](data);
+      return data;
     }
   }
 };

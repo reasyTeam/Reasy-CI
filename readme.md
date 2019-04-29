@@ -27,6 +27,16 @@
 1. 每天定时跑一遍程序删除没有使用的的配置文件，对应的file表中的数据也进行清空
 2. 验证上传的属性配置文件的正确性（必填属性是否填写，枚举值是否存在）
 3. 验证上传的代码生成文件的正确性
+4. 不同的valueType对应不同的显示
+enum：el-select
+number：el-input-number
+function：待定，代码编辑器
+string：el-input
+bool：el-switch
+array：提供可添加的组件
+regexp：el-input
+sync：查找对应的字段的值
+object: 提供object输入项
 
 ## 问题记录
-1. 更新组件的配置文件，无法更新对应的数据，需要重启服务，server没有更新缓存
+1. 更新组件的配置文件，无法更新对应的数据，需要重启服务，server没有更新缓存 -done

@@ -9,12 +9,14 @@ export default {
         components: [],
         // 当前处于active状态的组件
         selected: -1,
+        idGlobal: 0,
         // 存储预设的校验规则
         validates: [],
         // 存储不同的组件包含的配置项
         attrList: {},
         // 用于存储id:cfg键值对存储组件的自定义配置
-        cfgList: [],
+        cfgList: {},
+        // 暂时没有用到，不知道以后会不会用到
         cfgSortList: [],
         // 记录是否点击重制按钮，重置时需要同时将formList清空，在configList.vue中定义，用来存储已排序的组件
         hasReset: false
@@ -50,18 +52,31 @@ export default {
         [types.SET_COMPONENTS](state, data) {
             state.components = data;
         },
-        [types.SET_ACTIVE_KEY](state, data) {
+        [types.SET_SELECTED](state, data) {
             state.selected = data;
         },
-        [type.RESET_CFG_LIST](state) {
+        [types.RESET_CFG_LIST](state) {
             state.cfgList = {};
             state.hasReset = true;
         },
-        [type.ADD_CFG](state, data) {
+        [types.ADD_CFG](state, data) {
+            state.idGlobal++;
+            data.attrs = {};
+            let attrs = state.attrList[data.name];
+            for (let key in attrs) {
+                data.attrs[key] = attrs[key]['defaultValue'];
+            }
+
             state.cfgList[data.id] = data;
         },
-        [type.REMOVE_CFG](state, id) {
+        [types.REMOVE_CFG](state, id) {
             delete state.cfgList[id];
+        },
+        [types.SET_VALIDATES](state, data) {
+            state.validates = data;
+        },
+        [types.UPDATE_CFG_ATTR](state, id, attr, value) {
+            state.cfgList[state.selected]['attrs'][attr] = value;
         }
     },
     actions: {
@@ -88,6 +103,15 @@ export default {
             $http.setData("createComponents", data).then(() => {
                 dispatch('getComponents');
             });
-        }
+        },
+        getValidates({ commit }, querydata) {
+            if (!querydata || querydata.id === '' || querydata.id === undefined) {
+                return;
+            }
+
+            $http.getData("getValidates", querydata).then(data => {
+                commit(types.SET_VALIDATES, data);
+            });
+        },
     }
 }
