@@ -139,7 +139,7 @@ const components = {
                 title: '最大输入字符数',
                 valueType: 'number',
                 required: false,
-                defaultValue: null
+                defaultValue: 0
             },
             maxCallBack: {
                 title: '值大于max回调',
@@ -530,7 +530,7 @@ const components = {
             },
             showLoading: {
                 title: '是否显示上传中',
-                valueType: 'string',
+                valueType: 'bool',
                 required: false,
                 defaultValue: false
             },
@@ -813,15 +813,24 @@ const components = {
         ignore: {
             title: '是否忽略组件',
             valueType: 'enum',
-            selectArray: [true, false, undefined],
+            selectArray: [{
+                text: 'true',
+                value: true
+            }, {
+                text: 'false',
+                value: false
+            }, {
+                text: 'undefined',
+                value: undefined
+            }],
             required: false,
-            defaultValue: undefined
+            defaultValue: 'undefined'
         },
         sync: {
             title: '是否同步',
-            valueType: 'string',
+            valueType: 'bool',
             required: false,
-            defaultValue: ''
+            defaultValue: true
         },
         css: {
             title: '自定义样式类',

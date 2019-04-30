@@ -4,7 +4,7 @@
       <div class="float-r tool-bar">
         <el-button plain size="small" @click="reset">重置</el-button>
         <el-button plain type="primary" size="small">预览</el-button>
-        <el-button plain type="primary" size="small">保存</el-button>
+        <el-button plain type="primary" size="small" @click="save">保存</el-button>
       </div>
     </header>
     <div class="h-100 config">
@@ -15,7 +15,7 @@
       <div class="config-main h-100">
         <cfg-list :group="group"></cfg-list>
       </div>
-      <div class="config-aside h-100">
+      <div class="config-aside right h-100">
         <pro-list></pro-list>
       </div>
     </div>
@@ -39,10 +39,10 @@ export default {
   computed: {
     ...mapState({
       currentGroup: "currentGroup"
-    })
+    }),
+    ...mapState("components", ["cfgList"])
   },
   components: {
-    draggable,
     cfgList,
     comList,
     proList
@@ -62,6 +62,9 @@ export default {
         });
         this[types.RESET_CFG_LIST]();
       });
+    },
+    save() {
+      console.log(this.cfgList);
     }
   },
   created() {
@@ -108,6 +111,10 @@ $padding-top: 8px;
   .config-aside {
     width: 250px;
     overflow: auto;
+
+    &.right {
+      width: 300px;
+    }
   }
 
   .config-main {

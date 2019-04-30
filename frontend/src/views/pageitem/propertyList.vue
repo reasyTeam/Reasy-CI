@@ -4,9 +4,10 @@
     <div class="cfg-content">
       <fgroup
         v-for="(val, key) in currentAttrs"
-        :key="key"
+        :key="key+selected"
         :value="currentCfg[key]"
-        :attr="val"
+        :option="val"
+        :attr="key"
         @setValue="setValue"
       ></fgroup>
     </div>
@@ -52,7 +53,10 @@ export default {
   methods: {
     ...mapMutations("components", [types.UPDATE_CFG_ATTR]),
     setValue(attr, value) {
-      this[types.UPDATE_CFG_ATTR](attr, value);
+      this[types.UPDATE_CFG_ATTR]({
+        attr,
+        value
+      });
     }
   },
   components: { fgroup }

@@ -48,6 +48,7 @@ export default {
 
   &.is-active {
     border-left-color: $font-main-color;
+    background-color: $bg-color-light;
   }
 }
 

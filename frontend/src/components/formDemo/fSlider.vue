@@ -1,4 +1,4 @@
 <template>
-  <el-slider></el-slider>
+  <el-slider disabled></el-slider>
 </template>
 

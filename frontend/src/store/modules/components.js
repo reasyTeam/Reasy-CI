@@ -75,8 +75,8 @@ export default {
         [types.SET_VALIDATES](state, data) {
             state.validates = data;
         },
-        [types.UPDATE_CFG_ATTR](state, id, attr, value) {
-            state.cfgList[state.selected]['attrs'][attr] = value;
+        [types.UPDATE_CFG_ATTR](state, option) {
+            state.cfgList[state.selected]['attrs'][option.attr] = option.value;
         }
     },
     actions: {

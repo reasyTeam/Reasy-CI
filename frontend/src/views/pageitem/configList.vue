@@ -9,8 +9,8 @@
     >
       <f-group :title="element.title" :component="element.type">
         <div class="fix-icon" v-show="selected === element.id">
-          <i class="el-icon-document-copy" @click="deleteCfg(element.id)" title="复制"></i>
-          <i class="el-icon-delete" @click="copyCfg(element.id)" title="删除"></i>
+          <i class="el-icon-document-copy" @click="copyCfg(element.id)" title="复制"></i>
+          <i class="el-icon-delete" @click="deleteCfg(element.id)" title="删除"></i>
         </div>
       </f-group>
     </div>
@@ -107,6 +107,7 @@ export default {
   z-index: 1;
 
   i {
+    font-size: 16px;
     cursor: pointer;
     padding: 1px 3px;
   }

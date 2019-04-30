@@ -1,4 +1,4 @@
 <template>
-  <el-date-picker></el-date-picker>
+  <el-date-picker disabled></el-date-picker>
 </template>
 

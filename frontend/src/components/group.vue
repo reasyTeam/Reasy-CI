@@ -1,11 +1,11 @@
 <template>
   <section class="cfg-item">
-    <div class="cfg-title">{{attr.title}}</div>
+    <div class="cfg-title">{{option.title}}</div>
     <div>
       <component
-        :is="components[attr.valueType]"
+        :is="components[option.valueType]"
         :value="value"
-        :option="attr"
+        :option="option"
         @setValue="setValue"
       ></component>
     </div>
@@ -15,22 +15,22 @@
 <script>
 import { mapState } from "vuex";
 import finput from "./input.vue";
+import fswitch from "./switch.vue";
+import fselect from "./select.vue";
+import farray from "./array.vue";
+import fcode from "./code.vue";
 
 const components = {
   input: "finput",
-  //   enum: "fselect",
-  //   number: "finput-number",
-  //   string: "finput",
-  //   bool: "fswitch",
-  enum: "finput",
+  enum: "fselect",
   number: "finput",
   string: "finput",
-  bool: "finput",
+  bool: "fswitch",
   regexp: "finput",
-  function: "finput",
-  array: "finput",
-  object: "finput",
-  sync: "finput"
+  function: "fcode",
+  array: "farray",
+  object: "fcode",
+  sync: "fcode"
 };
 // function：待定，代码编辑器
 // array：提供可添加的组件
@@ -43,12 +43,11 @@ export default {
       components
     };
   },
-  //   model: {
-  //     prop: "value",
-  //     event: "setValue"
-  //   },
   props: {
     attr: {
+      required: true
+    },
+    option: {
       required: true
     },
     value: {
@@ -57,11 +56,15 @@ export default {
   },
   methods: {
     setValue(val) {
-      this.$emit("setValue", val);
+      this.$emit("setValue", this.attr, val);
     }
   },
   components: {
-    finput
+    finput,
+    fswitch,
+    fselect,
+    fcode,
+    farray
   }
 };
 </script>
@@ -69,7 +72,7 @@ export default {
 .cfg-item {
   border-bottom: 1px solid $border-color;
   margin-bottom: 8px;
-  padding-bottom: 8px;
+  padding-bottom: 16px;
 }
 
 .cfg-title {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-input-number
-      v-if="isnumber"
+      v-if="isNumber"
       v-model="val"
       @change="change"
       :min="option.min"
@@ -23,10 +23,11 @@ export default {
     },
     value: {
       required: true
-    },
-    isnumber: {
-      type: Boolean,
-      default: false
+    }
+  },
+  computed: {
+    isNumber() {
+      return this.option.valueType === "number";
     }
   },
   methods: {

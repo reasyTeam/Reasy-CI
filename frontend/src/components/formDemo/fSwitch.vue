@@ -1,4 +1,4 @@
 <template>
-  <el-switch></el-switch>
+  <el-switch disabled></el-switch>
 </template>
 

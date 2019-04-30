@@ -27,7 +27,7 @@ export default new Vuex.Store({
             },
             {
                 path: "/code",
-                text: "代码生成",
+                text: "代码生成器",
                 icon: "setting"
             },
             {

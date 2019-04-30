@@ -1,5 +1,5 @@
 <template>
-  <el-radio-group v-model="value">
+  <el-radio-group v-model="value" disabled>
     <el-radio :label="3">备选项</el-radio>
     <el-radio :label="6">备选项</el-radio>
     <el-radio :label="9">备选项</el-radio>

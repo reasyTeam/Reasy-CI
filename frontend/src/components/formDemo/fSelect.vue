@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="value" placeholder="请选择"></el-select>
+  <el-select v-model="value" placeholder="请选择" disabled></el-select>
 </template>
 <script>
 export default {
