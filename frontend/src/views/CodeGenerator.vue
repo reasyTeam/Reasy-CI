@@ -24,7 +24,7 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import draggable from "vuedraggable";
+// import draggable from "vuedraggable";
 import comList from "./pageitem/comList.vue";
 import cfgList from "./pageitem/configList.vue";
 import proList from "./pageitem/propertyList.vue";

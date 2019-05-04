@@ -1,4 +1,4 @@
-function deepClone(obj, res) {
+function deepClone(obj) {
     if (obj === null) {
         return null;
     }

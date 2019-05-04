@@ -39,10 +39,12 @@ export default {
   },
   methods: {
     ...mapMutations("components", [types.ADD_CFG]),
+    // 通过clone给configList添加组件列表
     clone(component) {
       let data = {
         id: this.idGlobal,
         name: component.name,
+        showOption: component.showOption,
         title: component.title,
         type: component.showType
       };

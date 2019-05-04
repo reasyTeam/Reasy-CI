@@ -1,6 +1,18 @@
 <template>
   <el-upload action="tt" disabled>
-    <el-button size="small" type="primary">点击上传</el-button>
+    <el-button size="small" type="primary" v-show="option.browseText">{{option.browseText}}</el-button>
+    <el-button
+      style="margin-left: 10px;"
+      size="small"
+      type="success"
+      :v-show="option.uploadText"
+    >{{option.uploadText}}</el-button>
+    <div :v-show="option.showFileList">文件上传列表</div>
   </el-upload>
 </template>
+<script>
+export default {
+  props: ["option"]
+};
+</script>
 

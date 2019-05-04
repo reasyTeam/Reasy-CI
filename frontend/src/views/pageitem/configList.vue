@@ -7,7 +7,7 @@
       :class="selected === element.id ? 'active':''"
       @click.stop="selectCom(element.id)"
     >
-      <f-group :title="element.title" :component="element.type">
+      <f-group :option="element">
         <div class="fix-icon" v-show="selected === element.id">
           <i class="el-icon-document-copy" @click="copyCfg(element.id)" title="复制"></i>
           <i class="el-icon-delete" @click="deleteCfg(element.id)" title="删除"></i>

@@ -93,8 +93,8 @@ export default {
   computed: {
     title() {
       return `配置[${this.option.title}][${this.option.valueType}]`;
-    },
-    defaultCode() {}
+    }
+    // defaultCode() {}
   },
   components: {
     codemirror

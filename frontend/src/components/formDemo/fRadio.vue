@@ -1,13 +1,11 @@
 <template>
-  <el-radio-group v-model="value" disabled>
-    <el-radio :label="3">备选项</el-radio>
-    <el-radio :label="6">备选项</el-radio>
-    <el-radio :label="9">备选项</el-radio>
+  <el-radio-group v-model="option.value" disabled>
+    <el-radio :label="item" v-for="item in option.selectArray" :key="item">备选项</el-radio>
   </el-radio-group>
 </template>
 <script>
 export default {
-  props: ["value"]
+  props: ["option"]
 };
 </script>
 

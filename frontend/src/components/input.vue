@@ -3,7 +3,7 @@
     <el-input-number
       v-if="isNumber"
       v-model="val"
-      @change="change"
+      @input.native="change"
       :min="option.min"
       :max="option.max"
     ></el-input-number>

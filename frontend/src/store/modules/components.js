@@ -1,4 +1,5 @@
 // 组件库操作
+import Vue from 'vue'
 import * as types from '../types'
 import $http from '@/plugins/axios.js'
 
@@ -68,6 +69,7 @@ export default {
             }
 
             state.cfgList[data.id] = data;
+            Vue.set(state.cfgList, data.id, data);
         },
         [types.REMOVE_CFG](state, id) {
             delete state.cfgList[id];

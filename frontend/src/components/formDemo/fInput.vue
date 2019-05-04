@@ -1,4 +1,10 @@
 <template>
-  <el-input type="text" placeholder="请输入内容" disabled></el-input>
+  <el-input type="text" :placeholder="option.title" v-model="option.value" disabled></el-input>
 </template>
+<script>
+export default {
+  props: ["option"]
+};
+</script>
+
 

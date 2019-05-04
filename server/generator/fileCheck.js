@@ -193,12 +193,15 @@ class FileCheck {
                     }
                 });
 
-                if (!hasValue) {
+                //通过表达式获取对应的值
+                if (!hasValue && !/^\$\[[\s\S]*\]$/.test(attr.defaultValue)) {
                     attr.defaultValue = attr.selectArray[0]['value'];
                 }
             }
 
             attr.required = !!attr.required;
+            // 是否显示配置属性
+            attr.hidden = !!attr.hidden;
         });
     }
 

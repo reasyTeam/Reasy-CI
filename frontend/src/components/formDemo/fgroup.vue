@@ -1,10 +1,10 @@
 <template>
   <el-row class="wrapper">
-    <el-col :span="title ? 6:0">
-      <div class="f-title">{{title}}</div>
+    <el-col :span="propData.title ? 6 : 0">
+      <div class="f-title">{{propData.title}}</div>
     </el-col>
-    <el-col :span="title?18:24">
-      <component :is="curComponent"></component>
+    <el-col :span="propData.title ? 18 : 24">
+      <component :is="curComponent" :option="propData"></component>
     </el-col>
     <slot></slot>
   </el-row>
@@ -22,10 +22,17 @@ import fLabel from "./fLabel";
 import fUpload from "./fUpload";
 
 export default {
-  props: ["title", "component"],
+  props: ["option"],
   computed: {
     curComponent() {
-      return `f-${this.component}`;
+      return `f-${this.option.type}`;
+    },
+    propData() {
+      let obj = {};
+      for (let key in this.option.showOption) {
+        obj[key] = this.option.attrs[this.option.showOption[key]];
+      }
+      return obj;
     }
   },
   components: {

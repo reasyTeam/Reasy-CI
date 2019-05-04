@@ -1,5 +1,5 @@
 <template>
-  <section class="cfg-item">
+  <section class="cfg-item" v-if="!option.hidden">
     <div class="cfg-title">{{option.title}}</div>
     <div>
       <component
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+// import { mapState } from "vuex";
 import finput from "./input.vue";
 import fswitch from "./switch.vue";
 import fselect from "./select.vue";

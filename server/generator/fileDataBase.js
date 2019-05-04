@@ -89,9 +89,46 @@ class FileDataBase {
 
         if (components && components.commonAttrs) {
             outData = components.components.map(item => {
+
                 if (!item.ignorCommon) {
                     item.attrs = Object.assign(deepClone(components.commonAttrs), item.attrs);
                 }
+
+                // 解析表达式等值
+                Object.values(item.attrs).forEach(attr => {
+                    // 同步表达式
+                    if (attr.valueType === 'sync') {
+                        let syncAttr = item.attrs[attr.syncKey];
+                        if (syncAttr) {
+                            for (let key in syncAttr) {
+                                if (!['title', 'required'].includes(key)) {
+                                    attr[key] = syncAttr[key];
+                                }
+                            }
+                        }
+                    }
+                    // 解析defaultValue表达式
+                    let dValue = attr.defaultValue;
+                    if (dValue && typeof dValue === 'string') {
+                        let match;
+                        if (match = dValue.match(/^\$\[([\s\S]*)\]$/)) {
+                            match = match[1].split('.');
+                            let val = null;
+                            for (let i = 0, l = match.length - 1; i <= l; i++) {
+                                val = item[match[i]];
+                                if (typeof val !== 'object' && i < l) {
+                                    val = null;
+                                    break;
+                                }
+                            }
+                            if (val !== null) {
+                                attr.defaultValue = val;
+                            }
+                        }
+
+                    }
+                });
+
                 return item;
             });
         }

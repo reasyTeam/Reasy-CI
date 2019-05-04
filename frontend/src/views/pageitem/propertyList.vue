@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { deepClone } from "@/assets/lib.js";
 import fgroup from "@/components/group.vue";
 import * as types from "@/store/types.js";
@@ -48,7 +48,7 @@ export default {
     }
   },
   watch: {
-    selected(newV, oldV) {}
+    // selected(newV, oldV) {}
   },
   methods: {
     ...mapMutations("components", [types.UPDATE_CFG_ATTR]),

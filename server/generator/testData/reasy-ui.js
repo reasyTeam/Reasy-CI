@@ -1,60 +1,84 @@
 const generate = {
-    // models: {
     FormInput: {
         htmlModel: '<input type="{type}" data-key="FormInput">'
     },
     FormCalendar: {
-        showType: 'datepicker',
         htmlModel: ''
     },
     FormCheckbox: {
-        showType: 'switch',
         htmlModel: ''
     },
     FormCheckList: {
-        showType: 'checkbox',
         htmlModel: ''
     },
     FormDropDownList: {
-        showType: 'select',
         htmlModel: ''
     },
     FormRadioList: {
-        showType: 'radio',
         htmlModel: ''
     },
     FormMultiInput: {
-        showType: 'input',
         htmlModel: ''
     },
     FormPercent: {
-        showType: 'slider',
         htmlModel: ''
     },
     FormTab: {
-        showType: '',
         htmlModel: ''
     },
     FormTextarea: {
-        showType: 'textarea',
         htmlModel: ''
     },
     FormUpload: {
-        showType: 'upload',
         htmlModel: ''
     },
     FormTable: {
-        showType: 'table',
         htmlModel: ''
     }
-    // }
 }
+
+// 不同的showtype对应不同的option
+var option = {
+    input: {
+        title: 'dataTitle',
+        value: 'defaultValue'
+    },
+    select: {
+        title: 'dataTitle',
+        value: 'defaultValue'
+    },
+    checkbox: {
+        title: 'dataTitle',
+        value: 'defaultValue'
+    },
+    switch: {
+        title: 'dataTitle',
+        value: 'defaultValue'
+    },
+    slider: {
+        title: 'dataTitle',
+        value: 'defaultValue'
+    },
+    datepicker: {
+        title: 'dataTitle',
+        value: 'defaultValue'
+    },
+    upload: {
+        title: 'dataTitle',
+        value: 'defaultValue'
+    }
+};
 
 const components = {
     components: [{
         name: 'FormInput',
         title: '文本框',
         showType: 'input', // input, select, checkbox, radio, checkbox, switch, slider, datepicker, label, upload
+        // 显示组件时使用
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue'
+        },
         isContainer: false,
         attrs: {
             placeholder: {
@@ -170,6 +194,10 @@ const components = {
         name: 'FormCalendar',
         title: '日期',
         showType: 'datepicker',
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue'
+        },
         isContainer: false,
         attrs: {
             hasWeekday: {
@@ -201,6 +229,10 @@ const components = {
         name: 'FormCheckbox',
         title: '开关',
         showType: 'switch',
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue'
+        },
         isContainer: false,
         attrs: {
             text: {
@@ -214,6 +246,11 @@ const components = {
         name: 'FormCheckList',
         title: '多选框',
         showType: 'checkbox',
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue',
+            selectArray: 'selectArray'
+        },
         isContainer: false,
         attrs: {
             selectArray: {
@@ -256,6 +293,11 @@ const components = {
         name: 'FormDropDownList',
         title: '下拉框',
         showType: 'select',
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue',
+            selectArray: 'selectArray'
+        },
         isContainer: false,
         attrs: {
             selectArray: {
@@ -325,6 +367,11 @@ const components = {
         name: 'FormRadioList',
         title: '单选框',
         showType: 'radio',
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue',
+            selectArray: 'selectArray'
+        },
         isContainer: false,
         attrs: {
             selectArray: {
@@ -345,6 +392,10 @@ const components = {
         name: 'FormMultiInput',
         title: '多文本输入框',
         showType: 'input',
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue'
+        },
         isContainer: false,
         attrs: {
             text: {
@@ -403,6 +454,10 @@ const components = {
         name: 'FormPercent',
         title: '百分比滑块',
         showType: 'slider',
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue'
+        },
         isContainer: false,
         attrs: {
             start: {
@@ -434,6 +489,10 @@ const components = {
         name: 'FormTab',
         title: 'Tab页签',
         showType: 'input',
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue'
+        },
         isContainer: false,
         attrs: {
             selectArray: {
@@ -458,6 +517,10 @@ const components = {
         name: 'FormTextarea',
         title: '多行文本框',
         showType: 'input',
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue'
+        },
         isContainer: false,
         attrs: {
             placeholder: {
@@ -514,6 +577,12 @@ const components = {
         name: 'FormUpload',
         title: '上传',
         showType: 'upload',
+        showOption: {
+            title: 'dataTitle',
+            showFileList: 'showFileText',
+            browseText: 'browseText',
+            uploadText: 'uploadText'
+        },
         isContainer: false,
         attrs: {
             submitUrl: {
@@ -591,6 +660,10 @@ const components = {
         name: 'FormTable',
         title: '表格',
         showType: 'table',
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue'
+        },
         isContainer: true,
         ignorCommon: true,
         attrs: {
@@ -784,7 +857,8 @@ const components = {
             title: '组件类型',
             valueType: 'string',
             required: true,
-            defaultValue: ''
+            hidden: true, //不进行显示配置
+            defaultValue: '$[name]'
         },
         dataField: {
             title: '数据字段',
@@ -796,7 +870,7 @@ const components = {
             title: '标题，不填则无标题显示',
             valueType: 'string',
             required: false,
-            defaultValue: ''
+            defaultValue: '$[title]'
         },
         editable: {
             title: '是否可编辑',
