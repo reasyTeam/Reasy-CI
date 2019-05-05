@@ -77,11 +77,13 @@ const components = {
         // 显示组件时使用
         showOption: {
             title: 'dataTitle',
-            value: 'defaultValue'
+            value: 'defaultValue',
+            type: 'type'
         },
         isContainer: false,
+        valueType: 'string',
         attrs: {
-            placeholder: {
+            type: {
                 title: 'type类型',
                 valueType: 'enum',
                 selectArray: ['text', 'password'],
@@ -93,6 +95,149 @@ const components = {
                 valueType: 'string',
                 required: false,
                 defaultValue: ''
+            },
+            dataValueType: {
+                title: '值类型',
+                valueType: 'string',
+                required: false,
+                hidden: true, //不进行显示配置
+                defaultValue: 'string'
+            },
+            displayMode: {
+                title: '模式',
+                valueType: 'enum',
+                selectArray: [{
+                    text: '只读',
+                    value: 'readonly'
+                }, {
+                    text: '写入',
+                    value: 'edit'
+                }, {
+                    text: '只读/写入切换',
+                    value: 'readEdit'
+                }],
+                required: true,
+                defaultValue: 'edit'
+            },
+            removeSpace: {
+                title: '移除首尾空格',
+                valueType: 'bool',
+                required: false,
+                defaultValue: false
+            },
+            hasEyes: {
+                title: '是否有眼睛图标显示',
+                valueType: 'bool',
+                required: false,
+                defaultValue: false
+            },
+            hasTitleDes: {
+                title: '输入框前面的间短的描述性文字',
+                valueType: 'string',
+                required: false,
+                defaultValue: ''
+            },
+            dataOptions: { // 重点考虑项如何配置
+                title: '数据校验项',
+                valueType: 'array',
+                itemType: 'validate',
+                required: false,
+                defaultValue: []
+            },
+            defaultText: {
+                title: '值为空时显示的默认文本',
+                valueType: 'string',
+                required: false,
+                defaultValue: ''
+            },
+            defaultTextClass: {
+                title: '默认文本class',
+                valueType: 'string',
+                required: false,
+                defaultValue: 'gray'
+            },
+            dataPrefix: {
+                title: '只读模式显示值前缀',
+                valueType: 'string',
+                required: false,
+                defaultValue: ''
+            },
+            regExp: {
+                title: '允许输入项的正则',
+                valueType: 'regexp',
+                required: false,
+                defaultValue: null
+            },
+            maxLength: {
+                title: '最大输入字符数',
+                valueType: 'number',
+                required: false,
+                defaultValue: 0
+            },
+            maxCallBack: {
+                title: '值大于max回调',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            },
+            switchCallBack: {
+                title: '切换模式回调',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            },
+            focusCallBack: {
+                title: '聚焦回调',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            },
+            blurCallBack: {
+                title: '失焦回调',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            }
+        }
+    }, {
+        name: 'FormInputNum',
+        title: '数字',
+        showType: 'input', // input, select, checkbox, radio, checkbox, switch, slider, datepicker, label, upload
+        // 显示组件时使用
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue',
+            type: 'type'
+        },
+        isContainer: false,
+        valueType: 'number', // $attr[selectArray]
+        attrs: {
+            dataKey: {
+                title: '组件类型',
+                valueType: 'string',
+                required: true,
+                hidden: true, //不进行显示配置
+                defaultValue: 'FormInput'
+            },
+            type: {
+                title: 'type类型',
+                valueType: 'enum',
+                selectArray: ['text', 'password'],
+                required: false,
+                defaultValue: 'text'
+            },
+            placeholder: {
+                title: '提示信息',
+                valueType: 'string',
+                required: false,
+                defaultValue: ''
+            },
+            dataValueType: {
+                title: '值类型',
+                valueType: 'number',
+                required: false,
+                hidden: true, //不进行显示配置
+                defaultValue: 0
             },
             displayMode: {
                 title: '模式',
@@ -198,6 +343,7 @@ const components = {
             title: 'dataTitle',
             value: 'defaultValue'
         },
+        valueType: 'datetime',
         isContainer: false,
         attrs: {
             hasWeekday: {
@@ -234,6 +380,7 @@ const components = {
             value: 'defaultValue'
         },
         isContainer: false,
+        valueType: 'bool',
         attrs: {
             text: {
                 title: '描述信息',
@@ -252,6 +399,7 @@ const components = {
             selectArray: 'selectArray'
         },
         isContainer: false,
+        valueType: '2|selectArray',
         attrs: {
             selectArray: {
                 title: '选项列表',
@@ -298,6 +446,7 @@ const components = {
             value: 'defaultValue',
             selectArray: 'selectArray'
         },
+        valueType: '1|selectArray',
         isContainer: false,
         attrs: {
             selectArray: {
@@ -373,6 +522,7 @@ const components = {
             selectArray: 'selectArray'
         },
         isContainer: false,
+        valueType: '1|selectArray',
         attrs: {
             selectArray: {
                 title: '选项列表',
@@ -394,9 +544,15 @@ const components = {
         showType: 'input',
         showOption: {
             title: 'dataTitle',
-            value: 'defaultValue'
+            value: 'defaultValue',
+            multiple: true,
+            text: 'text',
+            type: 'type',
+            inputCount: 'inputCount',
+            joiner: 'joiner'
         },
         isContainer: false,
+        valueType: 'string',
         attrs: {
             text: {
                 title: '文本框前面显示的文本',
@@ -408,7 +564,7 @@ const components = {
                 title: '最大输入字符数',
                 valueType: 'number',
                 required: false,
-                defaultValue: null
+                defaultValue: 20
             },
             regExp: {
                 title: '输入校验正则',
@@ -441,7 +597,7 @@ const components = {
                 title: '文本框个数',
                 valueType: 'number',
                 required: false,
-                defaultValue: 0
+                defaultValue: 4
             },
             joiner: {
                 title: '数据连接符',
@@ -459,6 +615,7 @@ const components = {
             value: 'defaultValue'
         },
         isContainer: false,
+        valueType: 'number',
         attrs: {
             start: {
                 title: '最小值',
@@ -488,12 +645,15 @@ const components = {
     }, {
         name: 'FormTab',
         title: 'Tab页签',
-        showType: 'input',
+        showType: 'radio',
         showOption: {
             title: 'dataTitle',
-            value: 'defaultValue'
+            value: 'defaultValue',
+            isButton: true,
+            selectArray: 'selectArray'
         },
         isContainer: false,
+        valueType: '1|selectArray',
         attrs: {
             selectArray: {
                 title: '选项列表',
@@ -519,9 +679,12 @@ const components = {
         showType: 'input',
         showOption: {
             title: 'dataTitle',
-            value: 'defaultValue'
+            value: 'defaultValue',
+            type: 'textarea',
+            rows: 3
         },
         isContainer: false,
+        valueType: 'string',
         attrs: {
             placeholder: {
                 title: '提示信息',
@@ -584,6 +747,7 @@ const components = {
             uploadText: 'uploadText'
         },
         isContainer: false,
+        ignorCommon: ['defaultValue'],
         attrs: {
             submitUrl: {
                 title: '提交地址',
@@ -661,8 +825,7 @@ const components = {
         title: '表格',
         showType: 'table',
         showOption: {
-            title: 'dataTitle',
-            value: 'defaultValue'
+            columns: 'columns'
         },
         isContainer: true,
         ignorCommon: true,
@@ -898,14 +1061,15 @@ const components = {
                 value: undefined
             }],
             required: false,
-            defaultValue: 'undefined'
+            defaultValue: undefined
         },
-        sync: {
-            title: '是否同步',
-            valueType: 'bool',
-            required: false,
-            defaultValue: true
-        },
+        // sync: {
+        //     title: '是否同步',
+        //     valueType: 'bool',
+        //     required: false,
+        //     hidden: true, //不进行显示配置
+        //     defaultValue: true
+        // },
         css: {
             title: '自定义样式类',
             valueType: 'string',
@@ -939,16 +1103,9 @@ const components = {
         defaultValue: {
             title: '默认值',
             valueType: 'sync',
-            syncKey: 'dataValueType',
+            syncKey: 'valueType',
             required: false,
             defaultValue: ''
-        },
-        dataValueType: {
-            title: '值类型',
-            valueType: 'enum', // bool, num, float, string
-            selectArray: ['bool', 'num', 'float', 'string'],
-            required: false,
-            defaultValue: 'string'
         },
         description: {
             title: '描述信息',

@@ -79,6 +79,9 @@ export default {
         },
         [types.UPDATE_CFG_ATTR](state, option) {
             state.cfgList[state.selected]['attrs'][option.attr] = option.value;
+            // if (typeof option.value === 'object') {
+            //     Vue.set(state.cfgList[state.selected]['attrs'], option.attr, option.value);
+            // }
         }
     },
     actions: {

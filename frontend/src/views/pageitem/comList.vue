@@ -10,7 +10,7 @@
         :clone="clone"
         tag="ul"
       >
-        <li class="group-item" v-for="element in item.list" :key="element.name">
+        <li class="group-item" v-for="(element, index) in item.list" :key="element.name + index">
           <a>{{ element.title }}</a>
         </li>
       </draggable>
@@ -42,12 +42,14 @@ export default {
     // 通过clone给configList添加组件列表
     clone(component) {
       let data = {
-        id: this.idGlobal,
-        name: component.name,
-        showOption: component.showOption,
-        title: component.title,
-        type: component.showType
+        id: this.idGlobal
       };
+
+      for (let key in component) {
+        if (key !== "attrs") {
+          data[key] = component[key];
+        }
+      }
       this[types.ADD_CFG](data);
       return data;
     }

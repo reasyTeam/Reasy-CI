@@ -1,5 +1,5 @@
 <template>
-  <el-upload action="tt" disabled>
+  <el-upload action="tt" disabled class="upload">
     <el-button size="small" type="primary" v-show="option.browseText">{{option.browseText}}</el-button>
     <el-button
       style="margin-left: 10px;"
@@ -15,4 +15,13 @@ export default {
   props: ["option"]
 };
 </script>
+
+<style scoped>
+/* .el-upload {
+  display: flex;
+  width: 100%;
+  align-items: center;
+} */
+</style>
+
 

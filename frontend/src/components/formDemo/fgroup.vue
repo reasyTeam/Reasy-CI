@@ -25,12 +25,14 @@ export default {
   props: ["option"],
   computed: {
     curComponent() {
-      return `f-${this.option.type}`;
+      return `f-${this.option.showType}`;
     },
     propData() {
       let obj = {};
       for (let key in this.option.showOption) {
-        obj[key] = this.option.attrs[this.option.showOption[key]];
+        let val = this.option.attrs[this.option.showOption[key]];
+        obj[key] =
+          val === null || val === undefined ? this.option.showOption[key] : val;
       }
       return obj;
     }
@@ -63,8 +65,8 @@ export default {
 }
 
 .f-title {
-  height: 40px;
-  line-height: 40px;
+  display: flex;
+  line-height: 20px;
 }
 </style>
 

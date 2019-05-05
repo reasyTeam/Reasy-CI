@@ -1,21 +1,12 @@
 <template>
   <div>
-    <el-input-number
-      v-if="isNumber"
-      v-model="val"
-      @input.native="change"
-      :min="option.min"
-      :max="option.max"
-    ></el-input-number>
-    <el-input :placeholder="option.title" :type="option.type" v-model="val" @change="change" v-else></el-input>
+    <el-input-number v-if="isNumber" v-model="val" :min="option.min" :max="option.max"></el-input-number>
+    <el-input :placeholder="option.title" :type="option.type" v-model="val" v-else></el-input>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return { val: this.value };
-  },
   props: {
     option: {
       required: true,
@@ -26,13 +17,16 @@ export default {
     }
   },
   computed: {
+    val: {
+      get: function() {
+        return this.value;
+      },
+      set: function(newValue) {
+        this.$emit("setValue", newValue);
+      }
+    },
     isNumber() {
       return this.option.valueType === "number";
-    }
-  },
-  methods: {
-    change(val) {
-      this.$emit("setValue", val);
     }
   }
 };

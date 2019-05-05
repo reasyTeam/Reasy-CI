@@ -5,7 +5,7 @@
       <component
         :is="components[option.valueType]"
         :value="value"
-        :option="option"
+        :option="pOption"
         @setValue="setValue"
       ></component>
     </div>
@@ -44,6 +44,9 @@ export default {
     };
   },
   props: {
+    currentCfg: {
+      required: true
+    },
     attr: {
       required: true
     },
@@ -52,6 +55,39 @@ export default {
     },
     value: {
       default: ""
+    }
+  },
+  computed: {
+    pOption() {
+      if (
+        this.option.valueType === "enum" &&
+        typeof this.option.selectArray === "string"
+      ) {
+        // 修改成{text: '', value: ''}
+        let arr = this.currentCfg[this.option.selectArray] || [],
+          res = [];
+        arr.forEach(item => {
+          if (typeof item === "object") {
+            for (let key in item) {
+              res.push({
+                text: item[key],
+                value: key
+              });
+              return;
+            }
+          } else {
+            res.push({
+              text: item,
+              value: item
+            });
+          }
+        });
+        return {
+          selectArray: res,
+          multiple: this.option.multiple
+        };
+      }
+      return this.option;
     }
   },
   methods: {

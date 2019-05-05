@@ -98,16 +98,25 @@ class FileDataBase {
                 Object.values(item.attrs).forEach(attr => {
                     // 同步表达式
                     if (attr.valueType === 'sync') {
-                        let syncAttr = item.attrs[attr.syncKey];
+                        let syncAttr = item[attr.syncKey];
+                        if (!syncAttr) {
+                            syncAttr = item.attrs[attr.syncKey];
+                        }
                         if (syncAttr) {
-                            for (let key in syncAttr) {
-                                if (!['title', 'required'].includes(key)) {
-                                    attr[key] = syncAttr[key];
+                            if (typeof syncAttr === 'object') {
+                                attr.valueType = syncAttr.valueType || 'string';
+                            } else {
+                                if (/\d\|/.test(syncAttr)) {
+                                    attr.valueType = 'enum';
+                                    attr.selectArray = syncAttr.split('|')[1];
+                                    attr.multiple = syncAttr.split('|')[0] == 2; // 是否可多选
+                                } else {
+                                    attr.valueType = syncAttr;
                                 }
                             }
                         }
                     }
-                    // 解析defaultValue表达式
+                    // 解析属性defaultValue表达式
                     let dValue = attr.defaultValue;
                     if (dValue && typeof dValue === 'string') {
                         let match;
@@ -137,7 +146,6 @@ class FileDataBase {
 
     updateData(id) {
         this.cacheData[id] = null;
-        // this.getComponents(id);
     }
 }
 

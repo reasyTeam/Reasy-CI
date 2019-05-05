@@ -34,6 +34,7 @@ import {
     Switch,
     Slider,
     Radio,
+    RadioButton,
     RadioGroup,
     Tabs,
     TabPane,
@@ -71,6 +72,7 @@ Vue.use(CheckboxGroup)
 Vue.use(Switch)
 Vue.use(Slider)
 Vue.use(Radio)
+Vue.use(RadioButton)
 Vue.use(RadioGroup)
 Vue.use(Tabs)
 Vue.use(TabPane)

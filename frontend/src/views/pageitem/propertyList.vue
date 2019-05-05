@@ -6,6 +6,7 @@
         v-for="(val, key) in currentAttrs"
         :key="key+selected"
         :value="currentCfg[key]"
+        :currentCfg="currentCfg"
         :option="val"
         :attr="key"
         @setValue="setValue"

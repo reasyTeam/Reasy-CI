@@ -1,16 +1,55 @@
 <template>
   <div>
-    <div class="arr-item" v-if="list.length === 0">
-      <el-input value="请点击添加按钮进行添加" disabled style="flex:1;"></el-input>
-      <i class="el-icon-plus arr-icon" title="添加" @click="add"></i>
+    <div class="arr-item">
+      <label class="arr-label">配置项类型：</label>
+      <el-select v-model="type" class="arr-select">
+        <el-option label="String" :value="1"></el-option>
+        <el-option label="Object" :value="2"></el-option>
+      </el-select>
+    </div>
+    <div v-if="list.length === 0">
+      <div class="arr-item">
+        <el-input value="请点击添加按钮进行添加" disabled style="flex:1;"></el-input>
+        <i class="el-icon-plus arr-icon" title="添加" @click="add"></i>
+      </div>
     </div>
     <draggable v-else :list="list" handle=".el-icon-rank" @end="setValue">
-      <div v-for="(item, index) in list" :key="index" class="arr-item">
-        <input :value="item" @change="change(index, $event)" class="arr-input">
-        <i class="el-icon-rank arr-icon" title="移动"></i>
-        <i class="el-icon-plus arr-icon" title="添加" @click="add"></i>
-        <i class="el-icon-minus arr-icon" title="删除" @click="remove(index)"></i>
-      </div>
+      <template v-if="type === 1">
+        <div v-for="(item, index) in list" :key="index" class="arr-item">
+          <input
+            :value="item"
+            @change="change(index, $event)"
+            class="arr-input"
+            placeholder="请输入选项"
+          >
+          <i class="el-icon-rank arr-icon" title="移动"></i>
+          <i class="el-icon-plus arr-icon" title="添加" @click="add"></i>
+          <i class="el-icon-minus arr-icon" title="删除" @click="remove(index)"></i>
+        </div>
+      </template>
+      <template v-else>
+        <div v-for="(item, index) in list" :key="index" class="arr-item">
+          <div class="arr-wrap" v-for="(value, key) in item" :key="key">
+            value:
+            <input
+              :value="key"
+              @change="change(index, $event)"
+              class="obj-input arr-input"
+              placeholder="value"
+            >
+            text:
+            <input
+              :value="value"
+              @change="change(index, $event, key)"
+              class="obj-input arr-input"
+              placeholder="text"
+            >
+          </div>
+          <i class="el-icon-rank arr-icon" title="移动"></i>
+          <i class="el-icon-plus arr-icon" title="添加" @click="add"></i>
+          <i class="el-icon-minus arr-icon" title="删除" @click="remove(index)"></i>
+        </div>
+      </template>
     </draggable>
   </div>
 </template>
@@ -21,7 +60,8 @@ import draggable from "vuedraggable";
 export default {
   data() {
     return {
-      list: this.value || []
+      list: this.value || [],
+      ptype: 1
     };
   },
   props: {
@@ -31,6 +71,27 @@ export default {
     },
     value: {
       required: true
+    }
+  },
+  computed: {
+    type: {
+      get() {
+        if (this.list.length > 0) {
+          return typeof this.list[0] === "string" ? 1 : 2;
+        }
+        return this.ptype;
+      },
+      set(val) {
+        this.ptype = val;
+        // 切换value的值
+        this.list = this.list.map(item => {
+          if (typeof item === "string") {
+            return this.ptype === 1 ? item : { [item]: item };
+          } else {
+            return this.ptype === 1 ? Object.keys(item)[0] : item;
+          }
+        });
+      }
     }
   },
   components: {
@@ -49,14 +110,27 @@ export default {
       this.setValue();
     },
     add() {
-      this.list.push(`选项${this.list.length + 1}`);
+      let text = `选项${this.list.length + 1}`;
+      text = this.type === 1 ? text : { [text]: text };
+      this.list.push(text);
       this.setValue();
     },
     setValue() {
       this.$emit("setValue", this.list);
     },
-    change(index, event) {
-      this.list[index] = event.target.value;
+    change(index, event, key) {
+      if (this.type === 1) {
+        this.list.splice(index, 1, event.target.value);
+      } else {
+        if (key) {
+          this.list[index][key] = event.target.value;
+        } else {
+          let tar = {
+            [event.target.value]: Object.values(this.list[index])[0]
+          };
+          this.list.splice(index, 1, tar);
+        }
+      }
       this.setValue();
     }
   }
@@ -70,6 +144,19 @@ export default {
   justify-content: center;
   align-items: center;
   margin-bottom: 8px;
+
+  .arr-label {
+    flex: 1;
+    text-align: left;
+  }
+
+  .arr-select {
+    width: 150px;
+  }
+
+  .arr-wrap {
+    flex: 1;
+  }
 
   .arr-input {
     flex: 1;
@@ -94,6 +181,11 @@ export default {
     &:focus {
       border-color: #409eff;
       outline: 0;
+    }
+
+    &.obj-input {
+      padding: 6px;
+      width: 70px;
     }
   }
 

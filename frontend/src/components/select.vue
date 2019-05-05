@@ -1,8 +1,8 @@
 <template>
-  <el-select v-model="val" placeholder="请选择" @change="change">
+  <el-select v-model="val" :multiple="option.multiple" placeholder="请选择" @change="change">
     <el-option
-      v-for="item in option.selectArray"
-      :key="item.value"
+      v-for="(item,index) in option.selectArray"
+      :key="item.value + '-' + index"
       :label="item.text"
       :value="item.value"
     ></el-option>
