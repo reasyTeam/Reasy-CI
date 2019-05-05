@@ -612,7 +612,8 @@ const components = {
         showType: 'slider',
         showOption: {
             title: 'dataTitle',
-            value: 'defaultValue'
+            value: 'defaultValue',
+            showInput: 'showInput'
         },
         isContainer: false,
         valueType: 'number',

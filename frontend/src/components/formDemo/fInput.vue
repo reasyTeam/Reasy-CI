@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="input-wrap" :class="{'input-max':option.multiple||option.type==='textarea'}">
     <template v-if="option.multiple">
       <label v-if="option.text">{{option.text}}</label>
       <template v-for="index in option.inputCount">
@@ -25,9 +25,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.wrapper {
+.input-wrap {
   display: flex;
+  width: 200px;
+  align-items: center;
   flex-wrap: nowrap;
+
+  &.input-max {
+    width: 100%;
+  }
 }
 
 .el-multi {
