@@ -3,8 +3,7 @@
     <div class="arr-item">
       <label class="arr-label">配置项类型：</label>
       <el-select v-model="type" class="arr-select">
-        <el-option label="String" :value="1"></el-option>
-        <el-option label="Object" :value="2"></el-option>
+        <el-option v-for="(text, key) in valueType" :label="text" :value="key" :key="key"></el-option>
       </el-select>
     </div>
     <div v-if="list.length === 0">
@@ -61,7 +60,12 @@ export default {
   data() {
     return {
       list: this.value || [],
-      ptype: 1
+      ptype: 1,
+      valueType: {
+        1: "枚举",
+        2: "键值对",
+        3: "属性配置框"
+      }
     };
   },
   props: {
@@ -77,7 +81,7 @@ export default {
     type: {
       get() {
         if (this.list.length > 0) {
-          return typeof this.list[0] === "string" ? 1 : 2;
+          return typeof this.list[0] === "object" ? 2 : 1;
         }
         return this.ptype;
       },
@@ -85,7 +89,7 @@ export default {
         this.ptype = val;
         // 切换value的值
         this.list = this.list.map(item => {
-          if (typeof item === "string") {
+          if (typeof item !== "object") {
             return this.ptype === 1 ? item : { [item]: item };
           } else {
             return this.ptype === 1 ? Object.keys(item)[0] : item;

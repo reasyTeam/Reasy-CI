@@ -854,6 +854,7 @@ const components = {
                 title: '表格数据',
                 valueType: 'array',
                 itemType: 'object',
+                hidden: true,
                 required: false,
                 defaultValue: []
             },
@@ -966,7 +967,8 @@ const components = {
             columns: {
                 title: '列配置',
                 valueType: 'array',
-                itemType: {
+                itemType: 'object',
+                itemCfg: {
                     field: {
                         title: '单元格对应的字段',
                         valueType: 'string',
