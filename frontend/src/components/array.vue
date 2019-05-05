@@ -1,9 +1,10 @@
 <template>
   <div>
-    <div class="arr-item">
+    <div class="arr-item" v-if="type != 3">
       <label class="arr-label">配置项类型：</label>
       <el-select v-model="type" class="arr-select">
-        <el-option v-for="(text, key) in valueType" :label="text" :value="key" :key="key"></el-option>
+        <el-option label="枚举" :value="1"></el-option>
+        <el-option label="健值对" :value="2"></el-option>
       </el-select>
     </div>
     <div v-if="list.length === 0">
@@ -13,21 +14,16 @@
       </div>
     </div>
     <draggable v-else :list="list" handle=".el-icon-rank" @end="setValue">
-      <template v-if="type === 1">
-        <div v-for="(item, index) in list" :key="index" class="arr-item">
+      <div v-for="(item, index) in list" :key="index" class="arr-item">
+        <template v-if="type === 1">
           <input
             :value="item"
             @change="change(index, $event)"
             class="arr-input"
             placeholder="请输入选项"
           >
-          <i class="el-icon-rank arr-icon" title="移动"></i>
-          <i class="el-icon-plus arr-icon" title="添加" @click="add"></i>
-          <i class="el-icon-minus arr-icon" title="删除" @click="remove(index)"></i>
-        </div>
-      </template>
-      <template v-else>
-        <div v-for="(item, index) in list" :key="index" class="arr-item">
+        </template>
+        <template v-else>
           <div class="arr-wrap" v-for="(value, key) in item" :key="key">
             value:
             <input
@@ -44,11 +40,11 @@
               placeholder="text"
             >
           </div>
-          <i class="el-icon-rank arr-icon" title="移动"></i>
-          <i class="el-icon-plus arr-icon" title="添加" @click="add"></i>
-          <i class="el-icon-minus arr-icon" title="删除" @click="remove(index)"></i>
-        </div>
-      </template>
+        </template>
+        <i class="el-icon-rank arr-icon" title="移动"></i>
+        <i class="el-icon-plus arr-icon" title="添加" @click="add"></i>
+        <i class="el-icon-minus arr-icon" title="删除" @click="remove(index)"></i>
+      </div>
     </draggable>
   </div>
 </template>
@@ -64,7 +60,7 @@ export default {
       valueType: {
         1: "枚举",
         2: "键值对",
-        3: "属性配置框"
+        3: "属性配置框" //包含itemCfg属性则直接显示该模式
       }
     };
   },
@@ -80,6 +76,9 @@ export default {
   computed: {
     type: {
       get() {
+        if (this.option.itemCfg) {
+          return 3;
+        }
         if (this.list.length > 0) {
           return typeof this.list[0] === "object" ? 2 : 1;
         }
