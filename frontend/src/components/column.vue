@@ -11,8 +11,8 @@
       ></fgroup>
     </div>
     <div slot="footer" class="dialog-footer">
-      <!-- <el-button @click="cancel">取 消</el-button> -->
-      <el-button type="primary" @click="hide">确 定</el-button>
+      <el-button @click="hide">取 消</el-button>
+      <el-button type="primary" @click="submit">确 定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -21,11 +21,20 @@
 import { mapState, mapMutations } from "vuex";
 import * as types from "@/store/types.js";
 import fgroup from "@/components/group.vue";
+import { deepClone } from "@/assets/lib.js";
 
 export default {
-  props: ["itemOption", "itemConfig"],
   computed: {
-    ...mapState("itemConfig", ["dialogVisible"]),
+    ...mapState("components/itemConfig", [
+      "dialogVisible",
+      "itemOption",
+      "itemConfigs",
+      "cfgAttr",
+      "cfgIndex"
+    ]),
+    itemConfig() {
+      return deepClone(this.itemConfigs[this.cfgIndex]);
+    },
     visible: {
       get() {
         return this.dialogVisible;
@@ -36,13 +45,21 @@ export default {
     }
   },
   methods: {
-    ...mapMutations("itemConfig", [types.SET_DIALOG_VISIBLE]),
+    ...mapMutations("components/itemConfig", [types.SET_DIALOG_VISIBLE]),
+    ...mapMutations("components", [types.UPDATE_CFG_ATTR]),
+    setValue(attr, value) {
+      this.itemConfig[attr] = value;
+    },
     hide() {
       this[types.SET_DIALOG_VISIBLE](false);
     },
-    setValue(attr, value) {
-      this.itemConfig[attr] = value;
-      this.emit("setConfig");
+    submit() {
+      this.itemConfigs.split(this.cfgIndex, 1, this.itemConfig);
+      this[types.UPDATE_CFG_ATTR]({
+        attr: this.cfgAttr,
+        value: this.itemConfigs
+      });
+      this.hide();
     }
   },
   components: {

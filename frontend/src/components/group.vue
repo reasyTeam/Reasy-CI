@@ -5,6 +5,7 @@
       <component
         :is="components[option.valueType]"
         :value="value"
+        :attr="attr"
         :option="pOption"
         @setValue="setValue"
       ></component>

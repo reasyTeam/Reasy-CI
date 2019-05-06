@@ -14,3 +14,5 @@ export const SET_VALIDATES = 'SET_VALIDATES';
 export const UPDATE_CFG_ATTR = 'UPDATE_CFG_ATTR';
 export const SET_ITEM_CONFIG = 'SET_ITEM_CONFIG';
 export const SET_DIALOG_VISIBLE = 'SET_DIALOG_VISIBLE';
+export const SET_CFG_ATTR = 'SET_CFG_ATTR';
+export const SET_ITEM_INDEX = 'SET_ITEM_INDEX';

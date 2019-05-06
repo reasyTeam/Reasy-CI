@@ -84,9 +84,13 @@ export default {
     },
     value: {
       required: true
+    },
+    attr: {
+      required: true
     }
   },
   computed: {
+    ...mapState("components/itemConfig", ""),
     type: {
       get() {
         if (this.option.itemCfg) {
@@ -120,21 +124,20 @@ export default {
         return data;
       }
       return {};
-    },
-    itemConfig() {
-      if (this.columnIndex === -1) {
-        return {};
-      }
-      return this.list[this.columnIndex];
     }
   },
   components: {
     draggable
   },
   methods: {
-    ...mapMutations("itemConfig", [types.SET_DIALOG_VISIBLE]),
+    ...mapMutations("components/itemConfig", [
+      types.SET_DIALOG_VISIBLE,
+      types.SET_ITEM_INDEX,
+      types.SET_CFG_ATTR
+    ]),
     showDialog(index) {
-      this.columnIndex = index;
+      this[types.SET_CFG_ATTR](this.attr);
+      this[types.SET_ITEM_INDEX](index);
       this[types.SET_DIALOG_VISIBLE](true);
     },
     remove(index) {
