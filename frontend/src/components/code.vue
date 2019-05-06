@@ -9,7 +9,12 @@
       @click="codedDialogVisible = true"
     >点击配置{{option.valueType}}</el-button>
 
-    <el-dialog :title="title" :visible.sync="codedDialogVisible" width="600px">
+    <el-dialog
+      :title="title"
+      :visible.sync="codedDialogVisible"
+      :append-to-body="true"
+      width="600px"
+    >
       <codemirror v-model="code" :options="cmOptions"></codemirror>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
@@ -116,7 +121,10 @@ export default {
   },
   mounted() {
     if (this.value) {
-      this.code = this.value;
+      this.code =
+        typeof this.value === "object"
+          ? JSON.stringify(this.value)
+          : this.value;
       this.startCode = this.code;
       return;
     }

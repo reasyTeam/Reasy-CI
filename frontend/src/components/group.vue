@@ -1,5 +1,5 @@
 <template>
-  <section class="cfg-item" v-if="!option.hidden">
+  <section class="cfg-item" :class="{nowrap: nowrap}" v-if="!option.hidden">
     <div class="cfg-title">{{option.title}}</div>
     <div>
       <component
@@ -55,6 +55,10 @@ export default {
     },
     value: {
       default: ""
+    },
+    nowrap: {
+      default: false,
+      required: false
     }
   },
   computed: {
@@ -116,6 +120,17 @@ export default {
   font-size: 12px;
   padding: 8px 0;
   color: #333;
+}
+
+.nowrap {
+  display: flex;
+  .cfg-title {
+    width: 40%;
+  }
+
+  .cfg-item {
+    flex: 1;
+  }
 }
 </style>
 

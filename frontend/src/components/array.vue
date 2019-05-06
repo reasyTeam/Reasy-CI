@@ -9,7 +9,7 @@
     </div>
     <div v-if="list.length === 0">
       <div class="arr-item">
-        <el-input value="请点击添加按钮进行添加" disabled style="flex:1;"></el-input>
+        <el-button @click="add" plain type="primary" icon="el-icon-plus" style="flex:1;">请点击添加</el-button>
         <i class="el-icon-plus arr-icon" title="添加" @click="add"></i>
       </div>
     </div>
@@ -48,6 +48,7 @@
             plain
             class="codebtn"
             @click="showDialog(index)"
+            style="flex:1"
           >{{item[option.showOption.title]}}</el-button>
         </template>
         <i class="el-icon-rank arr-icon" title="移动"></i>

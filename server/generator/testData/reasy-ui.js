@@ -826,7 +826,9 @@ const components = {
         title: '表格',
         showType: 'table',
         showOption: {
-            columns: 'columns'
+            columns: 'columns',
+            title: 'title',
+            field: 'field'
         },
         isContainer: true,
         ignorCommon: true,
@@ -841,7 +843,7 @@ const components = {
                 title: '请求参数',
                 valueType: 'object',
                 required: false,
-                defaultValue: {}
+                defaultValue: null
             },
             requestType: {
                 title: '请求类型',
@@ -849,6 +851,79 @@ const components = {
                 selectArray: ['get', 'post'],
                 required: false,
                 defaultValue: 'post'
+            }, // 列如何配置
+            columns: {
+                title: '列配置',
+                valueType: 'array',
+                itemType: 'object',
+                showOption: {
+                    title: 'title'
+                },
+                itemCfg: {
+                    field: {
+                        title: '单元格对应的字段',
+                        valueType: 'string',
+                        required: true,
+                        defaultValue: ''
+                    },
+                    title: {
+                        title: '列显示标题',
+                        valueType: 'string',
+                        required: false,
+                        defaultValue: ''
+                    },
+                    width: {
+                        title: '列宽',
+                        valueType: 'string',
+                        required: false,
+                        defaultValue: ''
+                    },
+                    sortable: {
+                        title: '设置字段是否可以排序',
+                        valueType: 'bool',
+                        required: false,
+                        defaultValue: false
+                    },
+                    sortCallBack: {
+                        title: '自定义排序逻辑函数',
+                        valueType: 'function',
+                        required: false,
+                        defaultValue: null
+                    },
+                    format: {
+                        title: '格式化单元格数据，必须有返回值',
+                        valueType: 'function',
+                        required: false,
+                        defaultValue: null
+                    },
+                    rendered: {
+                        title: '渲染完成后的回调',
+                        valueType: 'function',
+                        required: false,
+                        defaultValue: null
+                    }
+                },
+                required: true,
+                defaultValue: []
+            },
+            showCheckbox: {
+                title: '显示checkbox',
+                valueType: 'bool',
+                required: false,
+                defaultValue: false
+            },
+            sortFields: {
+                title: '排序字段规则优先级顺序',
+                valueType: 'array',
+                itemType: 'string',
+                required: false,
+                defaultValue: []
+            },
+            sortOpt: {
+                title: '排序字段对应的排序规则',
+                valueType: 'object',
+                required: false,
+                defaultValue: {}
             },
             data: {
                 title: '表格数据',
@@ -915,30 +990,11 @@ const components = {
                 required: true,
                 defaultValue: 'ID'
             },
-            sortFields: {
-                title: '排序字段规则优先级顺序',
-                valueType: 'array',
-                itemType: 'string',
-                required: false,
-                defaultValue: []
-            },
-            sortOpt: {
-                title: '排序字段对应的排序规则',
-                valueType: 'object',
-                required: false,
-                defaultValue: {}
-            },
             sortFunction: {
                 title: '自定义排序函数',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
-            },
-            showCheckbox: {
-                title: '显示checkbox',
-                valueType: 'bool',
-                required: false,
-                defaultValue: false
             },
             maxIndex: {
                 title: '分页栏最多显示按钮数',
@@ -963,60 +1019,6 @@ const components = {
                 valueType: 'function',
                 required: false,
                 defaultValue: null
-            }, // 列如何配置
-            columns: {
-                title: '列配置',
-                valueType: 'array',
-                itemType: 'object',
-                showOption: {
-                    title: 'title'
-                },
-                itemCfg: {
-                    field: {
-                        title: '单元格对应的字段',
-                        valueType: 'string',
-                        required: true,
-                        defaultValue: ''
-                    },
-                    title: {
-                        title: '列显示标题',
-                        valueType: 'string',
-                        required: false,
-                        defaultValue: ''
-                    },
-                    width: {
-                        title: '列宽',
-                        valueType: 'string',
-                        required: false,
-                        defaultValue: ''
-                    },
-                    sortable: {
-                        title: '设置字段是否可以排序',
-                        valueType: 'bool',
-                        required: false,
-                        defaultValue: false
-                    },
-                    sortCallBack: {
-                        title: '自定义排序逻辑函数',
-                        valueType: 'function',
-                        required: false,
-                        defaultValue: null
-                    },
-                    format: {
-                        title: '格式化单元格数据，必须有返回值',
-                        valueType: 'function',
-                        required: false,
-                        defaultValue: null
-                    },
-                    rendered: {
-                        title: '渲染完成后的回调',
-                        valueType: 'function',
-                        required: false,
-                        defaultValue: null
-                    }
-                },
-                required: true,
-                defaultValue: []
             }
         }
     }],
@@ -1047,6 +1049,12 @@ const components = {
             required: false,
             defaultValue: true
         },
+        required: {
+            title: '是否必填',
+            valueType: 'bool',
+            required: false,
+            defaultValue: true
+        },
         visible: {
             title: '是否可见',
             valueType: 'bool',
@@ -1069,6 +1077,13 @@ const components = {
             required: false,
             defaultValue: undefined
         },
+        defaultValue: {
+            title: '默认值',
+            valueType: 'sync',
+            syncKey: 'valueType',
+            required: false,
+            defaultValue: ''
+        },
         // sync: {
         //     title: '是否同步',
         //     valueType: 'bool',
@@ -1088,12 +1103,6 @@ const components = {
             required: false,
             defaultValue: true
         },
-        required: {
-            title: '是否必填',
-            valueType: 'bool',
-            required: false,
-            defaultValue: true
-        },
         autoValidate: {
             title: '是否自动进行数据校验',
             valueType: 'bool',
@@ -1105,13 +1114,6 @@ const components = {
             valueType: 'bool',
             required: false,
             defaultValue: true
-        },
-        defaultValue: {
-            title: '默认值',
-            valueType: 'sync',
-            syncKey: 'valueType',
-            required: false,
-            defaultValue: ''
         },
         description: {
             title: '描述信息',

@@ -6,7 +6,9 @@
         :key="key"
         :value="itemConfig[key]"
         :option="val"
+        :currentCfg="itemConfig"
         :attr="key"
+        :nowrap="true"
         @setValue="setValue"
       ></fgroup>
     </div>
@@ -18,29 +20,46 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapGetters } from "vuex";
 import * as types from "@/store/types.js";
 import fgroup from "@/components/group.vue";
 import { deepClone } from "@/assets/lib.js";
 
 export default {
+  data() {
+    return {
+      itemConfig: {},
+      hasInit: false
+    };
+  },
   computed: {
     ...mapState("components/itemConfig", [
       "dialogVisible",
-      "itemOption",
-      "itemConfigs",
       "cfgAttr",
       "cfgIndex"
     ]),
-    itemConfig() {
-      return deepClone(this.itemConfigs[this.cfgIndex]);
-    },
+    ...mapGetters("components/itemConfig", ["itemOption", "itemConfigs"]),
     visible: {
       get() {
         return this.dialogVisible;
       },
       set(val) {
         this[types.SET_DIALOG_VISIBLE](val);
+      }
+    }
+  },
+  watch: {
+    cfgIndex(newValue) {
+      if (newValue !== -1) {
+        let data = deepClone(this.itemConfigs[this.cfgIndex]);
+        if (this.hasInit) {
+          Object.assign(this.itemConfig, data);
+        } else {
+          this.hasInit = true;
+          for (let key in data) {
+            this.$set(this.itemConfig, key, data[key]);
+          }
+        }
       }
     }
   },
@@ -54,7 +73,7 @@ export default {
       this[types.SET_DIALOG_VISIBLE](false);
     },
     submit() {
-      this.itemConfigs.split(this.cfgIndex, 1, this.itemConfig);
+      this.itemConfigs.splice(this.cfgIndex, 1, this.itemConfig);
       this[types.UPDATE_CFG_ATTR]({
         attr: this.cfgAttr,
         value: this.itemConfigs

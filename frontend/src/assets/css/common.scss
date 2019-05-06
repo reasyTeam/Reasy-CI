@@ -108,6 +108,7 @@ li {
   .group-item {
     width: 100% !important;
     line-height: 40px !important;
+    border: 1px dashed #77bdff;
   }
 }
 
@@ -115,5 +116,5 @@ li {
   font-weight: bold;
   padding: 12px;
   text-align: center;
-  border-bottom: 1px dashed $border-color;
+  border-bottom: 1px solid $border-color;
 }

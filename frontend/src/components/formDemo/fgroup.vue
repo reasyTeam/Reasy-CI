@@ -1,11 +1,16 @@
 <template>
   <el-row class="wrapper">
-    <el-col :span="propData.title ? 6 : 0">
-      <div class="f-title">{{propData.title}}</div>
-    </el-col>
-    <el-col :span="propData.title ? 18 : 24">
+    <template v-if="option.isContainer">
       <component :is="curComponent" :option="propData"></component>
-    </el-col>
+    </template>
+    <template v-else>
+      <el-col :span="propData.title ? 6 : 0">
+        <div class="f-title">{{propData.title}}</div>
+      </el-col>
+      <el-col :span="propData.title ? 18 : 24">
+        <component :is="curComponent" :option="propData"></component>
+      </el-col>
+    </template>
     <slot></slot>
   </el-row>
 </template>
@@ -59,6 +64,7 @@ export default {
   position: relative;
 
   .el-input,
+  .el-select,
   .el-slider {
     width: 200px;
   }

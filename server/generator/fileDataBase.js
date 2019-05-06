@@ -89,9 +89,28 @@ class FileDataBase {
 
         if (components && components.commonAttrs) {
             outData = components.components.map(item => {
+                let funs = {};
+                for (let key in item.attrs) {
+                    if (item.attrs[key].valueType === 'function') {
+                        funs[key] = item.attrs[key];
+                        delete item.attrs[key];
+                    }
+                }
+
+                let cloneAttr = deepClone(components.commonAttrs);
+                for (let key in cloneAttr) {
+                    if (cloneAttr[key].valueType === 'function') {
+                        funs[key] = cloneAttr[key];
+                        delete cloneAttr[key];
+                    }
+                }
 
                 if (!item.ignorCommon) {
-                    item.attrs = Object.assign(deepClone(components.commonAttrs), item.attrs);
+                    item.attrs = Object.assign({}, cloneAttr, item.attrs);
+                }
+
+                for (let key in funs) {
+                    item.attrs[key] = funs[key];
                 }
 
                 // 解析表达式等值

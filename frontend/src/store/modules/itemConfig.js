@@ -1,7 +1,6 @@
 // 组件库操作
 import Vue from 'vue'
 import * as types from '../types'
-import { deepClone } from "@/assets/lib.js";
 
 export default {
     namespaced: true,
@@ -12,24 +11,32 @@ export default {
     },
     getters: {
         currentConfig(state, getters, rootState) {
-            return rootState.components.cfgList[rootState.components.selected];
+            if (rootState.components.selected === -1) {
+                return {};
+            }
+            return rootState.components.cfgList[rootState.components.selected] || {};
         },
         itemConfigs(state, getters) {
             if (state.cfgIndex === -1 || state.cfgAttr === '') {
+                return [];
+            }
+            return getters.currentConfig.attrs[state.cfgAttr] || [];
+        },
+        itemOption(state, getters, rootState) {
+            if (!getters.currentConfig.name) {
                 return {};
             }
-            return getters.currentConfig.attrs[state.cfgAttr];
-        },
-        currentOption(state, getters, rootState) {
-            return rootState.components.attrList[getters.currentConfig.name];
-        },
-        itemOption(state, getters) {
-            return getters.currentOption.itemCfg;
+            let cur = rootState.components.attrList[getters.currentConfig.name],
+                data = cur[state.cfgAttr] ? cur[state.cfgAttr].itemCfg : {}
+            return data;
         }
     },
     mutations: {
         [types.SET_DIALOG_VISIBLE](state, data) {
             state.dialogVisible = data;
+            if (data === false) {
+                state.cfgIndex = -1;
+            }
         },
         [types.SET_CFG_ATTR](state, data) {
             state.cfgAttr = data;

@@ -3,6 +3,7 @@ import Vue from 'vue'
 import * as types from '../types'
 import $http from '@/plugins/axios.js'
 import itemConfig from './itemConfig.js';
+import { deepClone } from "@/assets/lib.js";
 
 export default {
     namespaced: true,
@@ -63,11 +64,12 @@ export default {
         [types.RESET_CFG_LIST](state) {
             state.cfgList = {};
             state.hasReset = true;
+            state.selected = -1;
         },
         [types.ADD_CFG](state, data) {
             state.idGlobal++;
             data.attrs = {};
-            let attrs = state.attrList[data.name];
+            let attrs = deepClone(state.attrList[data.name]);
             for (let key in attrs) {
                 data.attrs[key] = attrs[key]['defaultValue'];
             }

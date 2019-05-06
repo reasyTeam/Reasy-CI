@@ -84,6 +84,7 @@ export default {
 <style lang="scss" scope>
 .cfg-list {
   min-height: 100%;
+  padding-top: 2px;
 }
 
 .list-item {

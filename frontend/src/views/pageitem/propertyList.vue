@@ -1,5 +1,6 @@
 <template>
   <div>
+    <fcolumn></fcolumn>
     <div class="pro-title">组件属性</div>
     <div class="cfg-content">
       <fgroup
@@ -12,7 +13,6 @@
         @setValue="setValue"
       ></fgroup>
     </div>
-    <fcolumn></fcolumn>
   </div>
 </template>
 
