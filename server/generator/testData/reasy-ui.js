@@ -968,6 +968,9 @@ const components = {
                 title: '列配置',
                 valueType: 'array',
                 itemType: 'object',
+                showOption: {
+                    title: 'title'
+                },
                 itemCfg: {
                     field: {
                         title: '单元格对应的字段',

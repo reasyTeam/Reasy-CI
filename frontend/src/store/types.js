@@ -12,3 +12,5 @@ export const ADD_CFG = 'ADD_CFG';
 export const REMOVE_CFG = 'REMOVE_CFG';
 export const SET_VALIDATES = 'SET_VALIDATES';
 export const UPDATE_CFG_ATTR = 'UPDATE_CFG_ATTR';
+export const SET_ITEM_CONFIG = 'SET_ITEM_CONFIG';
+export const SET_DIALOG_VISIBLE = 'SET_DIALOG_VISIBLE';

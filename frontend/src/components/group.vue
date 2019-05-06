@@ -19,7 +19,6 @@ import fswitch from "./switch.vue";
 import fselect from "./select.vue";
 import farray from "./array.vue";
 import fcode from "./code.vue";
-import fcolumn from "./column.vue";
 
 const components = {
   input: "finput",
@@ -30,8 +29,7 @@ const components = {
   regexp: "finput",
   function: "fcode",
   array: "farray",
-  object: "fcode",
-  column: "fcolumn"
+  object: "fcode"
 };
 // function：待定，代码编辑器
 // array：提供可添加的组件
@@ -101,8 +99,7 @@ export default {
     fswitch,
     fselect,
     fcode,
-    farray,
-    fcolumn
+    farray
   }
 };
 </script>

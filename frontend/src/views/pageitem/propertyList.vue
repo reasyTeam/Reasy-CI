@@ -12,6 +12,7 @@
         @setValue="setValue"
       ></fgroup>
     </div>
+    <fcolumn></fcolumn>
   </div>
 </template>
 
@@ -19,6 +20,7 @@
 import { mapState, mapMutations } from "vuex";
 import { deepClone } from "@/assets/lib.js";
 import fgroup from "@/components/group.vue";
+import fcolumn from "@/components/column.vue";
 import * as types from "@/store/types.js";
 
 export default {
@@ -60,7 +62,7 @@ export default {
       });
     }
   },
-  components: { fgroup }
+  components: { fgroup, fcolumn }
 };
 </script>
 

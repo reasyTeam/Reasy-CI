@@ -2,9 +2,13 @@
 import Vue from 'vue'
 import * as types from '../types'
 import $http from '@/plugins/axios.js'
+import itemConfig from './itemConfig.js';
 
 export default {
     namespaced: true,
+    modules: {
+        itemConfig
+    },
     state: {
         // 提供的组件列表
         components: [],

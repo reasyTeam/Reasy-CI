@@ -23,7 +23,7 @@
             placeholder="请输入选项"
           >
         </template>
-        <template v-else>
+        <template v-else-if="type === 2">
           <div class="arr-wrap" v-for="(value, key) in item" :key="key">
             value:
             <input
@@ -41,6 +41,15 @@
             >
           </div>
         </template>
+        <template v-else-if="type === 3">
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            plain
+            class="codebtn"
+            @click="showDialog(index)"
+          >{{item[option.showOption.title]}}</el-button>
+        </template>
         <i class="el-icon-rank arr-icon" title="移动"></i>
         <i class="el-icon-plus arr-icon" title="添加" @click="add"></i>
         <i class="el-icon-minus arr-icon" title="删除" @click="remove(index)"></i>
@@ -51,6 +60,9 @@
 
 <script>
 import draggable from "vuedraggable";
+import { deepClone } from "@/assets/lib.js";
+import { mapState, mapMutations } from "vuex";
+import * as types from "@/store/types.js";
 
 export default {
   data() {
@@ -61,7 +73,8 @@ export default {
         1: "枚举",
         2: "键值对",
         3: "属性配置框" //包含itemCfg属性则直接显示该模式
-      }
+      },
+      columnIndex: -1
     };
   },
   props: {
@@ -95,12 +108,35 @@ export default {
           }
         });
       }
+    },
+    itemObj() {
+      if (this.option.itemCfg) {
+        let data = {},
+          itemCfg = this.option.itemCfg;
+
+        for (let key in itemCfg) {
+          data[key] = itemCfg[key]["defaultValue"];
+        }
+        return data;
+      }
+      return {};
+    },
+    itemConfig() {
+      if (this.columnIndex === -1) {
+        return {};
+      }
+      return this.list[this.columnIndex];
     }
   },
   components: {
     draggable
   },
   methods: {
+    ...mapMutations("itemConfig", [types.SET_DIALOG_VISIBLE]),
+    showDialog(index) {
+      this.columnIndex = index;
+      this[types.SET_DIALOG_VISIBLE](true);
+    },
     remove(index) {
       if (this.list.length === 1) {
         this.$message({
@@ -112,15 +148,27 @@ export default {
       this.list.splice(index, 1);
       this.setValue();
     },
+
     add() {
-      let text = `选项${this.list.length + 1}`;
-      text = this.type === 1 ? text : { [text]: text };
-      this.list.push(text);
+      let data;
+      if (this.type === 3) {
+        data = deepClone(this.itemObj);
+        data[this.option.showOption.title] = `列${this.list.length + 1}`;
+      } else if (this.type === 2) {
+        let text = `选项${this.list.length + 1}`;
+        data = { [text]: text };
+      } else {
+        data = `选项${this.list.length + 1}`;
+      }
+
+      this.list.push(data);
       this.setValue();
     },
+
     setValue() {
       this.$emit("setValue", this.list);
     },
+
     change(index, event, key) {
       if (this.type === 1) {
         this.list.splice(index, 1, event.target.value);
@@ -134,6 +182,9 @@ export default {
           this.list.splice(index, 1, tar);
         }
       }
+      this.setValue();
+    },
+    setConfig() {
       this.setValue();
     }
   }
