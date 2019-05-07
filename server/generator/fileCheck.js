@@ -1,14 +1,26 @@
 // 验证文件的正确性，同时修正参数
 // 支持的valueType类型
 const reg_valuetype = /^(enum|number|function|string|bool|array|regexp|sync|object)$/i
+const reg_showtype = /^(input|switch|datetime|select|checkbox|radio|slider|upload|table)$/i
 const fo = require('../util/fileOperation');
 const { getType } = require('../util/lib');
 
 const required = {
     modules: ['components', 'generate'],
     components: {
-        propertys: ['name', 'title'],
-        attrs: ['title'],
+        propertys: ['name', 'title', 'showType', 'showOption'],
+        attrs: ['title', 'valueType'],
+        showOption: { // 不同的showType对应的showOption的必填项
+            input: ['title', 'type', 'value'],
+            datetime: ['title', 'value'],
+            switch: ['title', 'value'],
+            select: ['title', 'selectArray', 'value'],
+            checkbox: ['title', 'selectArray', 'value'],
+            radio: ['title', 'selectArray', 'value'],
+            slider: ['title', 'value'],
+            upload: ['title'],
+            table: ['title', 'columns']
+        },
         typeDependence: {
             enum: {
                 name: 'selectArray',
@@ -101,9 +113,23 @@ class FileCheck {
             // 组件属性验证 propertys
             propertys.forEach(pro => {
                 if (cmpt[pro] === undefined || cmpt[pro] === null) {
-                    this.addError('组件配置缺失', `组件[${_name}]配置[${pro}]为必填项`);
+                    this.addError('组件配置缺失', `组件[${_name}]的配置项[${pro}]为必填项`);
                 }
             });
+
+            let type, option;
+            if ((option = cmpt['showOption']) && (type = cmpt['showType'])) {
+                if (!reg_showtype.test(type)) {
+                    this.addError('组件配置错误', `组件[${_name}]的配置项[showType]只能为[${reg_showtype.source.replace(/[\^\$\(\)]/g, '')}]中的一个`);
+                } else {
+                    cmpt['showType'] = type.toLowerCase();
+                }
+                required.components.showOption[cmpt['showType']].forEach(pType => {
+                    if (option[pType] === undefined || option[pType] === null) {
+                        this.addError('组件配置缺失', `组件[${_name}]的配置项[showOption]中[${pType}]为必填项`);
+                    }
+                });
+            }
 
             this.checkAttrs(cmpt.attrs, _name);
         });
@@ -131,7 +157,7 @@ class FileCheck {
             }
 
             if (!reg_valuetype.test(_valueType)) {
-                this.addError('组件属性配置错误', `[${name}]的属性[${key}]配置项[valueType]只能为[enum|number|function|string|bool|array|regexp|sync]中的一个`);
+                this.addError('组件属性配置错误', `[${name}]的属性[${key}]配置项[valueType]只能为[${reg_valuetype.source.replace(/[\^\$\(\)]/g, '')}]中的一个`);
             } else {
                 _propertys['valueType'] = (_valueType + '').toLowerCase();
                 if (_dep = _deps[_valueType]) {
@@ -164,6 +190,7 @@ class FileCheck {
         let components = this.modules.components;
         components.components.forEach(item => {
             item.isContainer = !!item.isContainer;
+            item.noTitle = !!item.noTitle;
             item.remark = item.remark || item.title;
             this.formatAttrs(item.attrs);
         });

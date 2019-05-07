@@ -1,5 +1,5 @@
 const fo = require('../util/fileOperation');
-
+const defaultComs = require('./defaultComponents');
 const {
     log,
     LOG_TYPE,
@@ -15,6 +15,7 @@ class FileDataBase {
         this._id = -100;
         // 记录文件地址信息
         this._filePaht = {};
+        this.getDefaultComponents();
     }
 
     getJsData(id) {
@@ -160,11 +161,20 @@ class FileDataBase {
                 return item;
             });
         }
+
+        outData = this.defaultComs.concat(outData);
         return outData;
     }
 
     updateData(id) {
         this.cacheData[id] = null;
+    }
+
+    getDefaultComponents() {
+        this.defaultComs = defaultComs.map(item => {
+            item.isDefault = true;
+            return item;
+        })
     }
 }
 

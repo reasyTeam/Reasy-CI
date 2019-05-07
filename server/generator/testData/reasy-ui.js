@@ -37,50 +37,17 @@ const generate = {
     }
 }
 
-// 不同的showtype对应不同的option
-var option = {
-    input: {
-        title: 'dataTitle',
-        value: 'defaultValue'
-    },
-    select: {
-        title: 'dataTitle',
-        value: 'defaultValue'
-    },
-    checkbox: {
-        title: 'dataTitle',
-        value: 'defaultValue'
-    },
-    switch: {
-        title: 'dataTitle',
-        value: 'defaultValue'
-    },
-    slider: {
-        title: 'dataTitle',
-        value: 'defaultValue'
-    },
-    datepicker: {
-        title: 'dataTitle',
-        value: 'defaultValue'
-    },
-    upload: {
-        title: 'dataTitle',
-        value: 'defaultValue'
-    }
-};
-
 const components = {
     components: [{
         name: 'FormInput',
         title: '文本框',
-        showType: 'input', // input, select, checkbox, radio, checkbox, switch, slider, datepicker, label, upload
+        showType: 'input',
         // 显示组件时使用
         showOption: {
             title: 'dataTitle',
             value: 'defaultValue',
             type: 'type'
         },
-        isContainer: false,
         valueType: 'string',
         attrs: {
             type: {
@@ -202,15 +169,14 @@ const components = {
     }, {
         name: 'FormInputNum',
         title: '数字',
-        showType: 'input', // input, select, checkbox, radio, checkbox, switch, slider, datepicker, label, upload
+        showType: 'input', // input, select, checkbox, radio, checkbox, switch, slider, datetime, label, upload
         // 显示组件时使用
         showOption: {
             title: 'dataTitle',
             value: 'defaultValue',
             type: 'type'
         },
-        isContainer: false,
-        valueType: 'number', // $attr[selectArray]
+        valueType: 'number',
         attrs: {
             dataKey: {
                 title: '组件类型',
@@ -338,13 +304,12 @@ const components = {
     }, {
         name: 'FormCalendar',
         title: '日期',
-        showType: 'datepicker',
+        showType: 'datetime',
         showOption: {
             title: 'dataTitle',
             value: 'defaultValue'
         },
         valueType: 'datetime',
-        isContainer: false,
         attrs: {
             hasWeekday: {
                 title: '是否显示星期',
@@ -379,7 +344,6 @@ const components = {
             title: 'dataTitle',
             value: 'defaultValue'
         },
-        isContainer: false,
         valueType: 'bool',
         attrs: {
             text: {
@@ -398,7 +362,6 @@ const components = {
             value: 'defaultValue',
             selectArray: 'selectArray'
         },
-        isContainer: false,
         valueType: '2|selectArray',
         attrs: {
             selectArray: {
@@ -447,7 +410,6 @@ const components = {
             selectArray: 'selectArray'
         },
         valueType: '1|selectArray',
-        isContainer: false,
         attrs: {
             selectArray: {
                 title: '选项列表',
@@ -521,7 +483,6 @@ const components = {
             value: 'defaultValue',
             selectArray: 'selectArray'
         },
-        isContainer: false,
         valueType: '1|selectArray',
         attrs: {
             selectArray: {
@@ -551,7 +512,6 @@ const components = {
             inputCount: 'inputCount',
             joiner: 'joiner'
         },
-        isContainer: false,
         valueType: 'string',
         attrs: {
             text: {
@@ -615,7 +575,6 @@ const components = {
             value: 'defaultValue',
             showInput: 'showInput'
         },
-        isContainer: false,
         valueType: 'number',
         attrs: {
             start: {
@@ -653,7 +612,6 @@ const components = {
             isButton: true,
             selectArray: 'selectArray'
         },
-        isContainer: false,
         valueType: '1|selectArray',
         attrs: {
             selectArray: {
@@ -684,7 +642,6 @@ const components = {
             type: 'textarea',
             rows: 3
         },
-        isContainer: false,
         valueType: 'string',
         attrs: {
             placeholder: {
@@ -747,7 +704,6 @@ const components = {
             browseText: 'browseText',
             uploadText: 'uploadText'
         },
-        isContainer: false,
         ignorCommon: ['defaultValue'],
         attrs: {
             submitUrl: {
@@ -831,6 +787,7 @@ const components = {
             field: 'field'
         },
         isContainer: true,
+        noTitle: true,
         ignorCommon: true,
         attrs: {
             requestUrl: {
