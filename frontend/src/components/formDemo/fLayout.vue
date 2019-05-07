@@ -12,17 +12,28 @@
             group="component"
             @change="log"
           >
-            <f-group
+            <div
+              v-for="(item,i) in formList[index]"
+              :key="item.id"
+              :class="{active: (selected === item.id)}"
+              class="col-box"
+              @click.stop="selectCom(item.id)"
+            >
+              <label class="col-title">{{item.name+'/'+item.attrs[item.showOption.title]}}</label>
+              <div class="fix-icon" v-show="selected === item.id">
+                <i class="el-icon-delete" @click="deleteCfg(index, i)" title="删除"></i>
+              </div>
+            </div>
+            <!-- <f-group
               v-for="(item,i) in formList[index]"
               :key="item.id"
               :option="item"
               @click.stop.native="selectCom(item.id)"
             >
               <div class="fix-icon" v-show="selected === item.id">
-                <!-- <i class="el-icon-document-copy" @click="copyCfg(element.id)" title="复制"></i> -->
                 <i class="el-icon-delete" @click="deleteCfg(index, i)" title="删除"></i>
               </div>
-            </f-group>
+            </f-group>-->
           </draggable>
         </div>
       </el-col>
@@ -106,6 +117,64 @@ export default {
 .dragArea {
   min-height: 60px;
   border: 1px dashed;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+.col-box {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px;
+  position: relative;
+
+  .col-title {
+    width: 100%;
+    color: #409eff;
+    background: #ecf5ff;
+    border-color: #b3d8ff;
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #dcdfe6;
+    -webkit-appearance: none;
+    text-align: center;
+    box-sizing: border-box;
+    outline: 0;
+    margin: 0;
+    transition: 0.1s;
+    font-weight: 500;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 4px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  &.active .col-title {
+    background: #409eff;
+    border-color: #409eff;
+    color: #fff;
+  }
+  .fix-icon {
+    position: absolute;
+    left: 0px;
+    right: auto;
+    bottom: auto;
+    top: 10px;
+    background-color: red;
+    border-radius: 50%;
+    color: #fff;
+    transform: translateY(-50%);
+
+    i {
+      color: #fff;
+    }
+  }
 }
 </style>
 
