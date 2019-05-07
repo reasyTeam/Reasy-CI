@@ -10,7 +10,7 @@
     <template v-else>
       <el-input
         :type="option.type"
-        :rows="option.rows"
+        :rows="option.rows || 3"
         :placeholder="option.title"
         v-model="option.value"
         disabled

@@ -20,6 +20,7 @@ import fswitch from "./switch.vue";
 import fselect from "./select.vue";
 import farray from "./array.vue";
 import fcode from "./code.vue";
+import fdatetime from "./datetime.vue";
 
 const components = {
   input: "finput",
@@ -30,6 +31,7 @@ const components = {
   regexp: "finput",
   function: "fcode",
   array: "farray",
+  datetime: "fdatetime",
   object: "fcode"
 };
 // function：待定，代码编辑器
@@ -104,7 +106,8 @@ export default {
     fswitch,
     fselect,
     fcode,
-    farray
+    farray,
+    fdatetime
   }
 };
 </script>

@@ -30,6 +30,10 @@ export default {
     getters: {
         components: state => {
             let res = {
+                default: {
+                    text: '默认组件',
+                    list: []
+                },
                 container: {
                     text: '容器组件',
                     list: []
@@ -42,7 +46,9 @@ export default {
 
             let attrList = {};
             state.components.forEach(component => {
-                if (component.isContainer) {
+                if (component.isDefault) {
+                    res.default.list.push(component);
+                } else if (component.isContainer) {
                     res.container.list.push(component);
                 } else {
                     res.basic.list.push(component);

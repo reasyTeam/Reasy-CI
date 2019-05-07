@@ -1,16 +1,16 @@
 <template>
-  <draggable class="cfg-list" :sortable="false" :list="formList" :group="group">
+  <draggable class="cfg-list" handle=".drag-box" :list="formList" :group="group">
     <div
-      class="list-item"
-      v-for="element in formList"
+      class="list-item drag-box"
+      v-for="(element,index) in formList"
       :key="element.id"
       :class="selected === element.id ? 'active':''"
       @click.stop="selectCom(element.id)"
     >
       <f-group :option="element">
         <div class="fix-icon" v-show="selected === element.id">
-          <i class="el-icon-document-copy" @click="copyCfg(element.id)" title="复制"></i>
-          <i class="el-icon-delete" @click="deleteCfg(element.id)" title="删除"></i>
+          <i class="el-icon-document-copy" @click="copyCfg(index)" title="复制"></i>
+          <i class="el-icon-delete" @click="deleteCfg(index)" title="删除"></i>
         </div>
       </f-group>
     </div>
@@ -31,13 +31,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("components", ["selected", "idGlobal", "hasReset"]),
-    idToName() {
-      return this.cfgList.reduce((res, item) => {
-        res[item.id] = item.name;
-        return res;
-      }, {});
-    }
+    ...mapState("components", ["selected", "idGlobal", "hasReset"])
   },
   props: {
     group: {
@@ -85,6 +79,7 @@ export default {
 .cfg-list {
   min-height: 100%;
   padding-top: 2px;
+  box-sizing: border-box;
 }
 
 .list-item {

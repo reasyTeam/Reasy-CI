@@ -1,6 +1,6 @@
 <template>
   <el-row class="wrapper">
-    <template v-if="option.isContainer">
+    <template v-if="option.noTitle">
       <component :is="curComponent" :option="propData"></component>
     </template>
     <template v-else>
@@ -17,14 +17,16 @@
 <script>
 import fInput from "./fInput.vue";
 import fTable from "./fTable.vue";
-import fSelect from "./fSelect";
-import fSwitch from "./fSwitch";
-import fCheckbox from "./fCheckbox";
-import fSlider from "./fSlider";
-import fRadio from "./fRadio";
-import fDatepicker from "./fDatepicker";
-import fLabel from "./fLabel";
-import fUpload from "./fUpload";
+import fSelect from "./fSelect.vue";
+import fSwitch from "./fSwitch.vue";
+import fCheckbox from "./fCheckbox.vue";
+import fSlider from "./fSlider.vue";
+import fRadio from "./fRadio.vue";
+import fDatetime from "./fDatetime.vue";
+import fLabel from "./fLabel.vue";
+import fUpload from "./fUpload.vue";
+import fTitle from "./fTitle.vue";
+// import fLayout from "./fLayout.vue";
 
 export default {
   props: ["option"],
@@ -49,9 +51,11 @@ export default {
     fCheckbox,
     fSlider,
     fRadio,
-    fDatepicker,
+    fDatetime,
     fLabel,
     fUpload,
+    fTitle,
+    fLayout: () => import("./fLayout.vue"),
     fTable
   }
 };

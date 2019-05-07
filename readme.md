@@ -25,16 +25,86 @@
 
 ## todo
 1. 每天定时跑一遍程序删除没有使用的的配置文件，对应的file表中的数据也进行清空
-2. 验证上传的属性配置文件的正确性（必填属性是否填写，枚举值是否存在）
+2. 验证上传的属性配置文件的正确性（必填属性是否填写，枚举值是否存在） -ok
 3. 验证上传的代码生成文件的正确性 
-4. 不同的valueType对应不同的显示
-5. 根据设定的valueType的值，修正defaultvalue，转成符合格式对应的值
-6. 属性列表按优先级进行排序，把不是特别需要的配置项放在最下面
-7. 添加配置文件验证项，没有验证的配置项都进行验证
+4. 不同的valueType对应不同的显示 -ok
+5. 根据设定的valueType的值，修正defaultvalue，转成符合格式对应的值 -ok
+6. 属性列表按优先级进行排序，把不是特别需要的配置项放在最下面 -ok 通过配置文件去指定顺序
+7. 添加配置文件验证项，没有验证的配置项都进行验证 -ok
 8. 修改valueType为array对应的配置 -ok
-9. 完善不同组件对应的显示demo
-10. 切换组件库重置配置项，同时重置组件列表项
-11. 验证组件库配置文件更新，对应的文件是否同时更新的问题
+9. 完善不同组件对应的显示demo -ok
+10. 切换组件库重置配置项，同时重置组件列表项 -ok
+11. 验证组件库配置文件更新，对应的文件是否同时更新的问题 -ok
+12. 添加容器组件的配置(添加几组默认的容器组件)
+13. 生成的代码与脚手架进行耦合，依赖于脚手架
+14. 提供系统默认的组件，默认组件需要自行引入对应的样式文件
 
 ## 问题记录
-1. 更新组件的配置文件，无法更新对应的数据，需要重启服务，server没有更新缓存 -done
+
+
+## 配置
+```js
+/**
+ * 必要的属性及说明
+ * 
+ * 1. generate 代码生成配置，必填
+ * 2. components 组件配置，必填
+ */
+
+const components = {
+    components: [{
+        name: '组件的key，对应的代码的名称，唯一标识，必填',
+        title: '组件的中文描述名称，必填',
+        showType: '组件的显示类型，用于配置界面shishi，必填',
+        showOption: { // 显示配置，不同的showType对应的必填项如下所示，其他项为选填项目
+            input: ['title', 'type', 'value'],
+            datepicker: ['title', 'value'],
+            switch: ['title', 'value'],
+            select: ['title', 'selectArray', 'value'],
+            checkbox: ['title', 'selectArray', 'value'],
+            radio: ['title', 'selectArray', 'value'],
+            slider: ['title', 'value'],
+            upload: ['title'],
+            table: ['title', 'columns'],
+            // 以下为选填项
+            xuantian: {
+                input: {
+                    multiple: '多文本输入',
+                    text: '文本框前描述字段',
+                    inputCount: '文本框个数',
+                    joiner: "连接符",
+                    rows: 'type为textarea时，显示的行数'
+                },
+                radio: {
+                    isButton: '显示为按钮',
+
+                },
+                slider: {
+                    showInput: '显示文本框'
+                },
+                upload: { 'showFileList': '显示文件列表', browseText: "浏览文件按钮文字描述", uploadText: '上传按钮文字描述' }
+            }
+        },
+        isContainer: true,
+        valueType: '', //默认值类型，对于有默认值的组件需要提供，可以为enum|number|function|string|bool|array|regexp|sync|object或者[1|attrKey]类型，attrKey为valueType是数组类型的属性名称
+        attrs: {
+            '属性名称': {
+                title: 'type类型', // 必填
+                valueType: 'enum', //enum|number|function|string|bool|array|regexp|sync|object 必填
+                required: false, // 选填
+                hidden: false, //选填
+                defaultValue: 'text' // 必填，也可以是表达式-$[name]-获取对应的主属性的值
+            }
+        }
+    }],
+    // 组件的公共属性，选填
+    commonAttrs: {}
+}
+
+// valueType对应的必填项
+var t = {
+    enum: ['selectArray'], //数组类型
+    array: ['itemType'],
+    sync: ['syncKey']
+}
+```
