@@ -1,10 +1,9 @@
 <template>
   <div style="width:100%;">
-    <!-- <el-row v-for="row in option.rows" :key="row"> -->
+    <label v-if="option.title">{{option.title}}</label>
     <el-row :gutter="2">
-      <el-col :span="spans[index]" v-for="(col, index) in option.cols" :key="col">
+      <el-col :span="spans[index]" v-for="(col, index) in (option.cols||1)" :key="col">
         <div class="drag-item">
-          <!-- <nested-draggable :tasks="formList[index]"/> -->
           <draggable
             class="dragArea"
             tag="div"
@@ -12,28 +11,28 @@
             group="component"
             @change="log"
           >
-            <div
-              v-for="(item,i) in formList[index]"
-              :key="item.id"
-              :class="{active: (selected === item.id)}"
-              class="col-box"
-              @click.stop="selectCom(item.id)"
-            >
-              <label class="col-title">{{item.name+'/'+item.attrs[item.showOption.title]}}</label>
-              <div class="fix-icon" v-show="selected === item.id">
-                <i class="el-icon-delete" @click="deleteCfg(index, i)" title="删除"></i>
+            <template v-if="!formList[index] || formList[index].length === 0">
+              <div class="drag-text">将组件拖拽至此区域</div>
+            </template>
+            <template v-else>
+              <div
+                v-for="(item,i) in formList[index]"
+                :key="item.id"
+                :class="{active: (selected === item.id)}"
+                class="col-box"
+                @click.stop="selectCom(item.id)"
+              >
+                <template v-if="item.noTitle">
+                  <f-group :option="item"></f-group>
+                </template>
+                <template v-else>
+                  <label class="col-title">{{item.name+'/'+item.attrs[item.showOption.title]}}</label>
+                </template>
+                <div class="fix-icon" v-show="selected === item.id">
+                  <i class="el-icon-close" @click="deleteCfg(index, i)" title="删除"></i>
+                </div>
               </div>
-            </div>
-            <!-- <f-group
-              v-for="(item,i) in formList[index]"
-              :key="item.id"
-              :option="item"
-              @click.stop.native="selectCom(item.id)"
-            >
-              <div class="fix-icon" v-show="selected === item.id">
-                <i class="el-icon-delete" @click="deleteCfg(index, i)" title="删除"></i>
-              </div>
-            </f-group>-->
+            </template>
           </draggable>
         </div>
       </el-col>
@@ -43,9 +42,9 @@
 <script>
 // import nestedDraggable from "./nested";
 import draggable from "vuedraggable";
-import fGroup from "./fgroup.vue";
 import { mapState, mapMutations } from "vuex";
 import * as types from "@/store/types.js";
+import fGroup from "./fgroup.vue";
 
 export default {
   data() {
@@ -165,7 +164,10 @@ export default {
     left: 0px;
     right: auto;
     bottom: auto;
-    top: 10px;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+    top: 7px;
     background-color: red;
     border-radius: 50%;
     color: #fff;
@@ -173,8 +175,18 @@ export default {
 
     i {
       color: #fff;
+      padding: 0;
+      font-size: 12px;
     }
   }
+}
+
+.drag-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #909399;
+  height: 50px;
 }
 </style>
 

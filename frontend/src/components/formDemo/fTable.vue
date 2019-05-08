@@ -1,5 +1,7 @@
 <template>
   <el-table :data="[]" style="width: 100%">
+    <el-table-column type="selection" width="30" v-if="option.showCheckbox"></el-table-column>
+    <el-table-column type="index" width="30" v-if="option.showIndex"></el-table-column>
     <el-table-column
       v-for="(item, index) in columns"
       :key="index"

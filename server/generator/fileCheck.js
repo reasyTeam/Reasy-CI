@@ -1,7 +1,7 @@
 // 验证文件的正确性，同时修正参数
 // 支持的valueType类型
 const reg_valuetype = /^(enum|number|function|string|bool|array|regexp|sync|object)$/i
-const reg_showtype = /^(input|switch|datetime|select|checkbox|radio|slider|upload|table)$/i
+const reg_showtype = /^(input|switch|datetime|select|checkbox|radio|slider|upload|table|layout|label)$/i
 const fo = require('../util/fileOperation');
 const { getType } = require('../util/lib');
 
@@ -13,6 +13,7 @@ const required = {
         showOption: { // 不同的showType对应的showOption的必填项
             input: ['title', 'type', 'value'],
             datetime: ['title', 'value'],
+            label: ['title', 'value'],
             switch: ['title', 'value'],
             select: ['title', 'selectArray', 'value'],
             checkbox: ['title', 'selectArray', 'value'],
@@ -124,7 +125,9 @@ class FileCheck {
                 } else {
                     cmpt['showType'] = type.toLowerCase();
                 }
-                required.components.showOption[cmpt['showType']].forEach(pType => {
+
+                let showOption = required.components.showOption[cmpt['showType']];
+                showOption && showOption.forEach(pType => {
                     if (option[pType] === undefined || option[pType] === null) {
                         this.addError('组件配置缺失', `组件[${_name}]的配置项[showOption]中[${pType}]为必填项`);
                     }
@@ -199,10 +202,11 @@ class FileCheck {
     }
 
     formatAttrs(attrs) {
+        if (!attrs) {
+            return;
+        }
         Object.values(attrs).forEach(attr => {
             // valueType全部转换为小写
-
-
             if (attr.selectArray && getType(attr.selectArray) === 'Array' && attr.selectArray.length > 0) {
                 let value = attr.defaultValue,
                     hasValue = false;

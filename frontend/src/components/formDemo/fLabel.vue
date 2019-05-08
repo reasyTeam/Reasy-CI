@@ -1,5 +1,5 @@
 <template>
-  <el-label>{{option.title}}</el-label>
+  <el-label>{{option.value}}</el-label>
 </template>
 
 <script>

@@ -1,5 +1,11 @@
 <template>
-  <draggable class="cfg-list" handle=".drag-box" :list="formList" :group="group">
+  <draggable
+    class="cfg-list"
+    handle=".drag-box"
+    :list="formList"
+    :group="group"
+    @click.stop="selectCom(-1)"
+  >
     <div
       class="list-item drag-box"
       v-for="(element,index) in formList"

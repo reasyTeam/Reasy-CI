@@ -142,25 +142,25 @@ const components = {
                 defaultValue: 0
             },
             maxCallBack: {
-                title: '值大于max回调',
+                title: '值大于maxhook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
             },
             switchCallBack: {
-                title: '切换模式回调',
+                title: '切换模式hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
             },
             focusCallBack: {
-                title: '聚焦回调',
+                title: '聚焦hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
             },
             blurCallBack: {
-                title: '失焦回调',
+                title: '失焦hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
@@ -277,25 +277,25 @@ const components = {
                 defaultValue: 0
             },
             maxCallBack: {
-                title: '值大于max回调',
+                title: '值大于maxhook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
             },
             switchCallBack: {
-                title: '切换模式回调',
+                title: '切换模式hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
             },
             focusCallBack: {
-                title: '聚焦回调',
+                title: '聚焦hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
             },
             blurCallBack: {
-                title: '失焦回调',
+                title: '失焦hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
@@ -444,31 +444,31 @@ const components = {
                 defaultValue: null
             },
             switchCallBack: {
-                title: 'xxxxx',
+                title: '显示状态切换hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: ''
             },
             clickCallBack: {
-                title: 'xxxxx',
+                title: '点击hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: ''
             },
             hideCallBack: {
-                title: 'xxxxx',
+                title: '下拉项收起hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: ''
             },
             blurCallBack: {
-                title: 'xxxxx',
+                title: '输入框失去焦点hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: ''
             },
             focusCallBack: {
-                title: 'xxxxx',
+                title: '输入框聚焦hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: ''
@@ -682,13 +682,13 @@ const components = {
                 defaultValue: 5
             },
             keyupCallBack: {
-                title: 'xxxxx',
+                title: 'keyup hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
             },
             focusCallBack: {
-                title: 'xxxxx',
+                title: '输入框聚焦hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
@@ -765,18 +765,27 @@ const components = {
                 defaultValue: 'icon-add'
             },
             beforeUpload: {
-                title: 'xxxxx',
+                title: '上传前hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
             },
             success: {
-                title: 'xxxxx',
+                title: '上传成功hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
             }
         }
+    }, {
+        name: 'FormLabel',
+        title: '描述文本',
+        showType: 'label',
+        showOption: {
+            title: 'dataTitle',
+            value: 'defaultValue'
+        },
+        valueType: 'string'
     }, {
         name: 'FormTable',
         title: '表格',
@@ -784,9 +793,11 @@ const components = {
         showOption: {
             columns: 'columns',
             title: 'title',
-            field: 'field'
+            field: 'field',
+            showCheckbox: 'showCheckbox',
+            showIndex: "showIndex"
         },
-        isContainer: true,
+        isContainer: false,
         noTitle: true,
         ignorCommon: true,
         attrs: {
@@ -854,7 +865,7 @@ const components = {
                         defaultValue: null
                     },
                     rendered: {
-                        title: '渲染完成后的回调',
+                        title: '渲染完成后的hook',
                         valueType: 'function',
                         required: false,
                         defaultValue: null
@@ -960,19 +971,239 @@ const components = {
                 defaultValue: 7
             },
             updateCallback: {
-                title: '数据更新回调',
+                title: '数据更新hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
             },
             changePageNumCallBack: {
-                title: '改变每页显示条数回调',
+                title: '改变每页显示条数hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
             },
             beforeUpdate: {
                 title: '数据更新前操作',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            }
+        }
+    }, {
+        name: 'ComponentManager',
+        title: 'Form表单容器',
+        showType: 'layout',
+        showOption: {
+            cols: 'cols',
+            title: 'Form表单容器'
+        },
+        isContainer: true,
+        noTitle: true,
+        ignorCommon: true,
+        attrs: {
+            cols: {
+                title: 'Form表单列数',
+                valueType: 'number',
+                required: false,
+                min: 1,
+                max: 4,
+                defaultValue: 1
+            },
+            requestUrl: {
+                title: '请求地址',
+                valueType: 'string',
+                required: false,
+                defaultValue: ''
+            },
+            requestData: {
+                title: '请求参数',
+                valueType: 'object',
+                required: false,
+                defaultValue: null
+            },
+            submitUrl: {
+                title: '提交地址',
+                valueType: 'string',
+                required: false,
+                defaultValue: ''
+            },
+            autoRequest: {
+                title: '挂载后自动请求数据',
+                valueType: 'bool',
+                required: false,
+                defaultValue: false
+            },
+            reserveKeys: {
+                title: '保留字段',
+                valueType: 'array',
+                itemType: 'string',
+                required: false,
+                defaultValue: []
+            },
+            showSubmitbar: {
+                title: '是否显示操作按钮行',
+                valueType: 'bool',
+                required: false,
+                defaultValue: false
+            },
+            beforeUpdate: {
+                title: '数据更新前hook',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            },
+            afterUpdate: {
+                title: '数据更新后hook',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            },
+            beforeSubmit: {
+                title: '数据提交前hook',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            },
+            afterSubmit: {
+                title: '数据提交后hook',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            },
+            renderedCallBack: {
+                title: '组件渲染完成后hook',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            },
+            cancelCallBack: {
+                title: '取消按钮hook',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            },
+            errorCallBack: {
+                title: '校验失败hook',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            }
+        }
+    }, {
+        name: 'ModalDialog',
+        title: '弹出框',
+        showType: 'layout',
+        showOption: {
+            cols: 'cols',
+            title: '弹出框容器'
+        },
+        isContainer: true,
+        noTitle: true,
+        ignorCommon: true,
+        attrs: {
+            cols: {
+                title: '弹出框列数',
+                valueType: 'number',
+                required: false,
+                min: 1,
+                max: 4,
+                defaultValue: 1
+            },
+            title: {
+                title: '消息框标题',
+                valueType: 'string',
+                required: false,
+                defaultValue: ''
+            },
+            content: {
+                title: '消息体内容-通过代码生成',
+                valueType: 'object',
+                required: false,
+                defaultValue: null
+            },
+            isIframe: {
+                title: '是否为iframe',
+                valueType: 'bool',
+                required: false,
+                defaultValue: false
+            },
+            height: {
+                title: '挂载后自动请求数据',
+                valueType: 'bool',
+                required: false,
+                defaultValue: false
+            },
+            width: {
+                title: '保留字段',
+                valueType: 'array',
+                itemType: 'string',
+                required: false,
+                defaultValue: []
+            },
+            buttons: {
+                title: '操作按钮',
+                valueType: 'array',
+                itemType: 'object',
+                showOption: {
+                    title: 'text'
+                },
+                itemCfg: {
+                    theme: {
+                        title: '按钮主题',
+                        valueType: 'enum',
+                        selectArray: ['default', 'ok', 'success', 'info', 'warning', 'danger', 'primary'],
+                        required: true,
+                        defaultValue: 'default'
+                    },
+                    text: {
+                        title: '按钮文本值',
+                        valueType: 'string',
+                        required: false,
+                        defaultValue: '按钮'
+                    },
+                    autoHide: {
+                        title: '点击按钮后是否关闭弹出窗',
+                        valueType: 'bool',
+                        required: false,
+                        defaultValue: true
+                    },
+                    callback: {
+                        title: '点击按钮hook',
+                        valueType: 'function',
+                        required: false,
+                        defaultValue: null
+                    }
+                },
+                required: true,
+                defaultValue: []
+            },
+            autoClose: {
+                title: '是否自动关闭',
+                valueType: 'bool',
+                required: false,
+                defaultValue: false
+            },
+            timeout: {
+                title: 'autoClose为true时多少秒后自动关闭',
+                valueType: 'number',
+                required: false,
+                defaultValue: 3,
+                min: 1
+            },
+            openCallBack: {
+                title: '打开弹出框hook',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            },
+            cancelCallBack: {
+                title: '取消弹出框hook',
+                valueType: 'function',
+                required: false,
+                defaultValue: null
+            },
+            closeCallBack: {
+                title: '关闭弹出框hook',
                 valueType: 'function',
                 required: false,
                 defaultValue: null
@@ -1091,25 +1322,25 @@ const components = {
             defaultValue: null
         },
         changeCallBack: {
-            title: '组件值改变回调函数',
+            title: '组件值改变hook',
             valueType: 'function',
             required: false,
             defaultValue: null
         },
         validateCallBack: {
-            title: '数据校验回调函数',
+            title: '数据校验hook',
             valueType: 'function',
             required: false,
             defaultValue: null
         },
         afterChangeCallBack: {
-            title: '组值改变后回调',
+            title: '组值改变后hook',
             valueType: 'function',
             required: false,
             defaultValue: null
         },
         renderedCallBack: {
-            title: '组件渲染完成后的回调',
+            title: '组件渲染完成后的hook',
             valueType: 'function',
             required: false,
             defaultValue: null

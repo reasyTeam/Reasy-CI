@@ -10,7 +10,8 @@ export default {
 <style lang="scss" scoped>
 .h-header {
   font-size: 20px;
-  margin: 15px 0 10px;
+  // margin: 15px 0 10px;
+  margin: 0;
   height: 24px;
   padding-bottom: 10px;
   font-weight: 400;

@@ -27,22 +27,18 @@ let components = [{
     title: '布局组件',
     showType: 'layout',
     showOption: {
-        rows: 'rows',
-        cols: 'cols'
+        cols: 'cols',
+        title: '布局容器'
     },
     isContainer: true,
     noTitle: true,
     attrs: {
-        rows: {
-            title: '行数',
-            valueType: 'number',
-            required: false,
-            defaultValue: 1
-        },
         cols: {
             title: '列数',
             valueType: 'number',
             required: false,
+            min: 1,
+            max: 8,
             defaultValue: 2
         }
     }
