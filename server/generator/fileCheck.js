@@ -129,9 +129,13 @@ class FileCheck {
                 let showOption = required.components.showOption[cmpt['showType']];
                 showOption && showOption.forEach(pType => {
                     if (option[pType] === undefined || option[pType] === null) {
-                        this.addError('组件配置缺失', `组件[${_name}]的配置项[showOption]中[${pType}]为必填项`);
+                        this.addError('组件配置缺失', `组件[${_name}]的配置项[showOption]中的[${pType}]为必填项`);
                     }
                 });
+
+                if (cmpt.isContainer && !option['formList']) {
+                    this.addError('组件配置缺失', `组件[${_name}]为容器组件，其配置项[showOption]中的[formList]为必填项`);
+                }
             }
 
             this.checkAttrs(cmpt.attrs, _name);
@@ -143,6 +147,11 @@ class FileCheck {
         let _attrs = required.components.attrs;
         for (let key in attrs) {
             let _propertys = attrs[key];
+
+            if (_propertys['hidden']) {
+                // 对于hidden的属性不进行检验
+                continue;
+            }
 
             _attrs.forEach(pro => {
                 if (_propertys[pro] === undefined || _propertys[pro] === null) {

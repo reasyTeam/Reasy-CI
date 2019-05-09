@@ -4,13 +4,7 @@
     <el-row :gutter="2">
       <el-col :span="spans[index]" v-for="(col, index) in (option.cols||1)" :key="col">
         <div class="drag-item">
-          <draggable
-            class="dragArea"
-            tag="div"
-            :list="formList[index]"
-            group="component"
-            @change="log"
-          >
+          <draggable class="dragArea" tag="div" :list="formList[index]" group="component">
             <template v-if="!formList[index] || formList[index].length === 0">
               <div class="drag-text">将组件拖拽至此区域</div>
             </template>
@@ -54,7 +48,7 @@ export default {
   },
   props: ["option"],
   computed: {
-    ...mapState("components", ["selected"]),
+    ...mapState("components", ["selected", "cfgList"]),
     spans() {
       let cols = this.option.cols,
         t = Math.floor(24 / cols),
@@ -86,17 +80,34 @@ export default {
     draggable,
     fGroup
   },
+  watch: {
+    formList(newVal) {
+      let list = newVal.map(item => item.map(t => t.id));
+
+      this[types.UPDATE_CFG_ATTR]({
+        id: this.option.id,
+        attr: this.option.showOption.formList,
+        value: list
+      });
+    }
+  },
   methods: {
-    ...mapMutations("components", [types.REMOVE_CFG, types.SET_SELECTED]),
-    log: function(evt) {
-      console.log(evt);
-    },
+    ...mapMutations("components", [
+      types.REMOVE_CFG,
+      types.SET_SELECTED,
+      types.UPDATE_CFG_ATTR
+    ]),
     selectCom(index) {
       this[types.SET_SELECTED](index);
     },
     deleteCfg(index, i) {
       let data = this.formList[index][i];
       this[types.REMOVE_CFG](data.id);
+
+      // 删除当前选中的组件，重置selected
+      if (data.id === this.selected) {
+        this[types.SET_SELECTED](-1);
+      }
 
       this.formList[index].splice(i, 1);
     }

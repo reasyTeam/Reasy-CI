@@ -53,7 +53,8 @@ export default {
     ...mapMutations("components", [
       types.REMOVE_CFG,
       types.ADD_CFG,
-      types.SET_SELECTED
+      types.SET_SELECTED,
+      types.SET_SORT_LIST
     ]),
     selectCom(index) {
       this[types.SET_SELECTED](index);
@@ -69,6 +70,10 @@ export default {
       data.id = this.idGlobal;
       this[types.ADD_CFG](data);
       this.formList.push(data);
+    },
+    saveCfg() {
+      let list = this.formList.map(item => item.id);
+      this[types.SET_SORT_LIST](list);
     }
   },
   watch: {

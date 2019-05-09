@@ -15,7 +15,7 @@ export default {
         components: [],
         // 当前处于active状态的组件
         selected: -1,
-        idGlobal: 0,
+        idGlobal: 1,
         // 存储预设的校验规则
         validates: [],
         // 存储不同的组件包含的配置项
@@ -84,16 +84,25 @@ export default {
             Vue.set(state.cfgList, data.id, data);
         },
         [types.REMOVE_CFG](state, id) {
+            let data = state.cfgList[id];
+
+            // 同时删除所有内部的组件
+            if (data.isContainer) {
+                data.attr[data.showOption.formList].forEach(item => {
+                    delete state.cfgList[item];
+                });
+            }
             delete state.cfgList[id];
         },
         [types.SET_VALIDATES](state, data) {
             state.validates = data;
         },
         [types.UPDATE_CFG_ATTR](state, option) {
-            state.cfgList[state.selected]['attrs'][option.attr] = option.value;
-            // if (typeof option.value === 'object') {
-            //     Vue.set(state.cfgList[state.selected]['attrs'], option.attr, option.value);
-            // }
+            let id = option.id !== undefined ? option.id : state.selected;
+            state.cfgList[id]['attrs'][option.attr] = option.value;
+        },
+        [types.SET_SORT_LIST](state, data) {
+            state.cfgSortList = data;
         }
     },
     actions: {

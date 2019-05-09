@@ -4,16 +4,19 @@ import $http from '@/plugins/axios.js'
 import * as types from './types'
 import components from './modules/components.js'
 import framework from './modules/framework.js'
+import projects from './modules/projects.js'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     modules: {
         framework,
-        components
+        components,
+        projects
     },
     state: {
         currentGroup: '',
+        projectId: -1,
         groups: [],
         pathList: [{
                 path: "/",

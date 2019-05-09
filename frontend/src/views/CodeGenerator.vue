@@ -1,22 +1,27 @@
 <template>
-  <div class="h-100">
-    <header class="clear-fix header">
-      <div class="float-r tool-bar">
-        <el-button plain size="small" @click="reset">重置</el-button>
-        <el-button plain type="primary" size="small">预览</el-button>
-        <el-button plain type="primary" size="small" @click="save">保存</el-button>
-      </div>
-    </header>
-    <div class="h-100 config">
-      <div class="config-aside h-100">
-        <div class="pro-title">组件列表</div>
-        <com-list :group="group"></com-list>
-      </div>
-      <div class="config-main h-100">
-        <cfg-list :group="group"></cfg-list>
-      </div>
-      <div class="config-aside right h-100">
-        <pro-list></pro-list>
+  <div class="h-100 wrapper">
+    <div class="temp-wrapper">
+      <projects></projects>
+    </div>
+    <div class="cfg-wrapper">
+      <header class="clear-fix header">
+        <div class="float-r tool-bar">
+          <el-button plain size="small" @click="reset">重置</el-button>
+          <el-button plain type="primary" size="small">预览</el-button>
+          <el-button plain type="primary" size="small" @click="save">保存模板</el-button>
+        </div>
+      </header>
+      <div class="h-100 config">
+        <div class="config-aside h-100">
+          <div class="pro-title">组件列表</div>
+          <com-list :group="group"></com-list>
+        </div>
+        <div class="config-main h-100">
+          <cfg-list :group="group" ref="configList"></cfg-list>
+        </div>
+        <div class="config-aside right h-100">
+          <pro-list></pro-list>
+        </div>
       </div>
     </div>
   </div>
@@ -28,6 +33,7 @@ import { mapActions, mapState, mapMutations } from "vuex";
 import comList from "./pageitem/comList.vue";
 import cfgList from "./pageitem/configList.vue";
 import proList from "./pageitem/propertyList.vue";
+import projects from "./pageitem/projects.vue";
 import * as types from "@/store/types.js";
 
 export default {
@@ -45,6 +51,7 @@ export default {
   components: {
     cfgList,
     comList,
+    projects,
     proList
   },
   methods: {
@@ -64,7 +71,8 @@ export default {
       });
     },
     save() {
-      console.log(this.cfgList);
+      // console.log(this.cfgList);
+      this.$refs.configList.saveCfg();
     }
   },
   created() {
@@ -78,6 +86,21 @@ export default {
 <style lang="scss" scoped>
 $padding-left: 12px;
 $padding-top: 8px;
+
+.wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+
+  .temp-wrapper {
+    width: 300px;
+    border-right: 1px solid $border-color;
+  }
+
+  .cfg-wrapper {
+    flex: 1;
+    position: relative;
+  }
+}
 
 .h-100 {
   background-color: #fff;

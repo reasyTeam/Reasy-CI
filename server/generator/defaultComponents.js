@@ -12,13 +12,11 @@ let components = [{
         title: {
             title: '标题内容',
             valueType: 'string',
-            required: false,
             defaultValue: '标题'
         },
         hasBorder: {
             title: '是否需要下划线',
             valueType: 'bool',
-            required: false,
             defaultValue: true
         }
     }
@@ -28,7 +26,8 @@ let components = [{
     showType: 'layout',
     showOption: {
         cols: 'cols',
-        title: '布局容器'
+        title: '布局容器',
+        formList: 'formList'
     },
     isContainer: true,
     noTitle: true,
@@ -40,6 +39,11 @@ let components = [{
             min: 1,
             max: 8,
             defaultValue: 2
+        },
+        formList: {
+            valueType: 'array',
+            hidden: true,
+            defaultValue: []
         }
     }
 }];

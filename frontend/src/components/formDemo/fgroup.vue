@@ -27,6 +27,7 @@ import fLabel from "./fLabel.vue";
 import fUpload from "./fUpload.vue";
 import fTitle from "./fTitle.vue";
 // import fLayout from "./fLayout.vue";
+import { deepClone } from "@/assets/lib.js";
 
 export default {
   props: ["option"],
@@ -35,9 +36,13 @@ export default {
       return `f-${this.option.showType}`;
     },
     propData() {
-      let obj = {};
+      let obj = {
+        id: this.option.id,
+        name: this.option.name,
+        showOption: this.option.showOption
+      };
       for (let key in this.option.showOption) {
-        let val = this.option.attrs[this.option.showOption[key]];
+        let val = deepClone(this.option.attrs[this.option.showOption[key]]);
         obj[key] =
           val === null || val === undefined ? this.option.showOption[key] : val;
       }
