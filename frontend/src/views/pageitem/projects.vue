@@ -1,7 +1,7 @@
 <template>
   <div class="projects">
     <div class="group-title">项目目录结构</div>
-    <section>
+    <section class="docs">
       <el-button type="text" icon="el-icon-document-add" @click.stop="append(1)">添加文件</el-button>
       <el-button type="text" icon="el-icon-folder-add" @click.stop="append(2)">添加文件夹</el-button>
       <el-tree :data="treeData" node-key="id" expand-on-click-node highlight-current>
@@ -109,6 +109,10 @@ $padding-top: 8px;
 .group-title {
   padding: $padding-top $padding-left;
   font-size: 13px;
+}
+
+.docs {
+  padding: 0 12px;
 }
 
 .group-box {
