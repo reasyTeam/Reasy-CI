@@ -17,3 +17,5 @@ export const SET_DIALOG_VISIBLE = 'SET_DIALOG_VISIBLE';
 export const SET_CFG_ATTR = 'SET_CFG_ATTR';
 export const SET_ITEM_INDEX = 'SET_ITEM_INDEX';
 export const SET_SORT_LIST = 'SET_SORT_LIST';
+
+export const SET_MODULES = 'SET_MODULES';

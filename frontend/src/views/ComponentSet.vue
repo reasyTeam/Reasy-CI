@@ -27,8 +27,4 @@ export default {
   max-width: 1200px;
   margin: 0 auto;
 }
-
-.table-box {
-  // background-color: $bg-color-light;
-}
 </style>

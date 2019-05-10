@@ -1,13 +1,15 @@
 <template>
   <div class="h-100 wrapper">
-    <div class="temp-wrapper">
+    <div class="temp-wrapper" :class="{hide:!showProject}">
       <projects></projects>
+      <i class="icon el-icon-arrow-left" title="收起" v-if="showProject" @click="showProject = false"></i>
+      <i class="icon el-icon-arrow-right" title="张开" v-else @click="showProject = true">张开目录结构列表</i>
     </div>
     <div class="cfg-wrapper">
       <header class="clear-fix header">
         <div class="float-r tool-bar">
           <el-button plain size="small" @click="reset">重置</el-button>
-          <el-button plain type="primary" size="small">预览</el-button>
+          <!-- <el-button plain type="primary" size="small">预览</el-button> -->
           <el-button plain type="primary" size="small" @click="save">保存模板</el-button>
         </div>
       </header>
@@ -39,14 +41,18 @@ import * as types from "@/store/types.js";
 export default {
   data() {
     return {
-      group: "component"
+      group: "component",
+      showProject: true
     };
   },
   computed: {
     ...mapState({
       currentGroup: "currentGroup"
     }),
-    ...mapState("components", ["cfgList"])
+    ...mapState("components", ["cfgList"]),
+    moduleId() {
+      return this.$route.params.id;
+    }
   },
   components: {
     cfgList,
@@ -92,8 +98,33 @@ $padding-top: 8px;
   flex-wrap: nowrap;
 
   .temp-wrapper {
-    width: 300px;
+    width: 280px;
+    position: relative;
     border-right: 1px solid $border-color;
+    transition: width 0.4s;
+
+    &.hide {
+      width: 0px;
+    }
+
+    .icon {
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      z-index: 4;
+      width: 20px;
+      border: 1px solid $border-color;
+      padding: 6px 0;
+      font-size: 14px;
+      text-align: center;
+      border-radius: 2px;
+      background-color: #fff;
+      cursor: pointer;
+    }
+
+    .el-icon-arrow-right {
+      transform: translateX(100%);
+    }
   }
 
   .cfg-wrapper {

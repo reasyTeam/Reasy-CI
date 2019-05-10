@@ -1,6 +1,6 @@
 <template>
   <div class="projects">
-    <div class="group-title">项目目录结构</div>
+    <h5 class="pro-title">项目目录结构</h5>
     <section class="docs">
       <el-button type="text" icon="el-icon-document-add" @click.stop="append(1)">添加文件</el-button>
       <el-button type="text" icon="el-icon-folder-add" @click.stop="append(2)">添加文件夹</el-button>
@@ -36,19 +36,7 @@ import sInput from "@/components/switchInput.vue";
 export default {
   data() {
     return {
-      treeData: [
-        {
-          id: 1,
-          label: "一级 1",
-          edit: false,
-          children: []
-        },
-        {
-          id: 2,
-          label: "一级 2",
-          edit: false
-        }
-      ]
+      treeData: []
     };
   },
   computed: {},
@@ -93,59 +81,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$padding-left: 12px;
-$padding-top: 8px;
 .projects {
   font-size: 14px;
+  min-width: 250px;
 }
+
+.pro-title {
+  text-align: left;
+  margin: 0;
+}
+
 .icon-btn {
   font-size: 16px;
   color: $main-color;
   margin: 0 6px;
 }
+
 .el-icon-delete {
   color: red;
 }
-.group-title {
-  padding: $padding-top $padding-left;
-  font-size: 13px;
-}
 
 .docs {
-  padding: 0 12px;
-}
-
-.group-box {
-  padding: 0 $padding-left $padding-top;
-  display: flex;
-  flex-wrap: wrap;
-  list-style: none;
-  margin: 0;
-}
-
-.group-item {
-  width: 50%;
-  text-align: center;
-  font-size: 12px;
-  line-height: 26px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding: 2px;
-  color: #333;
-  box-sizing: border-box;
-
-  a {
-    background-color: #f4f6fc;
-    display: block;
-    cursor: move;
-    border: 1px solid #f4f6fc;
-
-    &:hover {
-      border: 1px dashed #77bdff;
-      color: #0db3a6;
-    }
-  }
+  padding: 0 0 12px 12px;
 }
 </style>
 

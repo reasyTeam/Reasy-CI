@@ -5,6 +5,7 @@ import * as types from './types'
 import components from './modules/components.js'
 import framework from './modules/framework.js'
 import projects from './modules/projects.js'
+import modules from './modules/modules.js'
 
 Vue.use(Vuex)
 
@@ -12,7 +13,8 @@ export default new Vuex.Store({
     modules: {
         framework,
         components,
-        projects
+        projects,
+        modules
     },
     state: {
         currentGroup: '',
@@ -27,16 +29,15 @@ export default new Vuex.Store({
                 path: "/components",
                 text: "组件管理",
                 icon: "printer"
-            },
-            {
-                path: "/code",
-                text: "代码生成器",
-                icon: "setting"
-            },
-            {
+            }, {
                 path: "/modules",
                 text: "模板管理",
                 icon: "menu"
+            },
+            {
+                path: "/code/add",
+                text: "代码生成器",
+                icon: "setting"
             },
             {
                 path: "/others",

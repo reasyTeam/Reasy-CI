@@ -6,8 +6,6 @@ const {
     deepClone
 } = require('../util/lib');
 
-const DEFAULT_CONFIG = {}
-
 class FileDataBase {
     constructor(dataBase) {
         this.dataBase = dataBase;

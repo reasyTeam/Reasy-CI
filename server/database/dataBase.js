@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const config = require('../config/mysql');
 const Op = Sequelize.Op;
 const util = require('../util/lib');
+const fo = require('../util/fileOperation');
 
 class Database {
     constructor() {
@@ -134,53 +135,6 @@ class Database {
         });
 
         /**
-         * 数据校验方法表
-         * @id 唯一标识
-         * @name 方法名称
-         * @description 描述信息
-         */
-        // this.tables.Validate = this.sequelize.define('validate', {
-        //     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true, allowNull: false },
-        //     primaryKey: { type: Sequelize.STRING, allowNull: false },
-        //     description: { type: Sequelize.STRING(255) }
-        // }, {
-        //     freezeTableName: true
-        // });
-
-        /**
-         * 参数表
-         * @id 唯一标识
-         * @name 名称
-         * @description 描述信息
-         * @value 值
-         * @value_type 值类型(用于生成代码)
-         */
-        // this.tables.Parameter = this.sequelize.define('parameter', {
-        //     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true, allowNull: false },
-        //     name: { type: Sequelize.STRING, allowNull: false },
-        //     description: { type: Sequelize.STRING },
-        //     value_type: { type: Sequelize.STRING }
-
-        // }, {
-        //     freezeTableName: true
-        // });
-
-        /**
-         * ParameterToValidate
-         * @id 唯一标识
-         * @validate_id 校验方法
-         * @parameter_id 校验参数
-         * @value 值
-         */
-        // this.tables.ParameterToValidate = this.sequelize.define('parameter_to_validate', {
-        //     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true, allowNull: false },
-        //     validate_id: { type: Sequelize.INTEGER, allowNull: false },
-        //     parameter_id: { type: Sequelize.ARRAY, allowNull: true }
-        // }, {
-        //     freezeTableName: true
-        // });
-
-        /**
          * 模版表
          * @id 唯一标识
          * @name 模板名称
@@ -189,11 +143,85 @@ class Database {
          */
         this.tables.Module = this.sequelize.define('module', {
             id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true, allowNull: false },
+            group_id: { type: Sequelize.INTEGER, allowNull: false },
+            // 模板名称
             name: { type: Sequelize.STRING, allowNull: false },
+            // 模板描述
             description: { type: Sequelize.STRING },
+            // 模板文件地址，包括[目录结构]
             url: { type: Sequelize.STRING }
         }, {
-            freezeTableName: true
+            freezeTableName: true,
+            hooks: {
+                beforeBulkDestroy: (group, option) => {
+                    let id = group.where.id;
+                    // 删除数据前同时删除页面相关配置数据
+                    this.tables.Module.findAll({
+                        where: {
+                            id: id
+                        }
+                    }).then(data => {
+                        if (data.length > 0) {
+                            let url = data.map(item => item.url);
+
+                            // 删除对应的配置文件
+                            url.forEach(item => fo.unlink(item));
+
+                        };
+                    }).catch(err => {
+                        util.log('Module配置文件删除失败', util.LOG_TYPE.ERROR);
+                        util.log(err, util.LOG_TYPE.ERROR);
+                    });
+
+                    // 删除对应的modulePage
+                    this.tables.ModulePage.destroy({
+                        where: {
+                            module_id: id
+                        }
+                    })
+                }
+            }
+        });
+
+        /**
+         * 模版表对应的页面配置
+         * @id 唯一标识
+         * @name 页面名称
+         * @description 模板描述信息
+         * @url 模板文件存储地址
+         */
+        this.tables.ModulePage = this.sequelize.define('modulepage', {
+            id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true, allowNull: false },
+            // 模板名称
+            module_id: { type: Sequelize.INTEGER, allowNull: false },
+            // 页面文件名称
+            name: { type: Sequelize.STRING, allowNull: false },
+            // 模板文件地址，包括[组件配置项]
+            url: { type: Sequelize.STRING }
+        }, {
+            freezeTableName: true,
+            hooks: {
+                beforeBulkDestroy: (group, option) => {
+                    let ids = group.where.id;
+
+                    this.tables.File.findAll({
+                        where: {
+                            id: ids
+                        }
+                    }).then(data => {
+                        if (data.length > 0) {
+                            let url = data.map(item => item.url);
+
+                            // 删除对应的配置文件
+                            url.forEach(item => fo.unlink(item));
+                        }
+                    }).catch(err => {
+                        util.log('ModulePage配置文件删除失败', util.LOG_TYPE.ERROR);
+                        util.log(err, util.LOG_TYPE.ERROR);
+                    });
+
+                }
+            }
         });
 
         return Promise.resolve();
@@ -211,30 +239,36 @@ class Database {
             as: 'file_id'
         });
 
-        // this.tables.Validate.hasOne(this.tables.ParameterToValidate, {
-        //     foreignKey: 'id',
-        //     as: 'validate_id'
-        // });
+        this.tables.Group.hasOne(this.tables.Module, {
+            foreignKey: 'id',
+            as: 'group_id'
+        });
 
-        // this.tables.Parameter.hasOne(this.tables.ParameterToValidate, {
-        //     foreignKey: 'id',
-        //     as: 'parameter_id'
-        // });
+        this.tables.Module.hasOne(this.tables.ModulePage, {
+            foreignKey: 'id',
+            as: 'module_id'
+        })
 
         return new Promise((resolve, reject) => {
             //同步实例与DB
             const force = this.force;
             Promise.all([
                     this.tables.Dependence.sync({ force }),
-                    this.tables.Module.sync({ force }),
-                    // this.tables.Validate.sync({ force }),
-                    // this.tables.Parameter.sync({ force }),
                     this.tables.File.sync({ force })
                 ])
                 .then(() => {
                     return Promise.all([
-                        this.tables.Group.sync({ force }),
-                        // this.tables.ParameterToValidate.sync({ force })
+                        this.tables.Group.sync({ force })
+                    ]);
+                })
+                .then(() => {
+                    return Promise.all([
+                        this.tables.Module.sync({ force })
+                    ]);
+                })
+                .then(() => {
+                    return Promise.all([
+                        this.tables.ModulePage.sync({ force })
                     ]);
                 })
                 .then(resolve)

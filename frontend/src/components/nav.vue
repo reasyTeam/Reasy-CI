@@ -1,7 +1,7 @@
 <template>
   <div class="navigator">
     <el-menu
-      :default-active="$route.path"
+      :default-active="routePath"
       class="el-menu-vertical"
       active-text-color="#1989fa"
       :router="true"
@@ -20,7 +20,13 @@ import { mapState } from "vuex";
 export default {
   name: "navBar",
   computed: {
-    ...mapState(["pathList"])
+    ...mapState(["pathList"]),
+    routePath() {
+      if (/\/code\//gi.test(this.$route.path)) {
+        return "/code/add";
+      }
+      return this.$route.path;
+    }
   }
 };
 </script>

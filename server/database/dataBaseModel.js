@@ -2,6 +2,7 @@ const TableHandle = require('./TableHandle');
 const DataBase = require('./dataBase');
 const Sequelize = require('sequelize');
 const FileDataBase = require('../generator/fileDataBase');
+const ModuleHandle = require('../generator/moduleHandle');
 const Op = Sequelize.Op;
 const util = require('../util/lib');
 const fo = require('../util/fileOperation');
@@ -30,12 +31,13 @@ function init() {
                         })
                     }
                 }),
-                // Validate: new TableHandle(dataBase.tables.Validate),
+                ModulePage: new TableHandle(dataBase.tables.ModulePage),
                 // Parameter: new TableHandle(dataBase.tables.Parameter),
                 // ParameterToValidate: new TableHandle(dataBase.tables.ParameterToValidate),
                 Module: new TableHandle(dataBase.tables.Module),
                 sequelize: dataBase.sequelize,
-                FileDataBase: new FileDataBase(dataBase)
+                FileDataBase: new FileDataBase(dataBase),
+                ModuleHandle: new ModuleHandle(dataBase)
             };
         }).catch((error) => {
             util.log('数据库初始化出错！' + error, util.LOG_TYPE.ERROR);

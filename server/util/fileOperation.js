@@ -76,6 +76,10 @@ const fo = {
      */
     writeJs(data, src, needModule = true) {
         src = this.correctUrl(src);
+
+        let folder = path.dirname(src);
+        this.mkdirSync(folder);
+
         let outStream = JSON.stringify(data, null, 4);
 
         if (needModule) {

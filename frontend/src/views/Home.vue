@@ -55,7 +55,11 @@ export default {
       }
     },
     title() {
-      return this.pathToTitle[this.$route.path];
+      let path = this.$route.path;
+      if (/\/code\//g.test(path)) {
+        path = "/code/add";
+      }
+      return this.pathToTitle[path];
     }
   },
   methods: {

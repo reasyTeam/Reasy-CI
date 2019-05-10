@@ -995,7 +995,8 @@ const components = {
         showType: 'layout',
         showOption: {
             cols: 'cols',
-            title: 'Form表单容器'
+            title: 'Form表单容器',
+            formList: 'formCfg'
         },
         isContainer: true,
         noTitle: true,
@@ -1020,6 +1021,11 @@ const components = {
                 valueType: 'object',
                 required: false,
                 defaultValue: null
+            },
+            formCfg: {
+                hidden: true,
+                valueType: 'object',
+                defaultValue: {}
             },
             submitUrl: {
                 title: '提交地址',
@@ -1095,7 +1101,8 @@ const components = {
         showType: 'layout',
         showOption: {
             cols: 'cols',
-            title: '弹出框容器'
+            title: '弹出框容器',
+            formList: 'content'
         },
         isContainer: true,
         noTitle: true,
@@ -1118,8 +1125,9 @@ const components = {
             content: {
                 title: '消息体内容-通过代码生成',
                 valueType: 'object',
+                hidden: true,
                 required: false,
-                defaultValue: null
+                defaultValue: []
             },
             isIframe: {
                 title: '是否为iframe',

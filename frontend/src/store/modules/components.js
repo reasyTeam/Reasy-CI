@@ -15,6 +15,8 @@ export default {
         components: [],
         // 当前处于active状态的组件
         selected: -1,
+        // 当前选中的文件ID
+        fileId: -1,
         idGlobal: 1,
         // 存储预设的校验规则
         validates: [],
@@ -103,6 +105,9 @@ export default {
         },
         [types.SET_SORT_LIST](state, data) {
             state.cfgSortList = data;
+        },
+        [types.SET_FILE_ID](state, data) {
+            state.fileId = data;
         }
     },
     actions: {

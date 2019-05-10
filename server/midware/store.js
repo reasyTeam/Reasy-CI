@@ -1,3 +1,5 @@
+const cuid = require('cuid');
+
 const api = {
     // 组件库操作
     // 获取
@@ -72,10 +74,50 @@ const api = {
         let data = req.body;
         return models.FileDataBase.getValidates(data.id);
     },
-
     // 获取模板
-    'getModels': function(models) {
+    'getModules': function(models) {
         return models.Module.query();
+    },
+    'createModule': function(models, req) {
+        let data = req.body;
+        data.url = data.url || `uploads/modules/${cuid()}.js`;
+        return models.Module.create(data);
+    },
+    // 更新
+    'updateModule': function(models, req) {
+        let data = req.body;
+        return models.Module.update(data);
+    },
+    // 删除模板
+    'delModule': function(models, req) {
+        let data = req.body;
+        return models.Module.delete(data);
+    },
+    // 获取模块数据
+    'getModuleData': function(models, req) {
+        // 通过url获取对应的数据
+        let data = req.body;
+        return models.ModuleHandle.getModuleData(data.id);
+    },
+    // 获取模块页面配置数据
+    'getModuleData': function(models, req) {
+        // 通过url获取对应的数据
+        let data = req.body;
+        return models.ModuleHandle.getModulePage(data.id);
+    },
+    // 删除模板单项配置
+    'delModulePage': function(models, req) {
+        let data = req.body;
+        return models.ModulePage.delete(data);
+    },
+    'updateModulePage': function(models, req) {
+        let data = req.body;
+        // 添加文件，并更新id
+        return models.ModuleHandle.writePageCfg(data.pageCfg);
+    },
+    'updateModeuleDirectory': function(models, req) {
+        let data = req.body;
+        models.ModuleHandle.writeFile(data.url, data.module);
     }
 };
 

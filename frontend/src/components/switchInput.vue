@@ -1,6 +1,7 @@
 <template>
   <span class="label-wrapper">
     <i class="icon el-icon-document" v-if="!fileData.children"></i>
+    <i class="icon el-icon-caret-right" v-else-if="fileData.children.length === 0"></i>
     <input
       type="text"
       ref="input"
@@ -49,8 +50,10 @@ export default {
 
 .icon {
   position: absolute;
-  left: -16px;
-  top: 0;
+  left: -18px;
+  font-size: 12px;
+  top: 1px;
+  color: #c0c4cc;
 }
 
 input {
