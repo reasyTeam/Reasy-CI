@@ -27,7 +27,13 @@
       </div>
     </div>
 
-    <el-dialog title="创建模块" :visible.sync="visible" class="pop-dialog" :before-close="() => false">
+    <el-dialog
+      title="创建模块"
+      :visible.sync="visible"
+      class="pop-dialog"
+      :show-close="false"
+      :before-close="() => false"
+    >
       <template v-if="currentGroup === ''">
         <div>请先创建组件库，再进行代码配置</div>
       </template>
@@ -42,10 +48,10 @@
             <el-input v-model="frameForm.description"></el-input>
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm()">确 定</el-button>
-        </div>
       </template>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm()">确 定</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -143,6 +149,10 @@ export default {
       this.$refs.configList.saveCfg();
     },
     submitForm() {
+      if (this.currentGroup === "") {
+        this.$router.push(`/components`);
+        return;
+      }
       this.$refs[REF_FORM].validate(valid => {
         this.frameForm.group_id = this.currentGroup;
         if (valid) {
