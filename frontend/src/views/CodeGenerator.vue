@@ -26,6 +26,27 @@
         </div>
       </div>
     </div>
+
+    <el-dialog title="创建模块" :visible.sync="visible" class="pop-dialog" :before-close="() => false">
+      <template v-if="currentGroup === ''">
+        <div>请先创建组件库，再进行代码配置</div>
+      </template>
+
+      <template v-else>
+        <el-form :model="frameForm" :rules="frameRules" ref="modules" class="pop-form">
+          <!-- <div>请先创建模板</div> -->
+          <el-form-item label="模板名称" prop="name">
+            <el-input v-model="frameForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="描述" prop="description">
+            <el-input v-model="frameForm.description"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitForm()">确 定</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -37,21 +58,61 @@ import cfgList from "./pageitem/configList.vue";
 import proList from "./pageitem/propertyList.vue";
 import projects from "./pageitem/projects.vue";
 import * as types from "@/store/types.js";
+const REF_FORM = "modules";
 
 export default {
   data() {
+    var checkFrame = (rule, value, callback) => {
+      let modules = this.modules,
+        isEdit = !!this.frameForm.id || this.frameForm.id === 0,
+        reg = new RegExp("^" + value + "$", "i");
+
+      for (let i = 0, l = modules.length; i < l; i++) {
+        if (reg.test(modules[i].name)) {
+          if (isEdit && this.frameForm.id === modules[i].value) {
+            return callback();
+          }
+          return callback(new Error("模板名称不能重复"));
+        }
+      }
+      callback();
+    };
     return {
       group: "component",
-      showProject: true
+      showProject: true,
+      frameForm: {
+        group_id: -1,
+        name: "",
+        description: ""
+      },
+      frameRules: {
+        name: [
+          { required: true, message: "请输入模板名称", trigger: "blur" },
+          {
+            min: 1,
+            max: 50,
+            message: "长度在 1 到 50 个字符",
+            trigger: "blur"
+          },
+          { validator: checkFrame, trigger: "blur" }
+        ],
+        description: [
+          { min: 0, max: 50, message: "长度在 0 到 50 个字符", trigger: "blur" }
+        ]
+      }
     };
   },
   computed: {
     ...mapState({
       currentGroup: "currentGroup"
     }),
+    ...mapState("modules", ["modules"]),
     ...mapState("components", ["cfgList"]),
     moduleId() {
       return this.$route.params.id;
+    },
+    visible() {
+      return this.currentGroup === "" || this.$route.params.id === "add";
     }
   },
   components: {
@@ -62,6 +123,7 @@ export default {
   },
   methods: {
     ...mapActions("components", ["getComponents"]),
+    ...mapActions("modules", ["getModules"]),
     ...mapMutations("components", [types.RESET_CFG_LIST]),
     reset() {
       this.$confirm("此操作将重置配置, 是否继续?", "提示", {
@@ -79,12 +141,35 @@ export default {
     save() {
       // console.log(this.cfgList);
       this.$refs.configList.saveCfg();
+    },
+    submitForm() {
+      this.$refs[REF_FORM].validate(valid => {
+        this.frameForm.group_id = this.currentGroup;
+        if (valid) {
+          this.frameForm.group_id = this.currentGroup;
+          this.$http.setData("createModule", this.frameForm).then(data => {
+            this.$router.push(`/code/${data.id}`);
+          });
+        } else {
+          this.$message({
+            message: "请修正错误的项",
+            type: "error"
+          });
+          return false;
+        }
+      });
     }
   },
   created() {
+    if (this.currentGroup === "") {
+      return;
+    }
+
     this.getComponents({
       id: this.currentGroup
     });
+
+    this.getModules();
   }
 };
 </script>
