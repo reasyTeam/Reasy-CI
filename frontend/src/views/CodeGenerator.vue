@@ -9,8 +9,8 @@
       <header class="clear-fix header">
         <div class="float-r tool-bar">
           <el-button plain size="small" @click="reset">重置</el-button>
-          <!-- <el-button plain type="primary" size="small">预览</el-button> -->
           <el-button plain type="primary" size="small" @click="save">保存模板</el-button>
+          <el-button plain type="primary" size="small">生成代码</el-button>
         </div>
       </header>
       <div class="h-100 config">
@@ -28,27 +28,34 @@
     </div>
 
     <el-dialog
+      title="友情提醒"
+      :visible.sync="tipVisible"
+      class="pop-dialog"
+      :show-close="false"
+      :before-close="() => false"
+    >
+      <div>请先创建组件库，再进行代码配置</div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm()">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog
       title="创建模块"
       :visible.sync="visible"
       class="pop-dialog"
       :show-close="false"
       :before-close="() => false"
     >
-      <template v-if="currentGroup === ''">
-        <div>请先创建组件库，再进行代码配置</div>
-      </template>
-
-      <template v-else>
-        <el-form :model="frameForm" :rules="frameRules" ref="modules" class="pop-form">
-          <!-- <div>请先创建模板</div> -->
-          <el-form-item label="模板名称" prop="name">
-            <el-input v-model="frameForm.name"></el-input>
-          </el-form-item>
-          <el-form-item label="描述" prop="description">
-            <el-input v-model="frameForm.description"></el-input>
-          </el-form-item>
-        </el-form>
-      </template>
+      <el-form :model="frameForm" :rules="frameRules" ref="modules" class="pop-form">
+        <!-- <div>请先创建模板</div> -->
+        <el-form-item label="模板名称" prop="name">
+          <el-input v-model="frameForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="描述" prop="description">
+          <el-input v-model="frameForm.description"></el-input>
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm()">确 定</el-button>
       </div>
@@ -86,6 +93,7 @@ export default {
     return {
       group: "component",
       showProject: true,
+      visible: false,
       frameForm: {
         group_id: -1,
         name: "",
@@ -117,8 +125,8 @@ export default {
     moduleId() {
       return this.$route.params.id;
     },
-    visible() {
-      return this.currentGroup === "" || this.$route.params.id === "add";
+    tipVisible() {
+      return this.currentGroup === "";
     }
   },
   components: {

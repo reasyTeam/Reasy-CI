@@ -22,7 +22,7 @@ export default {
         validates: [],
         // 存储不同的组件包含的配置项
         attrList: {},
-        // 用于存储id:cfg键值对存储组件的自定义配置
+        // 用于存储fileid:{id:cfg}键值对存储组件的自定义配置
         cfgList: {},
         // 暂时没有用到，不知道以后会不会用到
         cfgSortList: [],
@@ -145,4 +145,9 @@ export default {
             });
         },
     }
+}
+
+// 数据结构
+let data = {
+
 }

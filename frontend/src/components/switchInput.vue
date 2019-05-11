@@ -9,6 +9,7 @@
       maxlength="12"
       v-show="fileData.edit"
       @blur="blur"
+      @keyup.enter="blur"
     >
     <label v-show="!fileData.edit">{{fileData.label}}</label>
     <i v-show="!fileData.edit" class="el-icon-edit" @click.stop="showEdit"></i>
@@ -18,18 +19,21 @@
 <script>
 export default {
   props: ["fileData"],
+  computed: {
+    defaultData() {
+      return this.fileData.children ? "folder" : "file";
+    }
+  },
   updated() {
     if (this.fileData.edit) {
-      //   this.$nextTick(() => {
       this.$refs.input.focus();
-      //   });
+      this.$refs.input.select();
     }
   },
   mounted() {
     if (this.fileData.edit) {
-      //   this.$nextTick(() => {
       this.$refs.input.focus();
-      //   });
+      this.$refs.input.select();
     }
   },
   methods: {
@@ -37,6 +41,10 @@ export default {
       this.fileData.edit = true;
     },
     blur() {
+      if (this.fileData.label === "") {
+        this.fileData.label = this.defaultData;
+      }
+
       this.fileData.edit = false;
     }
   }

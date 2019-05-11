@@ -151,7 +151,9 @@ export default {
     }
   },
   created() {
-    this.getModules();
+    this.getModules({
+      group_id: this.currentGroup
+    });
   }
 };
 </script>

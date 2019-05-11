@@ -239,10 +239,10 @@ class Database {
             as: 'file_id'
         });
 
-        this.tables.Group.hasOne(this.tables.Module, {
-            foreignKey: 'id',
-            as: 'group_id'
-        });
+        // this.tables.Group.hasOne(this.tables.Module, {
+        //     foreignKey: 'id',
+        //     as: 'group_id'
+        // });
 
         this.tables.Module.hasOne(this.tables.ModulePage, {
             foreignKey: 'id',

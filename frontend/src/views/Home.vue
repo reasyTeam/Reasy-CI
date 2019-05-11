@@ -3,12 +3,7 @@
     <el-container style="height: 100%;">
       <el-aside class="nav" style="width: 220px;">
         <div class="nav-title">
-          <el-select
-            v-model="currentGroup"
-            @change="changeGroup"
-            class="nav-select"
-            placeholder="请添加组件库"
-          >
+          <el-select v-model="currentGroup" class="nav-select" placeholder="请添加组件库">
             <el-option
               v-for="item in groupNames"
               :key="item.value"
@@ -23,7 +18,7 @@
         <el-header class="header" height="68px">
           <div class="title">{{title}}</div>
         </el-header>
-        <el-main class="content">
+        <el-main class="content" v-if="isRouteAlive">
           <slot></slot>
         </el-main>
       </el-container>
@@ -42,7 +37,9 @@ export default {
   name: "home",
   components: { navBar },
   data() {
-    return {};
+    return {
+      isRouteAlive: true
+    };
   },
   computed: {
     ...mapGetters(["pathToTitle", "groupNames"]),
@@ -66,16 +63,16 @@ export default {
     ...mapMutations({
       setCurGroup: types.SET_CUR_GROUP
     }),
-    changeGroup() {
-      // 重新获取组件列表
-      // this.getComponents({ id: this.currentGroup });
-    },
     ...mapActions(["getGroups"]),
     ...mapActions("components", ["getComponents"])
   },
   watch: {
     currentGroup() {
-      this.getComponents({ id: this.currentGroup });
+      // this.getComponents({ id: this.currentGroup });
+      this.isRouteAlive = false;
+      this.$nextTick(() => {
+        this.isRouteAlive = true;
+      });
     }
   },
   created() {

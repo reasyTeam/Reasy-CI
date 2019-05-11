@@ -14,24 +14,30 @@ export default {
         },
     },
     actions: {
-        getModules({ commit }) {
-            $http.getData("getModules").then(data => {
+        getModules({ commit }, data) {
+            $http.getData("getModules", data).then(data => {
                 commit(types.SET_MODULES, data);
             });
         },
-        delModules({ dispatch }, data) {
+        delModules({ dispatch, rootState }, data) {
             $http.setData("delModule", data).then(() => {
-                dispatch('getModules');
+                dispatch('getModules', {
+                    group_id: rootState.currentGroup
+                });
             });
         },
-        updateModules({ dispatch }, data) {
+        updateModules({ dispatch, rootState }, data) {
             $http.setData("updateModule", data).then(() => {
-                dispatch('getModules');
+                dispatch('getModules', {
+                    group_id: rootState.currentGroup
+                });
             });
         },
-        createModules({ dispatch }, data) {
+        createModules({ dispatch, rootState }, data) {
             $http.setData("createModule", data).then(() => {
-                dispatch('getModules');
+                dispatch('getModules', {
+                    group_id: rootState.currentGroup
+                });
             });
         }
     }

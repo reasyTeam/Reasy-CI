@@ -75,12 +75,14 @@ const api = {
         return models.FileDataBase.getValidates(data.id);
     },
     // 获取模板
-    'getModules': function(models) {
-        return models.Module.query();
+    'getModules': function(models, req) {
+        let data = req.body;
+        return models.Module.query(data);
     },
     'createModule': function(models, req) {
         let data = req.body;
         data.url = data.url || `uploads/modules/${cuid()}.js`;
+
         return models.Module.create(data);
     },
     // 更新
