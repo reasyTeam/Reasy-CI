@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 import draggable from "vuedraggable";
 import fGroup from "@/components/formDemo/fgroup.vue";
 import * as types from "@/store/types.js";
@@ -33,11 +33,26 @@ import { deepClone } from "@/assets/lib.js";
 export default {
   data() {
     return {
+      // formlist格式
+      a: [
+        {
+          attr: {
+            // 对应的是当前配置组件的id
+            formCfg: [[1, 2]]
+          },
+          id: "",
+          showOption: {
+            // list对应的组件
+            formList: "formCfg"
+          }
+        }
+      ],
       formList: []
     };
   },
   computed: {
-    ...mapState("components", ["selected", "idGlobal", "hasReset"])
+    ...mapState("components", ["selected", "idGlobal", "fileId"]),
+    ...mapGetters("components", ["curPageCfg"])
   },
   props: {
     group: {
@@ -74,13 +89,31 @@ export default {
     saveCfg() {
       let list = this.formList.map(item => item.id);
       this[types.SET_SORT_LIST](list);
+    },
+    getFormList() {
+      let { sortArray, cfgList } = this.curPageCfg;
+      sortArray.forEach(index => {
+        let itemCfg = deepClone(cfgList[index]);
+        // check(itemCfg);
+        this.formList.push(itemCfg);
+      });
+      // 好像不需要在这设置
+      // function check(cfg){
+      //   while(cfg.isContainer){
+      //     let data = cfg.attrs[cfg.showOption.formList];
+
+      //   }
+      // }
     }
   },
   watch: {
-    hasReset(val) {
-      if (val) {
+    selected(val) {
+      if (val === -1) {
         this.formList = [];
       }
+    },
+    fileId(val) {
+      this.getFormList();
     }
   }
 };

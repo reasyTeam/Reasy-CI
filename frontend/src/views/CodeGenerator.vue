@@ -133,7 +133,7 @@ export default {
       currentGroup: "currentGroup"
     }),
     ...mapState("modules", ["modules"]),
-    ...mapState("components", ["cfgList"]),
+    ...mapState("components", ["formList"]),
     moduleId() {
       return this.$route.params.id;
     },
@@ -165,7 +165,7 @@ export default {
       });
     },
     save() {
-      // console.log(this.cfgList);
+      console.log(this.formList);
       this.$refs.configList.saveCfg();
     },
     goToCom() {

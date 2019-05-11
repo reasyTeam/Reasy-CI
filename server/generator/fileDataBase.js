@@ -86,7 +86,7 @@ class FileDataBase {
     formatComponents(components) {
         let outData = [];
 
-        if (components && components.commonAttrs) {
+        if (components && components.components) {
             outData = components.components.map(item => {
                 let funs = {};
                 for (let key in item.attrs) {

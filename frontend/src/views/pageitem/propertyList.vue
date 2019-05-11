@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 import { deepClone } from "@/assets/lib.js";
 import fgroup from "@/components/group.vue";
 import fcolumn from "@/components/column.vue";
@@ -30,12 +30,14 @@ export default {
   },
   computed: {
     ...mapState("components", ["selected", "cfgList", "attrList"]),
+    ...mapGetters("components", ["curPageCfg"]),
     currentAttrs() {
-      if (this.cfgList[this.selected] === undefined) {
+      let cfgList = this.curPageCfg.cfgList[this.selected];
+      if (cfgList === undefined) {
         return {};
       }
 
-      let name = this.cfgList[this.selected]["name"];
+      let name = cfgList["name"];
 
       if (!this.clones[name]) {
         this.clones[name] = deepClone(this.attrList[name]);
@@ -43,15 +45,13 @@ export default {
       return this.clones[name];
     },
     currentCfg() {
-      if (this.cfgList[this.selected] === undefined) {
+      let cfgList = this.curPageCfg.cfgList[this.selected];
+      if (cfgList === undefined) {
         return {};
       }
 
-      return this.cfgList[this.selected]["attrs"];
+      return cfgList["attrs"];
     }
-  },
-  watch: {
-    // selected(newV, oldV) {}
   },
   methods: {
     ...mapMutations("components", [types.UPDATE_CFG_ATTR]),

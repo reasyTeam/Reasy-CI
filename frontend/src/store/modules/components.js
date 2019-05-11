@@ -23,12 +23,10 @@ export default {
         // 存储不同的组件包含的配置项
         attrList: {},
         // 用于存储fileid:{id:cfg}键值对存储组件的自定义配置
-        formList: { '-1': {} },
+        formList: { '-1': { cfgList: {}, sortArray: [] } }
         // cfgList: {},
-        // 暂时没有用到，不知道以后会不会用到
-        cfgSortList: [],
         // 记录是否点击重制按钮，重置时需要同时将formList清空，在configList.vue中定义，用来存储已排序的组件
-        hasReset: false
+        // hasReset: false
     },
     getters: {
         components: state => {
@@ -61,6 +59,9 @@ export default {
 
             state.attrList = attrList;
             return res;
+        },
+        curPageCfg: state => {
+            return state.formList[state.fileId];
         }
     },
     mutations: {
@@ -79,7 +80,7 @@ export default {
             };
 
             state.formList[state.fileId] = data;
-            state.hasReset = true;
+            // state.hasReset = true;
             state.selected = -1;
         },
         // 添加组件

@@ -36,7 +36,7 @@
 <script>
 // import nestedDraggable from "./nested";
 import draggable from "vuedraggable";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 import * as types from "@/store/types.js";
 import fGroup from "./fgroup.vue";
 
@@ -48,7 +48,8 @@ export default {
   },
   props: ["option"],
   computed: {
-    ...mapState("components", ["selected", "cfgList"]),
+    ...mapState("components", ["selected"]),
+    ...mapGetters("components", ["curPageCfg"]),
     spans() {
       let cols = this.option.cols,
         t = Math.floor(24 / cols),
@@ -110,6 +111,26 @@ export default {
       }
 
       this.formList[index].splice(i, 1);
+    },
+    getFormList() {
+      // 好像不需要在这设置
+      // function check(cfg){
+      //   while(cfg.isContainer){
+      //     let data = cfg.attrs[cfg.showOption.formList];
+      //   }
+      // }
+    }
+  },
+  created() {
+    let formList = this.option.formList;
+    if (formList && formList.length > 0) {
+      let list = [];
+      formList.forEach(index => {
+        let { cfgList } = this.curPageCfg;
+        let itemCfg = deepClone(cfgList[index]);
+        list.push(itemCfg);
+      });
+      this.formList = list;
     }
   }
 };

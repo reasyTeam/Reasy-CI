@@ -10,11 +10,12 @@ export default {
         cfgIndex: -1,
     },
     getters: {
-        currentConfig(state, getters, rootState) {
-            if (rootState.components.selected === -1) {
+        currentConfig(state, getters, rootState, rootGetter) {
+            let comState = rootState.components;
+            if (comState.selected === -1) {
                 return {};
             }
-            return rootState.components.cfgList[rootState.components.selected] || {};
+            return rootGetter['components/curPageCfg'].cfgList[comState.selected] || {};
         },
         itemConfigs(state, getters) {
             if (state.cfgIndex === -1 || state.cfgAttr === '') {
