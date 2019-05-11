@@ -19,3 +19,4 @@ export const SET_ITEM_INDEX = 'SET_ITEM_INDEX';
 export const SET_SORT_LIST = 'SET_SORT_LIST';
 
 export const SET_MODULES = 'SET_MODULES';
+export const SET_FILE_ID = 'SET_FILE_ID';

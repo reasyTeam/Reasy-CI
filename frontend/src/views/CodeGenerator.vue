@@ -1,6 +1,6 @@
 <template>
   <div class="h-100 wrapper">
-    <div class="temp-wrapper" :class="{hide:!showProject}">
+    <div class="temp-wrapper" v-if="needProject" :class="{hide:!showProject}">
       <projects></projects>
       <i class="icon el-icon-arrow-left" title="收起" v-if="showProject" @click="showProject = false"></i>
       <i class="icon el-icon-arrow-right" title="张开" v-else @click="showProject = true">张开目录结构列表</i>
@@ -9,7 +9,7 @@
       <header class="clear-fix header">
         <div class="float-r tool-bar">
           <el-button plain size="small" @click="reset">重置</el-button>
-          <el-button plain type="primary" size="small" @click="save">保存模板</el-button>
+          <el-button plain type="primary" v-if="needProject" size="small" @click="save">保存模板</el-button>
           <el-button plain type="primary" size="small">生成代码</el-button>
         </div>
       </header>
@@ -36,7 +36,7 @@
     >
       <div>请先创建组件库，再进行代码配置</div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm()">确 定</el-button>
+        <el-button type="primary" @click="goToCom()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -47,8 +47,19 @@
       :show-close="false"
       :before-close="() => false"
     >
-      <el-form :model="frameForm" :rules="frameRules" ref="modules" class="pop-form">
-        <!-- <div>请先创建模板</div> -->
+      <div class="el-form-item pop-form">
+        <label class="el-form-item__label">是否创建项目</label>
+        <div class="el-form-item__content">
+          <el-switch v-model="needProject" active-text="创建" inactive-text="不创建"></el-switch>
+        </div>
+      </div>
+      <el-form
+        :model="frameForm"
+        :rules="frameRules"
+        ref="modules"
+        class="pop-form"
+        v-if="needProject"
+      >
         <el-form-item label="模板名称" prop="name">
           <el-input v-model="frameForm.name"></el-input>
         </el-form-item>
@@ -94,6 +105,7 @@ export default {
       group: "component",
       showProject: true,
       visible: false,
+      needProject: false,
       frameForm: {
         group_id: -1,
         name: "",
@@ -156,11 +168,15 @@ export default {
       // console.log(this.cfgList);
       this.$refs.configList.saveCfg();
     },
+    goToCom() {
+      this.$router.push(`/components`);
+    },
     submitForm() {
-      if (this.currentGroup === "") {
-        this.$router.push(`/components`);
+      if (!this.needProject) {
+        this.visible = false;
         return;
       }
+
       this.$refs[REF_FORM].validate(valid => {
         this.frameForm.group_id = this.currentGroup;
         if (valid) {
@@ -168,6 +184,7 @@ export default {
           this.$http.setData("createModule", this.frameForm).then(data => {
             this.$router.push(`/code/${data.id}`);
           });
+          this.visible = false;
         } else {
           this.$message({
             message: "请修正错误的项",
@@ -188,6 +205,9 @@ export default {
     });
 
     this.getModules();
+  },
+  mounted() {
+    this.visible = !this.tipVisible && this.$route.params.id === "add";
   }
 };
 </script>

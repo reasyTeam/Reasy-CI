@@ -2,9 +2,10 @@
   <div class="projects">
     <h5 class="pro-title">项目目录结构</h5>
     <section class="docs">
-      <el-button type="text" icon="el-icon-document-add" @click.stop="append(1)">添加文件</el-button>
-      <el-button type="text" icon="el-icon-folder-add" @click.stop="append(2)">添加文件夹</el-button>
-      <el-tree :data="treeData" node-key="id" expand-on-click-node highlight-current>
+      <i class="icon el-icon-caret-bottom"></i>
+      <el-button type="text" icon="el-icon-document-add" @click.stop="append(1)">添加根文件</el-button>
+      <el-button type="text" icon="el-icon-folder-add" @click.stop="append(2)">添加根文件夹</el-button>
+      <el-tree ref="tree" :data="treeData" node-key="id" expand-on-click-node highlight-current>
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <s-input :fileData="data"></s-input>
           <span>
@@ -44,6 +45,7 @@ export default {
   methods: {
     append(type, data) {
       if (data) {
+        this.$refs.tree.store.nodesMap[data.id].expanded = true;
         data = data.children;
       } else {
         data = this.treeData;
@@ -70,6 +72,9 @@ export default {
       const index = children.findIndex(d => d.id === data.id);
       children.splice(index, 1);
     },
+    click(data, node, com) {
+      console.log(data);
+    },
     showEdit(data) {
       data.edit = true;
     },
@@ -84,6 +89,11 @@ export default {
 .projects {
   font-size: 14px;
   min-width: 250px;
+}
+
+.icon {
+  font-size: 12px;
+  color: #c0c4cc;
 }
 
 .pro-title {

@@ -23,7 +23,8 @@ export default {
         // 存储不同的组件包含的配置项
         attrList: {},
         // 用于存储fileid:{id:cfg}键值对存储组件的自定义配置
-        cfgList: {},
+        formList: { '-1': {} },
+        // cfgList: {},
         // 暂时没有用到，不知道以后会不会用到
         cfgSortList: [],
         // 记录是否点击重制按钮，重置时需要同时将formList清空，在configList.vue中定义，用来存储已排序的组件
@@ -66,14 +67,22 @@ export default {
         [types.SET_COMPONENTS](state, data) {
             state.components = data;
         },
+        // 设置选中的组件
         [types.SET_SELECTED](state, data) {
             state.selected = data;
         },
+        // 重置
         [types.RESET_CFG_LIST](state) {
-            state.cfgList = {};
+            let data = {
+                cfgList: {},
+                sortArray: []
+            };
+
+            state.formList[state.fileId] = data;
             state.hasReset = true;
             state.selected = -1;
         },
+        // 添加组件
         [types.ADD_CFG](state, data) {
             state.idGlobal++;
             data.attrs = {};
@@ -82,30 +91,37 @@ export default {
                 data.attrs[key] = attrs[key]['defaultValue'];
             }
 
-            state.cfgList[data.id] = data;
-            Vue.set(state.cfgList, data.id, data);
+            state.formList[state.fileId].cfgList[data.id] = data;
+            Vue.set(state.formList[state.fileId].cfgList, data.id, data);
         },
+        // 移除组件
         [types.REMOVE_CFG](state, id) {
-            let data = state.cfgList[id];
+            let cfgList = state.formList[state.fileId].cfgList,
+                data = cfgList[id];
 
             // 同时删除所有内部的组件
             if (data.isContainer) {
                 data.attr[data.showOption.formList].forEach(item => {
-                    delete state.cfgList[item];
+                    delete cfgList[item];
                 });
             }
-            delete state.cfgList[id];
+            delete cfgList[id];
         },
         [types.SET_VALIDATES](state, data) {
             state.validates = data;
         },
+        // 更新组件配置属性
         [types.UPDATE_CFG_ATTR](state, option) {
-            let id = option.id !== undefined ? option.id : state.selected;
-            state.cfgList[id]['attrs'][option.attr] = option.value;
+            let id = option.id !== undefined ? option.id : state.selected,
+                cfgList = state.formList[state.fileId].cfgList;
+
+            cfgList[id]['attrs'][option.attr] = option.value;
         },
+        // 设置排序后的组件
         [types.SET_SORT_LIST](state, data) {
-            state.cfgSortList = data;
+            state.formList[state.fileId].sortArray = data;
         },
+        // 设置选中的文件id
         [types.SET_FILE_ID](state, data) {
             state.fileId = data;
         }
@@ -147,7 +163,26 @@ export default {
     }
 }
 
-// 数据结构
-let data = {
-
-}
+// // 数据结构
+// let data = {
+//     selected: 1,
+//     fileId: 2,
+//     formList: {
+//         fileId: {
+//             cfgList: {
+//                 id: cfg
+//             },
+//             sortArray: []
+//         }
+//     },
+//     // 目录结构
+//     directory: [{
+//         id: '',
+//         label: '',
+//         children: []
+//     }, {
+//         id: '',
+//         label: '',
+//         modulepage_id: '' // 对应单个页面的配置文件
+//     }]
+// }

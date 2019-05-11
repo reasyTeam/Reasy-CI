@@ -6,7 +6,7 @@
         <el-table-column prop="name" label="模板名称"></el-table-column>
         <el-table-column prop="description" label="描述"></el-table-column>
         <el-table-column prop="createdAt" label="创建日期"></el-table-column>
-        <el-table-column float="right" width="240" label="操作">
+        <el-table-column float="right" width="300" label="操作">
           <template v-slot="scope">
             <el-button type="primary" @click="editData(scope.row)" size="small">编辑</el-button>
             <el-button
@@ -15,6 +15,7 @@
               size="small"
             >配置</el-button>
             <el-button type="danger" @click="deleteData(scope.row)" size="small">删除</el-button>
+            <el-button type="success" @click="deleteData(scope.row)" size="small">下载代码</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -51,7 +52,7 @@ export default {
 
       for (let i = 0, l = modules.length; i < l; i++) {
         if (reg.test(modules[i].name)) {
-          if (isEdit && this.frameForm.id === modules[i].value) {
+          if (isEdit && this.frameForm.id === modules[i].id) {
             return callback();
           }
           return callback(new Error("模板名称不能重复"));
