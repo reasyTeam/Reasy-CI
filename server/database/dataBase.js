@@ -43,7 +43,8 @@ class Database {
                     min: 0, //最小连接数
                     acquire: config.aquireTimeout, //请求超时时间
                     idle: 10000 //断开连接后，连接实例在连接池保持的时间
-                }
+                },
+                logging: false
             });
             resolve();
         })
