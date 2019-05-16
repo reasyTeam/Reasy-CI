@@ -9,7 +9,7 @@
       <header class="clear-fix header">
         <div class="float-r tool-bar">
           <el-button plain size="small" @click="reset">重置</el-button>
-          <el-button plain type="primary" v-if="needProject" size="small" @click="save">保存模板</el-button>
+          <el-button plain type="primary" size="small" @click="save">保存模板</el-button>
           <el-button plain type="primary" size="small">生成代码</el-button>
         </div>
       </header>
@@ -185,6 +185,10 @@ export default {
             this.$router.push(`/code/${data.id}`);
           });
           this.visible = false;
+          this.$message({
+            type: "success",
+            message: "模板添加成功!"
+          });
         } else {
           this.$message({
             message: "请修正错误的项",
@@ -198,6 +202,10 @@ export default {
   created() {
     if (this.currentGroup === "") {
       return;
+    }
+
+    if (this.$route.params.id !== "add") {
+      this.needProject = true;
     }
 
     this.getComponents({

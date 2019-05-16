@@ -4,6 +4,13 @@ const cuid = require('cuid');
 class ModuleHandle {
     constructor(dataBase) {
         this.dataBase = dataBase;
+        this.cache = {
+            curId: -1,
+            // 目录结构信息
+            direct: {},
+            // 页面配置信息，id: config
+            config: {}
+        }
     }
 
     writeFile(filePath, data = {}) {
@@ -19,19 +26,39 @@ class ModuleHandle {
 
     }
 
-    getModuleData(id) {
+    reset() {
+        this.cache = {
+            curId: -1,
+            direct: {},
+            config: {}
+        }
+    }
+
+    getDirect(id) {
+        this.reset();
+
+        this.cache.curId = id;
         return this.dataBase.Module.query({
             id
         }).then(data => {
             if (data.length > 0) {
                 let cfgData = require(data[0].url);
+                this.cache.direct = cfgData;
                 return cfgData;
             }
             return [];
         })
-        // .catch(err => {
-        //     // 输出错误信息
-        // });
+    }
+
+    writeDirect() {
+        let id = this.cache.curId;
+        return this.dataBase.Module.query({
+            id
+        }).then(data => {
+            if (data.length > 0) {
+                fo.writeJs()
+            }
+        });
     }
 
     getModulePage(id) {
@@ -40,13 +67,14 @@ class ModuleHandle {
         }).then(data => {
             if (data.length > 0) {
                 let cfgData = require(data[0].url);
+                this.cache.config[id] = cfgData;
                 return cfgData;
             }
             return [];
-        })
+        });
     }
 
-    writePageCfg(cfg) {
+    writeModulePage(cfg) {
         if (!cfg.modulepage_id) {
             let url = `uploads/modules/pages/${cuid()}.js`;
             this.dataBase.ModulePage.create({
@@ -70,6 +98,11 @@ class ModuleHandle {
                 };
             });
         }
+    }
+
+    // 保存所有的数据
+    saveModule() {
+
     }
 
     writePageCfgs() {

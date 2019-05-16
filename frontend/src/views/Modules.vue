@@ -15,7 +15,7 @@
               size="small"
             >配置</el-button>
             <el-button type="danger" @click="deleteData(scope.row)" size="small">删除</el-button>
-            <el-button type="success" @click="deleteData(scope.row)" size="small">下载代码</el-button>
+            <el-button type="success" size="small">下载代码</el-button>
           </template>
         </el-table-column>
       </el-table>
