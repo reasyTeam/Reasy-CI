@@ -34,79 +34,26 @@ class ModuleHandle {
         }
     }
 
-    getDirect(id) {
-        this.reset();
-
-        this.cache.curId = id;
-        return this.dataBase.Module.query({
+    getModuleConfig(id) {
+        return this.dataBase.tables.Module.findAll({
             id
         }).then(data => {
             if (data.length > 0) {
-                let cfgData = require(data[0].url);
-                this.cache.direct = cfgData;
-                return cfgData;
+                return fo.readJs(data[0].url);
             }
             return [];
         })
     }
 
-    writeDirect() {
-        let id = this.cache.curId;
-        return this.dataBase.Module.query({
+    updateModuleConfig(id, obj) {
+        return this.dataBase.tables.Module.findAll({
             id
         }).then(data => {
             if (data.length > 0) {
-                fo.writeJs()
+                fo.writeJs(obj, data[0].url);
             }
-        });
-    }
-
-    getModulePage(id) {
-        return this.dataBase.ModulePage.query({
-            id
-        }).then(data => {
-            if (data.length > 0) {
-                let cfgData = require(data[0].url);
-                this.cache.config[id] = cfgData;
-                return cfgData;
-            }
-            return [];
-        });
-    }
-
-    writeModulePage(cfg) {
-        if (!cfg.modulepage_id) {
-            let url = `uploads/modules/pages/${cuid()}.js`;
-            this.dataBase.ModulePage.create({
-                module_id: cfg.module_id,
-                name: cfg.name,
-                url
-            }).then(data => {
-                this.writeFile(data[0].url, cfg.formList);
-                return {
-                    id: data.id
-                }
-            });
-        } else {
-            this.data.ModulePage.query({
-                id: cfg.modulepage_id
-            }).then(data => {
-                // 更新文件
-                this.writeFile(data[0].url, cfg.formList);
-                return {
-                    id: cfg.modulepage_id
-                };
-            });
-        }
-    }
-
-    // 保存所有的数据
-    saveModule() {
-
-    }
-
-    writePageCfgs() {
-        // if ()
+            return {}
+        })
     }
 
     // 生成真正的代码

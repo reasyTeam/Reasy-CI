@@ -16,17 +16,14 @@ export default {
         // 当前处于active状态的组件
         selected: -1,
         // 当前选中的文件ID
-        fileId: -1,
+        fileId: 'default',
         idGlobal: 1,
         // 存储预设的校验规则
         validates: [],
         // 存储不同的组件包含的配置项
         attrList: {},
         // 用于存储fileid:{id:cfg}键值对存储组件的自定义配置
-        formList: { '-1': { cfgList: {}, sortArray: [] } }
-        // cfgList: {},
-        // 记录是否点击重制按钮，重置时需要同时将formList清空，在configList.vue中定义，用来存储已排序的组件
-        // hasReset: false
+        formList: { 'default': { cfgList: {}, sortArray: [] } }
     },
     getters: {
         components: state => {
@@ -125,6 +122,12 @@ export default {
         // 设置选中的文件id
         [types.SET_FILE_ID](state, data) {
             state.fileId = data;
+        },
+        [types.SET_CUR_MODULE](state, data) {
+            state.formList[data.id] = data.data;
+        },
+        [types.RESET_DEFAULT_MODULE](state, data) {
+            state.formList['default'] = { cfgList: {}, sortArray: [] }
         }
     },
     actions: {
@@ -161,6 +164,21 @@ export default {
                 commit(types.SET_VALIDATES, data);
             });
         },
+        getModuleConfig({ commit }, data) {
+            let id = data.id;
+            $http.getData("getModuleConfig", data).then(data => {
+                commit(types.SET_CUR_MODULE, { id, data });
+                commit(types.SET_FILE_ID, id);
+            });
+        },
+        updateModuleConfig({ state }, data) {
+            data = {
+                id: data,
+                config: state.formList[state.fileId]
+            };
+
+            $http.getData("updateModuleConfig", data);
+        }
     }
 }
 

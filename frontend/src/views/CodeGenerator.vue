@@ -1,10 +1,10 @@
 <template>
   <div class="h-100 wrapper">
-    <div class="temp-wrapper" v-if="needProject" :class="{hide:!showProject}">
+    <!-- <div class="temp-wrapper" :class="{hide:!showProject}">
       <projects></projects>
       <i class="icon el-icon-arrow-left" title="收起" v-if="showProject" @click="showProject = false"></i>
       <i class="icon el-icon-arrow-right" title="张开" v-else @click="showProject = true">张开目录结构列表</i>
-    </div>
+    </div>-->
     <div class="cfg-wrapper">
       <header class="clear-fix header">
         <div class="float-r tool-bar">
@@ -40,26 +40,14 @@
       </div>
     </el-dialog>
 
-    <el-dialog
-      title="创建模块"
-      :visible.sync="visible"
-      class="pop-dialog"
-      :show-close="false"
-      :before-close="() => false"
-    >
-      <div class="el-form-item pop-form">
+    <el-dialog title="创建模块" :visible.sync="visible" class="pop-dialog">
+      <!-- <div class="el-form-item pop-form">
         <label class="el-form-item__label">是否创建项目</label>
         <div class="el-form-item__content">
           <el-switch v-model="needProject" active-text="创建" inactive-text="不创建"></el-switch>
         </div>
-      </div>
-      <el-form
-        :model="frameForm"
-        :rules="frameRules"
-        ref="modules"
-        class="pop-form"
-        v-if="needProject"
-      >
+      </div>-->
+      <el-form :model="frameForm" :rules="frameRules" ref="modules" class="pop-form">
         <el-form-item label="模板名称" prop="name">
           <el-input v-model="frameForm.name"></el-input>
         </el-form-item>
@@ -105,7 +93,8 @@ export default {
       group: "component",
       showProject: true,
       visible: false,
-      needProject: false,
+      // needProject: false,
+      id: -1,
       frameForm: {
         group_id: -1,
         name: "",
@@ -148,9 +137,16 @@ export default {
     proList
   },
   methods: {
-    ...mapActions("components", ["getComponents"]),
+    ...mapActions("components", [
+      "getComponents",
+      "updateModuleConfig",
+      "getModuleConfig"
+    ]),
     ...mapActions("modules", ["getModules"]),
-    ...mapMutations("components", [types.RESET_CFG_LIST]),
+    ...mapMutations("components", [
+      types.RESET_CFG_LIST,
+      types.RESET_DEFAULT_MODULE
+    ]),
     reset() {
       this.$confirm("此操作将重置配置, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -167,27 +163,44 @@ export default {
     save() {
       console.log(this.formList);
       this.$refs.configList.saveCfg();
+
+      if (this.formList[this.id].sortArray.length === 0) {
+        this.$message({
+          type: "success",
+          message: "无任何需要保存项!"
+        });
+        return;
+      }
+
+      if (this.id === "default") {
+        this.visible = true;
+      } else {
+        this.updateConfig();
+      }
+    },
+    updateConfig() {
+      this.updateModuleConfig(this.id);
     },
     goToCom() {
       this.$router.push(`/components`);
     },
     submitForm() {
-      if (!this.needProject) {
-        this.visible = false;
-        return;
-      }
-
       this.$refs[REF_FORM].validate(valid => {
         this.frameForm.group_id = this.currentGroup;
         if (valid) {
           this.frameForm.group_id = this.currentGroup;
           this.$http.setData("createModule", this.frameForm).then(data => {
+            this.id = data.id;
+            this.updateConfig();
+
+            this.visible = false;
+
+            this.$message({
+              type: "success",
+              message: "模板添加成功!"
+            });
+            this[types.RESET_DEFAULT_MODULE]();
             this.$router.push(`/code/${data.id}`);
-          });
-          this.visible = false;
-          this.$message({
-            type: "success",
-            message: "模板添加成功!"
           });
         } else {
           this.$message({
@@ -204,10 +217,6 @@ export default {
       return;
     }
 
-    if (this.$route.params.id !== "add") {
-      this.needProject = true;
-    }
-
     this.getComponents({
       id: this.currentGroup
     });
@@ -215,7 +224,12 @@ export default {
     this.getModules();
   },
   mounted() {
-    this.visible = !this.tipVisible && this.$route.params.id === "add";
+    this.id = this.$route.params.id;
+    if (this.id !== "add") {
+      this.getModuleConfig({ id: this.id });
+    } else {
+      this.id = "default";
+    }
   }
 };
 </script>

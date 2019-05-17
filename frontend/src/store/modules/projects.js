@@ -27,10 +27,13 @@ export default {
             });
         },
         addProject({}, data) {
-
+            $http.setData("getProject", querydata).then(data => {
+                commit(types.SET_PROJECT, data);
+            });
         },
         editProject({}, data) {
 
-        }
+        },
+        getModelPage
     }
 }

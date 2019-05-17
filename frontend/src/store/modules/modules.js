@@ -11,7 +11,7 @@ export default {
     mutations: {
         [types.SET_MODULES](state, modules) {
             state.modules = modules;
-        },
+        }
     },
     actions: {
         getModules({ commit }, data) {

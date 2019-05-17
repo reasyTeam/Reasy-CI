@@ -174,12 +174,12 @@ class Database {
                         util.log(err, util.LOG_TYPE.ERROR);
                     });
 
-                    // 删除对应的modulePage
-                    this.tables.ModulePage.destroy({
-                        where: {
-                            module_id: id
-                        }
-                    })
+                    // // 删除对应的modulePage
+                    // this.tables.ModulePage.destroy({
+                    //     where: {
+                    //         module_id: id
+                    //     }
+                    // })
                 }
             }
         });

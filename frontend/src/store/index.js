@@ -4,7 +4,7 @@ import $http from '@/plugins/axios.js'
 import * as types from './types'
 import components from './modules/components.js'
 import framework from './modules/framework.js'
-import projects from './modules/projects.js'
+// import projects from './modules/projects.js'
 import modules from './modules/modules.js'
 
 Vue.use(Vuex)
@@ -13,7 +13,7 @@ export default new Vuex.Store({
     modules: {
         framework,
         components,
-        projects,
+        // projects,
         modules
     },
     state: {

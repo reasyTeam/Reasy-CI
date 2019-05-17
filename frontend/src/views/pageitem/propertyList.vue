@@ -32,6 +32,9 @@ export default {
     ...mapState("components", ["selected", "cfgList", "attrList"]),
     ...mapGetters("components", ["curPageCfg"]),
     currentAttrs() {
+      if (this.selected === -1) {
+        return {};
+      }
       let cfgList = this.curPageCfg.cfgList[this.selected];
       if (cfgList === undefined) {
         return {};

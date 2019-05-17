@@ -111,9 +111,6 @@ export default {
       if (val === -1) {
         this.formList = [];
       }
-    },
-    fileId(val) {
-      this.getFormList();
     }
   }
 };
