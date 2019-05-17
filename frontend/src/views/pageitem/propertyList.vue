@@ -29,13 +29,17 @@ export default {
     return {};
   },
   computed: {
-    ...mapState("components", ["selected", "cfgList", "attrList"]),
-    ...mapGetters("components", ["curPageCfg"]),
+    ...mapState("components", [
+      "selected",
+      "cfgList",
+      "attrList",
+      "formConfig"
+    ]),
     currentAttrs() {
       if (this.selected === -1) {
         return {};
       }
-      let cfgList = this.curPageCfg.cfgList[this.selected];
+      let cfgList = this.formConfig.cfgList[this.selected];
       if (cfgList === undefined) {
         return {};
       }
@@ -48,7 +52,7 @@ export default {
       return this.clones[name];
     },
     currentCfg() {
-      let cfgList = this.curPageCfg.cfgList[this.selected];
+      let cfgList = this.formConfig.cfgList[this.selected];
       if (cfgList === undefined) {
         return {};
       }

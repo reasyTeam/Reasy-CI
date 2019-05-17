@@ -15,15 +15,13 @@ export default {
         components: [],
         // 当前处于active状态的组件
         selected: -1,
-        // 当前选中的文件ID
-        fileId: 'default',
         idGlobal: 1,
         // 存储预设的校验规则
         validates: [],
         // 存储不同的组件包含的配置项
         attrList: {},
         // 用于存储fileid:{id:cfg}键值对存储组件的自定义配置
-        formList: { 'default': { cfgList: {}, sortArray: [] } }
+        formConfig: { cfgList: {}, sortArray: [] }
     },
     getters: {
         components: state => {
@@ -56,9 +54,6 @@ export default {
 
             state.attrList = attrList;
             return res;
-        },
-        curPageCfg: state => {
-            return state.formList[state.fileId];
         }
     },
     mutations: {
@@ -76,8 +71,7 @@ export default {
                 sortArray: []
             };
 
-            state.formList[state.fileId] = data;
-            // state.hasReset = true;
+            state.formConfig = data;
             state.selected = -1;
         },
         // 添加组件
@@ -89,17 +83,17 @@ export default {
                 data.attrs[key] = attrs[key]['defaultValue'];
             }
 
-            state.formList[state.fileId].cfgList[data.id] = data;
-            Vue.set(state.formList[state.fileId].cfgList, data.id, data);
+            state.formConfig.cfgList[data.id] = data;
+            Vue.set(state.formConfig.cfgList, data.id, data);
         },
         // 移除组件
         [types.REMOVE_CFG](state, id) {
-            let cfgList = state.formList[state.fileId].cfgList,
+            let cfgList = state.formConfig.cfgList,
                 data = cfgList[id];
 
             // 同时删除所有内部的组件
             if (data.isContainer) {
-                data.attr[data.showOption.formList].forEach(item => {
+                data.attr[data.showOption.formConfig].forEach(item => {
                     delete cfgList[item];
                 });
             }
@@ -111,23 +105,23 @@ export default {
         // 更新组件配置属性
         [types.UPDATE_CFG_ATTR](state, option) {
             let id = option.id !== undefined ? option.id : state.selected,
-                cfgList = state.formList[state.fileId].cfgList;
+                cfgList = state.formConfig.cfgList;
 
             cfgList[id]['attrs'][option.attr] = option.value;
         },
         // 设置排序后的组件
         [types.SET_SORT_LIST](state, data) {
-            state.formList[state.fileId].sortArray = data;
+            state.formConfig.sortArray = data;
         },
         // 设置选中的文件id
         [types.SET_FILE_ID](state, data) {
             state.fileId = data;
         },
         [types.SET_CUR_MODULE](state, data) {
-            state.formList[data.id] = data.data;
+            state.formConfig = data;
         },
         [types.RESET_DEFAULT_MODULE](state, data) {
-            state.formList['default'] = { cfgList: {}, sortArray: [] }
+            state.formConfig = { cfgList: {}, sortArray: [] }
         }
     },
     actions: {
@@ -167,14 +161,13 @@ export default {
         getModuleConfig({ commit }, data) {
             let id = data.id;
             $http.getData("getModuleConfig", data).then(data => {
-                commit(types.SET_CUR_MODULE, { id, data });
-                commit(types.SET_FILE_ID, id);
+                commit(types.SET_CUR_MODULE, data);
             });
         },
         updateModuleConfig({ state }, data) {
             data = {
                 id: data,
-                config: state.formList[state.fileId]
+                config: state.formConfig
             };
 
             $http.getData("updateModuleConfig", data);
@@ -186,7 +179,7 @@ export default {
 // let data = {
 //     selected: 1,
 //     fileId: 2,
-//     formList: {
+//     formConfig: {
 //         fileId: {
 //             cfgList: {
 //                 id: cfg

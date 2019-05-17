@@ -122,7 +122,7 @@ export default {
       currentGroup: "currentGroup"
     }),
     ...mapState("modules", ["modules"]),
-    ...mapState("components", ["formList"]),
+    ...mapState("components", ["formConfig"]),
     moduleId() {
       return this.$route.params.id;
     },
@@ -161,10 +161,10 @@ export default {
       });
     },
     save() {
-      console.log(this.formList);
+      console.log(this.formConfig);
       this.$refs.configList.saveCfg();
 
-      if (this.formList[this.id].sortArray.length === 0) {
+      if (this.formConfig.sortArray.length === 0) {
         this.$message({
           type: "success",
           message: "无任何需要保存项!"
@@ -199,7 +199,6 @@ export default {
               type: "success",
               message: "模板添加成功!"
             });
-            this[types.RESET_DEFAULT_MODULE]();
             this.$router.push(`/code/${data.id}`);
           });
         } else {
@@ -229,6 +228,7 @@ export default {
       this.getModuleConfig({ id: this.id });
     } else {
       this.id = "default";
+      this[types.RESET_DEFAULT_MODULE]();
     }
   }
 };

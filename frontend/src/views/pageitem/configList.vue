@@ -51,8 +51,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("components", ["selected", "idGlobal", "fileId"]),
-    ...mapGetters("components", ["curPageCfg"])
+    ...mapState("components", ["selected", "idGlobal", "fileId", "formConfig"])
   },
   props: {
     group: {
@@ -91,7 +90,7 @@ export default {
       this[types.SET_SORT_LIST](list);
     },
     getFormList() {
-      let { sortArray, cfgList } = this.curPageCfg;
+      let { sortArray, cfgList } = this.formConfig;
       sortArray.forEach(index => {
         let itemCfg = deepClone(cfgList[index]);
         // check(itemCfg);

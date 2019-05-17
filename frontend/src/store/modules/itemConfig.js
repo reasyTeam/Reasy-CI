@@ -15,7 +15,7 @@ export default {
             if (comState.selected === -1) {
                 return {};
             }
-            return rootGetter['components/curPageCfg'].cfgList[comState.selected] || {};
+            return rootState['components'].formConfig.cfgList[comState.selected] || {};
         },
         itemConfigs(state, getters) {
             if (state.cfgIndex === -1 || state.cfgAttr === '') {
