@@ -90,19 +90,14 @@ export default {
       this[types.SET_SORT_LIST](list);
     },
     getFormList() {
+      this.formList = [];
       let { sortArray, cfgList } = this.formConfig;
-      sortArray.forEach(index => {
-        let itemCfg = deepClone(cfgList[index]);
-        // check(itemCfg);
-        this.formList.push(itemCfg);
-      });
-      // 好像不需要在这设置
-      // function check(cfg){
-      //   while(cfg.isContainer){
-      //     let data = cfg.attrs[cfg.showOption.formList];
-
-      //   }
-      // }
+      sortArray &&
+        sortArray.forEach(index => {
+          let itemCfg = deepClone(cfgList[index]);
+          // check(itemCfg);
+          this.formList.push(itemCfg);
+        });
     }
   },
   watch: {

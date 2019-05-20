@@ -1,39 +1,30 @@
 const generate = {
+    commonTemplate: '<div id="{id}" data-key="{name}">',
+    commonScript: `let {id} = $('#{id}').Rcomponent({attrs});`,
     FormInput: {
-        htmlModel: '<input type="{type}" data-key="FormInput">'
+        template: '<input id="{id}" type="{type}" data-key="FormInput"/>'
     },
     FormCalendar: {
-        htmlModel: ''
-    },
-    FormCheckbox: {
-        htmlModel: ''
-    },
-    FormCheckList: {
-        htmlModel: ''
-    },
-    FormDropDownList: {
-        htmlModel: ''
-    },
-    FormRadioList: {
-        htmlModel: ''
-    },
-    FormMultiInput: {
-        htmlModel: ''
-    },
-    FormPercent: {
-        htmlModel: ''
-    },
-    FormTab: {
-        htmlModel: ''
+        template: '<input id="{id}" type="text" data-key="FormCalendar"/>'
     },
     FormTextarea: {
-        htmlModel: ''
-    },
-    FormUpload: {
-        htmlModel: ''
+        template: '<textarea id="{id}" data-key="FormTextarea"/>'
     },
     FormTable: {
-        htmlModel: ''
+        single: true, // 需要单独处理
+        template: '<table id="{id}"></table>',
+        script: `let {id} = $('#{id}').FormTable({attrs});`
+    },
+    ComponentManager: {
+        single: true, // 需要单独处理
+        template: '<div id="{id}"></div>',
+        formListKey: 'dataField',
+        script: `let {id} = $.componentManager({attrs});`
+    },
+    ModalDialog: {
+        single: true,
+        template: '',
+        script: `let {id} = $.modalDialog({attrs});`
     }
 }
 
@@ -801,6 +792,12 @@ const components = {
         noTitle: true,
         ignorCommon: true,
         attrs: {
+            id: {
+                title: '表格id',
+                valueType: 'string',
+                required: false,
+                defaultValue: 'formtable'
+            },
             requestUrl: {
                 title: '请求地址',
                 valueType: 'string',
@@ -1219,6 +1216,12 @@ const components = {
         }
     }],
     commonAttrs: {
+        id: {
+            title: '容器id',
+            valueType: 'string',
+            required: true,
+            defaultValue: ''
+        },
         // 该项或许不需要提供吧
         dataKey: {
             title: '组件类型',

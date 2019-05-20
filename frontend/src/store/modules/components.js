@@ -120,7 +120,7 @@ export default {
         [types.SET_CUR_MODULE](state, data) {
             state.formConfig = data;
         },
-        [types.RESET_DEFAULT_MODULE](state, data) {
+        [types.RESET_DEFAULT_MODULE](state) {
             state.formConfig = { cfgList: {}, sortArray: [] }
         }
     },
@@ -159,9 +159,15 @@ export default {
             });
         },
         getModuleConfig({ commit }, data) {
-            let id = data.id;
+            let cb = data.success;
+            delete data.success;
             $http.getData("getModuleConfig", data).then(data => {
-                commit(types.SET_CUR_MODULE, data);
+                if (data.cfgList) {
+                    commit(types.SET_CUR_MODULE, data);
+                } else {
+                    commit(types.RESET_DEFAULT_MODULE);
+                }
+                cb && cb();
             });
         },
         updateModuleConfig({ state }, data) {

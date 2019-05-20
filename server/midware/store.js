@@ -90,7 +90,7 @@ const api = {
         let data = req.body;
         data.url = data.url || `uploads/modules/${cuid()}.js`;
         // todo by xc 将数据写入文件
-        // models.ModuleHandle.writeFile(data.url, data.config);
+        models.ModuleHandle.writeFile(data.url, data.config || {});
 
         return models.Module.create(data);
     },

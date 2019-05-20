@@ -4,7 +4,7 @@ import Home from './views/Readme.vue'
 
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
     routes: [{
             path: '/',
             name: 'home',
@@ -18,6 +18,13 @@ export default new Router({
             path: '/code/:id',
             name: 'code',
             component: () => import( /* webpackChunkName: "code" */ './views/CodeGenerator.vue')
+            // beforeEnter: (to, from, next) => {
+            //     if (from.name === to.name && to.name === 'code' && to.params.id === "add") {
+            //         next(false);
+            //     } else {
+            //         next();
+            //     }
+            // }
         }, {
             path: '/modules',
             name: 'modules',
@@ -28,4 +35,6 @@ export default new Router({
             component: () => import( /* webpackChunkName: "others" */ './views/Others.vue')
         }
     ]
-})
+});
+
+export default router;

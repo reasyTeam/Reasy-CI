@@ -64,6 +64,9 @@ const fo = {
         src = this.correctUrl(src);
 
         try {
+            // 更新缓存
+            delete require.cache[src];
+
             return require(src);
         } catch (e) {
             log(e, LOG_TYPE.ERROR);

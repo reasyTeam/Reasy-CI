@@ -39,6 +39,7 @@ import draggable from "vuedraggable";
 import { mapState, mapGetters, mapMutations } from "vuex";
 import * as types from "@/store/types.js";
 import fGroup from "./fgroup.vue";
+import { deepClone } from "@/assets/lib.js";
 
 export default {
   data() {

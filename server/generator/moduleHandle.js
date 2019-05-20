@@ -36,7 +36,9 @@ class ModuleHandle {
 
     getModuleConfig(id) {
         return this.dataBase.tables.Module.findAll({
-            id
+            where: {
+                id
+            }
         }).then(data => {
             if (data.length > 0) {
                 return fo.readJs(data[0].url);
@@ -47,7 +49,9 @@ class ModuleHandle {
 
     updateModuleConfig(id, obj) {
         return this.dataBase.tables.Module.findAll({
-            id
+            where: {
+                id
+            }
         }).then(data => {
             if (data.length > 0) {
                 fo.writeJs(obj, data[0].url);

@@ -209,6 +209,21 @@ export default {
           return false;
         }
       });
+    },
+    changeRouter() {
+      this.id = this.$route.params.id;
+      if (this.id !== "add") {
+        this.getModuleConfig({
+          id: this.id,
+          success: () => {
+            this.$refs.configList.getFormList();
+          }
+        });
+      } else {
+        this.id = "default";
+        this[types.RESET_DEFAULT_MODULE]();
+        this.$refs.configList.getFormList();
+      }
     }
   },
   created() {
@@ -223,13 +238,10 @@ export default {
     this.getModules();
   },
   mounted() {
-    this.id = this.$route.params.id;
-    if (this.id !== "add") {
-      this.getModuleConfig({ id: this.id });
-    } else {
-      this.id = "default";
-      this[types.RESET_DEFAULT_MODULE]();
-    }
+    this.changeRouter();
+  },
+  watch: {
+    $route: "changeRouter"
   }
 };
 </script>
