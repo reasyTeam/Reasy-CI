@@ -66,6 +66,7 @@ class FileDataBase {
                         error: -1
                     };
                 }
+                global.components = this.cacheData[id];
                 return this.cacheData[id].components_list;
             });
     }

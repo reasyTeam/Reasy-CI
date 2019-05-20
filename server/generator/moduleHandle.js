@@ -61,8 +61,31 @@ class ModuleHandle {
     }
 
     // 生成真正的代码
-    generate() {
+    generate(data) {
+        if (data.id !== undefined) {
+            this.updateModuleConfig(data.id, data.config);
+        }
 
+        // xxx 
+        this.formatConfig(data.config);
+        // xxx 
+        this.cfgToCode(data.config);
+    }
+
+    formatConfig(config) {
+        let cptCfg = global.components;
+        for (let key in config) {
+            let itemCfg = config[key];
+            let cptAttr = cptCfg.components_list[itemCfg.name];
+
+            for (let key in itemCfg) {
+                if (cptAttr[key] === itemCfg[key]) {
+                    delete itemCfg[key];
+                } else if (JSON.stringify(itemCfg[key]) === JSON.stringify(cptAttr[key])) {
+                    delete itemCfg[key];
+                }
+            }
+        }
     }
 }
 
