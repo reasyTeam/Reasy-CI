@@ -49,6 +49,8 @@ class FileDataBase {
                 } else {
                     this.cacheData[id] = data;
                     this.cacheData[id].components_list = this.formatComponents(data.components);
+                    // 格式化generate
+                    this.formatGenerate(data);
                 }
             });
     }
@@ -165,15 +167,33 @@ class FileDataBase {
         return outData;
     }
 
+    formatGenerate(data) {
+        let components = data.components.components,
+            generate = data.generate;
+        let defaultCfg = {
+            template: generate.commonTemplate,
+            script: generate.commonScript,
+            single: false
+        }
+
+        components.forEach(component => {
+            let name = component.name;
+            generate[name] = Object.assign({}, defaultCfg, generate[name]);
+        });
+
+        data.generate = Object.assign({}, generate, this.defaultGens);
+    }
+
     updateData(id) {
         this.cacheData[id] = null;
     }
 
     getDefaultComponents() {
-        this.defaultComs = defaultComs.map(item => {
+        this.defaultComs = defaultComs.components.map(item => {
             item.isDefault = true;
             return item;
-        })
+        });
+        this.defaultGens = defaultComs.generate;
     }
 }
 

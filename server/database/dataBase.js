@@ -130,6 +130,7 @@ class Database {
         this.tables.Dependence = this.sequelize.define('dependence', {
             id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true, allowNull: false },
             name: { type: Sequelize.STRING },
+            fileType: { type: Sequelize.INTEGER, allowNull: true },
             version: { type: Sequelize.STRING }
         }, {
             freezeTableName: true

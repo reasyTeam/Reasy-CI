@@ -5,7 +5,11 @@
         <div>
           <el-button type="primary" icon="el-icon-plus" size="small" @click="openDialog()">新增</el-button>
           <el-table :data="frameData" style="width: 100%">
-            <el-table-column prop="name" label="框架名"></el-table-column>
+            <el-table-column prop="name" label="框架名">
+              <!-- <template slot-scope="scope">
+                <div>{{ frameTypeObj[scope.row.name] }}</div>
+              </template>-->
+            </el-table-column>
             <el-table-column prop="version" label="版本号"></el-table-column>
             <el-table-column prop="createdAt" label="创建日期"></el-table-column>
             <el-table-column float="right" width="150" label="操作">
@@ -21,8 +25,15 @@
 
     <el-dialog :title="title" :visible.sync="dialogFrameVisible" class="pop-dialog">
       <el-form :model="frameForm" :rules="frameRules" ref="framework" class="pop-form">
-        <el-form-item label="框架名称" prop="name">
-          <el-input v-model="frameForm.name"></el-input>
+        <el-form-item label="框架名称" prop="fileType">
+          <el-select v-model="frameForm.fileType" placeholder="请选择">
+            <el-option
+              v-for="item in frameType"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="版本号" prop="version">
           <el-input v-model="frameForm.version"></el-input>
@@ -65,17 +76,22 @@ export default {
       frameForm: {
         id: "",
         name: "",
+        fileType: 1,
         version: ""
+      },
+      frameType: [
+        { name: "Vue", value: 1 },
+        { name: "jQuery", value: 2 },
+        { name: "React", value: 3 }
+      ],
+      frameTypeObj: {
+        1: "Vue",
+        2: "jQuery",
+        3: "React"
       },
       frameRules: {
         name: [
-          { required: true, message: "请输入框架名称", trigger: "blur" },
-          {
-            min: 1,
-            max: 50,
-            message: "长度在 1 到 50 个字符",
-            trigger: "blur"
-          },
+          { required: true, message: "请输入框架名称", trigger: "change" },
           { validator: checkFrame, trigger: "blur" }
         ],
         version: [
@@ -103,6 +119,7 @@ export default {
     submitForm() {
       this.$refs[REF_FORM].validate(valid => {
         if (valid) {
+          this.frameForm.name = this.frameTypeObj[this.frameForm.fileType];
           this.frameForm.id
             ? this.updateFrameWorks(this.frameForm).finally(() => {
                 this.getGroups();
@@ -132,6 +149,7 @@ export default {
       this.$nextTick(function() {
         this.frameForm.id = data.id;
         this.frameForm.name = data.name;
+        this.frameForm.fileType = data.fileType;
         this.frameForm.version = data.version;
       });
     },

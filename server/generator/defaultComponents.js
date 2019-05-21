@@ -74,7 +74,7 @@ let generate = {
 
             let htmlCode = `<div class="el-row">`;
             this.attrs.formList.forEach((item, index) => {
-                htmlCode += `<div class="el-col el-col-${res[index]}">{${index}}</div>`;
+                htmlCode += `<div class="el-col el-col-${res[index]}">{for:formList[${index}]}</div>`;
             });
             htmlCode += '</div>';
             return htmlCode;
@@ -83,4 +83,7 @@ let generate = {
     }
 };
 
-module.exports = components;
+module.exports = {
+    components,
+    generate
+};

@@ -17,8 +17,8 @@ const generate = {
     },
     ComponentManager: {
         single: true, // 需要单独处理
-        template: '<div id="{id}"></div>',
-        formListKey: 'dataField',
+        template: '<div id="{id}">{for:formCfg}</div>',
+        formListData: 'object:dataField:attrs',
         script: `let {id} = $.componentManager({attrs});`
     },
     ModalDialog: {
@@ -1121,7 +1121,7 @@ const components = {
             },
             content: {
                 title: '消息体内容-通过代码生成',
-                valueType: 'object',
+                valueType: 'string',
                 hidden: true,
                 required: false,
                 defaultValue: []
@@ -1220,6 +1220,7 @@ const components = {
             title: '容器id',
             valueType: 'string',
             required: true,
+            ignore: true, // 生成代码时不使用该属性
             defaultValue: ''
         },
         // 该项或许不需要提供吧
