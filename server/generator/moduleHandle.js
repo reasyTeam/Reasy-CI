@@ -1,6 +1,7 @@
 const fo = require('../util/fileOperation');
 const { getType } = require('../util/lib');
 const cuid = require('cuid');
+const compressing = require('compressing');
 
 class ModuleHandle {
     constructor(dataBase) {
@@ -12,6 +13,7 @@ class ModuleHandle {
             // 页面配置信息，id: config
             config: {}
         }
+        this.components = null;
     }
 
     writeFile(filePath, data = {}) {
@@ -63,23 +65,42 @@ class ModuleHandle {
 
     // 生成真正的代码
     generate(data) {
-        if (data.id !== undefined) {
+        if (data.id !== 'default') {
             this.updateModuleConfig(data.id, data.config);
         }
 
+        this.dataBase.sequelize
+            .query('SELECT fileType FROM `dependence` JOIN `group` WHERE `group`.dependence_id = `dependence`.id AND `group`.id = ' + data.groupId, {
+                type: this.dataBase.sequelize.QueryTypes.SELECT
+            })
+            .then(queryData => {
+                if (queryData.length > 0) {
+                    let fileType = queryData[0]['fileType'];
+                    // 数据处理
+                    this.cfgToCode(data.config, fileType);
+                } else {
+                    log(`file_id[${id}]找不到对应的文件数据`, LOG_TYPE.WARNING);
+                    return -1;
+                }
+            }).catch(e => {
+                // 错误处理
+                log(`获取File表数据出错，${LOG_TYPE}`, LOG_TYPE.ERROR);
+                return -1;
+            });
+
         // xxx 
-        this.formatConfig(data.config.cfgList);
-        // xxx 
-        this.cfgToCode(data.config);
+        this.formatConfig(data.config.cfgList, data.groupId);
     }
 
-    formatConfig(config) {
-        let cptCfg = global.components.components_list;
+    formatConfig(config, groupId) {
+        this.components = global.cacheData[groupId];
+        let nameIndex = this.components.nameIndex,
+            cptCfg = this.components.components_list;
         for (let key in config) {
             let itemCfg = config[key];
-            let cptAttr = cptCfg[itemCfg.name].attrs;
+            let cptAttr = cptCfg[nameIndex[itemCfg.name]].attrs;
             itemCfg['ignore'] = {};
-            this.formatConfig(itemCfg, cptAttr);
+            this.formatObj(itemCfg, cptAttr);
         }
     }
 
@@ -99,16 +120,37 @@ class ModuleHandle {
         }
     }
 
-    cfgToCode(config) {
+    cfgToCode(config, fileType) {
         let { cfgList, sortArray } = config;
-        let generateCode = createCode(cfgList, sortArray);
+        let basePath = 'upload/download/',
+            fileName = cuid();
+
+        let generateCode = this.createCode(cfgList, sortArray);
         // 根据当前的组件库，确定文件类型
+        switch (fileType) {
+            case 1: // vue文件
+                break;
+            case 2: // js和html文件
+                // 写入文件
+                fo.writeFile(generateCode.htmlCode, `${basePath}${fileName}/page.html`);
+                fo.writeFile(generateCode.jsCode, `${basePath}${fileName}/page.js`);
+                break;
+            case 3: // react js文件
+                break;
+        }
+        compressing.zip.compressDir(`${basePath}${fileName}`, `${basePath}${fileName}.zip`)
+            .then(() => {
+                console.log('done');
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     createCode(cfgList, sortArray) {
         let htmlCode = '',
             jsCode = '',
-            generate = global.components.generate;
+            generate = this.components.generate;
 
         sortArray.forEach(id => {
             let cfg = cfgList[id],
@@ -171,10 +213,11 @@ class ModuleHandle {
     }
 
     createJs(cfg, cfgList) {
+        let generate = this.components.generate[cfg.name],
+            template = generate.script;
+
         if (cfg.isContainer) {
             let key = cfg.showOption.formList,
-                generate = global.components.generate[cfg.name],
-                template = generate.script,
                 data = cfg.attrs[key],
                 obj = null;
 

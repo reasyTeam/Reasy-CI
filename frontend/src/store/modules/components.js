@@ -177,6 +177,15 @@ export default {
             };
 
             $http.getData("updateModuleConfig", data);
+        },
+        generate({ state, rootState }, data) {
+            data = {
+                groupId: rootState.currentGroup,
+                id: data,
+                config: state.formConfig
+            };
+
+            $http.setData('generate', data);
         }
     }
 }

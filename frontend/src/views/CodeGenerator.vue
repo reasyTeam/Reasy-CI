@@ -10,7 +10,7 @@
         <div class="float-r tool-bar">
           <el-button plain size="small" @click="reset">重置</el-button>
           <el-button plain type="primary" size="small" @click="save">保存模板</el-button>
-          <el-button plain type="primary" size="small">生成代码</el-button>
+          <el-button plain type="primary" size="small" @click="generateCode">生成代码</el-button>
         </div>
       </header>
       <div class="h-100 config">
@@ -140,7 +140,8 @@ export default {
     ...mapActions("components", [
       "getComponents",
       "updateModuleConfig",
-      "getModuleConfig"
+      "getModuleConfig",
+      "generate"
     ]),
     ...mapActions("modules", ["getModules"]),
     ...mapMutations("components", [
@@ -161,7 +162,7 @@ export default {
       });
     },
     save() {
-      console.log(this.formConfig);
+      // console.log(this.formConfig);
       this.$refs.configList.saveCfg();
 
       if (this.formConfig.sortArray.length === 0) {
@@ -177,6 +178,10 @@ export default {
       } else {
         this.updateConfig();
       }
+    },
+    generateCode() {
+      this.$refs.configList.saveCfg();
+      this.generate(this.id);
     },
     updateConfig() {
       this.updateModuleConfig(this.id);

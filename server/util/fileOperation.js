@@ -93,6 +93,18 @@ const fo = {
         } catch (e) {
             log(e, LOG_TYPE.ERROR);
         }
+    },
+    writeFile(outStream, src) {
+        src = this.correctUrl(src);
+
+        let folder = path.dirname(src);
+        this.mkdirSync(folder);
+
+        try {
+            fs.writeFileSync(src, outStream);
+        } catch (e) {
+            log(e, LOG_TYPE.ERROR);
+        }
     }
 }
 

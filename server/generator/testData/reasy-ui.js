@@ -1,30 +1,30 @@
 const generate = {
-    commonTemplate: '<div id="{id}" data-key="{name}">',
-    commonScript: `let {id} = $('#{id}').Rcomponent({attrs});`,
+    commonTemplate: '<div id="{elementId}" data-key="{name}">',
+    commonScript: `let {elementId} = $('#{elementId}').Rcomponent({attrs});`,
     FormInput: {
-        template: '<input id="{id}" type="{type}" data-key="FormInput"/>'
+        template: '<input id="{elementId}" type="{type}" data-key="FormInput"/>'
     },
     FormCalendar: {
-        template: '<input id="{id}" type="text" data-key="FormCalendar"/>'
+        template: '<input id="{elementId}" type="text" data-key="FormCalendar"/>'
     },
     FormTextarea: {
-        template: '<textarea id="{id}" data-key="FormTextarea"/>'
+        template: '<textarea id="{elementId}" data-key="FormTextarea"/>'
     },
     FormTable: {
         single: true, // 需要单独处理
-        template: '<table id="{id}"></table>',
-        script: `let {id} = $('#{id}').FormTable({attrs});`
+        template: '<table id="{elementId}"></table>',
+        script: `let {elementId} = $('#{elementId}').FormTable({attrs});`
     },
     ComponentManager: {
         single: true, // 需要单独处理
-        template: '<div id="{id}">{for:formCfg}</div>',
+        template: '<div id="{elementId}">{for:formCfg}</div>',
         formListData: 'object:dataField:attrs',
-        script: `let {id} = $.componentManager({attrs});`
+        script: `let {elementId} = $.componentManager({attrs});`
     },
     ModalDialog: {
         single: true,
         template: '',
-        script: `let {id} = $.modalDialog({attrs});`
+        script: `let {elementId} = $.modalDialog({attrs});`
     }
 }
 
@@ -792,7 +792,7 @@ const components = {
         noTitle: true,
         ignorCommon: true,
         attrs: {
-            id: {
+            elementId: {
                 title: '表格id',
                 valueType: 'string',
                 required: false,
@@ -1216,7 +1216,7 @@ const components = {
         }
     }],
     commonAttrs: {
-        id: {
+        elementId: {
             title: '容器id',
             valueType: 'string',
             required: true,

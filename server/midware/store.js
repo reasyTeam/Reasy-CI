@@ -108,6 +108,10 @@ const api = {
     'delModule': function(models, req) {
         let data = req.body;
         return models.Module.delete(data);
+    },
+    'generate': function(models, req) {
+        let data = req.body;
+        return models.ModuleHandle.generate(data);
     }
 };
 

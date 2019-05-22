@@ -9,7 +9,7 @@ const {
 class FileDataBase {
     constructor(dataBase) {
         this.dataBase = dataBase;
-        this.cacheData = {};
+        global.cacheData = this.cacheData = {};
         this._id = -100;
         // 记录文件地址信息
         this._filePaht = {};
@@ -49,6 +49,10 @@ class FileDataBase {
                 } else {
                     this.cacheData[id] = data;
                     this.cacheData[id].components_list = this.formatComponents(data.components);
+                    let nameIndex = this.cacheData[id].nameIndex = {};
+                    this.cacheData[id].components_list.forEach((item, index) => {
+                        nameIndex[item.name] = index;
+                    });
                     // 格式化generate
                     this.formatGenerate(data);
                 }
@@ -68,7 +72,6 @@ class FileDataBase {
                         error: -1
                     };
                 }
-                global.components = this.cacheData[id];
                 return this.cacheData[id].components_list;
             });
     }
