@@ -151,7 +151,8 @@ class Database {
             // 模板描述
             description: { type: Sequelize.STRING },
             // 模板文件地址，包括[目录结构]
-            url: { type: Sequelize.STRING }
+            url: { type: Sequelize.STRING },
+            zip_url: { type: Sequelize.STRING }
         }, {
             freezeTableName: true,
             hooks: {

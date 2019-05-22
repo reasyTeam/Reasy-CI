@@ -68,8 +68,9 @@ class ModuleHandle {
         if (data.id !== 'default') {
             this.updateModuleConfig(data.id, data.config);
         }
-
-        this.dataBase.sequelize
+        // 去除默认值属性
+        this.formatConfig(data.config.cfgList, data.groupId);
+        return this.dataBase.sequelize
             .query('SELECT fileType FROM `dependence` JOIN `group` WHERE `group`.dependence_id = `dependence`.id AND `group`.id = ' + data.groupId, {
                 type: this.dataBase.sequelize.QueryTypes.SELECT
             })
@@ -77,7 +78,7 @@ class ModuleHandle {
                 if (queryData.length > 0) {
                     let fileType = queryData[0]['fileType'];
                     // 数据处理
-                    this.cfgToCode(data.config, fileType);
+                    return this.cfgToCode(data.config, fileType);
                 } else {
                     log(`file_id[${id}]找不到对应的文件数据`, LOG_TYPE.WARNING);
                     return -1;
@@ -88,8 +89,6 @@ class ModuleHandle {
                 return -1;
             });
 
-        // xxx 
-        this.formatConfig(data.config.cfgList, data.groupId);
     }
 
     formatConfig(config, groupId) {
@@ -138,12 +137,13 @@ class ModuleHandle {
             case 3: // react js文件
                 break;
         }
-        compressing.zip.compressDir(`${basePath}${fileName}`, `${basePath}${fileName}.zip`)
+        let url = `${basePath}${fileName}.zip`;
+        return compressing.zip.compressDir(`${basePath}${fileName}`, url)
             .then(() => {
-                console.log('done');
-            })
-            .catch((err) => {
-                console.log(err);
+                fo.rmdir(`${basePath}${fileName}`);
+                return url;
+            }).catch(err => {
+                fo.rmdir(`${basePath}${fileName}`);
             });
     }
 

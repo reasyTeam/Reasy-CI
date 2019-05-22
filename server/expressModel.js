@@ -182,32 +182,61 @@ class ExpressModel {
     initDownloadMidware() {
         this.app.use(`${api}download`, (req, res) => {
             let id = req.query.id,
-                fileName = req.query.fileName;
+                fileName = req.query.fileName,
+                promiseNext = null;
 
-            this.tableModel.File.query({
-                id: id
-            }).then(data => {
-                if (data.length > 0) {
-                    res.set({
-                        "Content-type": "application/octet-stream",
-                        "Content-Disposition": "attachment;filename=" + encodeURI(fileName)
-                    });
-                    let fReadStream = fs.createReadStream(path.join(fo.cwd, data[0]['url']));
-                    fReadStream.on("data", function(chunk) {
-                        res.write(chunk, "binary");
-                    });
-                    fReadStream.on("end", function() {
-                        res.end();
-                    });
-                    // res.status(200).download(path.join(fo.cwd, data[0]['url']), fileName);
-                } else {
-                    res.status(404).end();
-                }
+            switch (req.query.type) {
+                case 'module':
+                    promiseNext = this.tableModel.File.query({
+                        id: id
+                    })
+                    break;
+                default:
+                    promiseNext = this.tableModel.File.query({
+                        id: id
+                    }).then(data => {
+                        if (data.length > 0) {
+                            return data[0]['url'];
+                        } else {
+                            res.status(404).end();
+                        }
+                    })
+                    break;
+            }
+
+            promiseNext.then(data => {
+                // fo.downloadFile(fileName, path.join(fo.cwd, data), res);
+                fo.downloadFile(fileName, data, res);
             }).catch(err => {
                 res.writeHead(200, { 'content-type': 'application/json' });
                 res.end();
             });
         })
+    }
+
+    initGenerateMidware() {
+        this.app.use(`${api}generate`, (req, res) => {
+            let requestBody = req.body;
+            this.tableModel.ModuleHandle.generate(data)
+                .then(url => {
+                    fo.downloadFile(requestBody.fileName, url, res, function(url) {
+                        if (requestBody.id === 'default') {
+                            fo.unlink(url);
+                        } else {
+                            this.tableModel.Module.findAll({
+                                where: {
+                                    id: requestBody.id
+                                }
+                            }).then(data => {
+                                fo.renameSync(data[0].zip_url, url);
+                            })
+                        }
+                    });
+                }).catch(err => {
+                    res.writeHead(200, { 'content-type': 'application/json' });
+                    res.end();
+                })
+        });
     }
 
     run() {

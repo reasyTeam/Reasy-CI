@@ -89,6 +89,7 @@ const api = {
     'createModule': function(models, req) {
         let data = req.body;
         data.url = data.url || `uploads/modules/${cuid()}.js`;
+        data.zip_url = data.zip_url || `uploads/download/${cuid()}.zip`;
         // todo by xc 将数据写入文件
         models.ModuleHandle.writeFile(data.url, data.config || {});
 
@@ -108,11 +109,11 @@ const api = {
     'delModule': function(models, req) {
         let data = req.body;
         return models.Module.delete(data);
-    },
-    'generate': function(models, req) {
-        let data = req.body;
-        return models.ModuleHandle.generate(data);
     }
+    // 'generate': function(models, req) {
+    //     let data = req.body;
+    //     return models.ModuleHandle.generate(data);
+    // }
 };
 
 module.exports = api;

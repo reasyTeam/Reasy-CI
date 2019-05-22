@@ -252,7 +252,7 @@ export default {
       return isJS && isLess;
     },
     download(id, fileName) {
-      this.$http.download({ id, fileName });
+      this.$http.download({ id, fileName, type: "plugin" });
     }
     // download(url) {
     //   window.open(url);

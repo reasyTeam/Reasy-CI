@@ -12,7 +12,7 @@ const fo = {
      * 文件删除
      */
     unlink(src, fn) {
-        this.correctUrl(src);
+        src = this.correctUrl(src);
         fs.unlink(src, (err) => {
             if (err) {
                 log(err, LOG_TYPE.ERROR);
@@ -43,6 +43,16 @@ const fo = {
         } catch (e) {
             log(e, LOG_TYPE.ERROR);
         }
+    },
+
+    rmdir(src) {
+        src = this.correctUrl(src);
+        fs.rmdir(src);
+    },
+    renameSync(oldPath, newPath) {
+        oldPath = this.correctUrl(oldPath);
+        newPath = this.correctUrl(newPath);
+        fs.renameSync(oldPath, newPath);
     },
 
     /**
@@ -104,6 +114,27 @@ const fo = {
             fs.writeFileSync(src, outStream);
         } catch (e) {
             log(e, LOG_TYPE.ERROR);
+        }
+    },
+    downloadFile(fileName, url, res, cb) {
+        // let fileName = 'pageModule';
+        url = this.correctUrl(url);
+        try {
+            res.set({
+                "Content-type": "application/octet-stream",
+                "Content-Disposition": "attachment;filename=" + encodeURI(fileName)
+            });
+            let fReadStream = fs.createReadStream(url);
+            fReadStream.on("data", function(chunk) {
+                res.write(chunk, "binary");
+            });
+            fReadStream.on("end", function() {
+                cb && cb(url);
+                res.end();
+            });
+        } catch (e) {
+            cb && cb(url);
+            res.status(404).end();
         }
     }
 }
