@@ -1,5 +1,5 @@
 const fo = require('../util/fileOperation');
-const { getType } = require('../util/lib');
+const { getType, deepClone } = require('../util/lib');
 const cuid = require('cuid');
 const compressing = require('compressing');
 
@@ -66,7 +66,7 @@ class ModuleHandle {
     // 生成真正的代码
     generate(data) {
         if (data.id !== 'default') {
-            this.updateModuleConfig(data.id, data.config);
+            this.updateModuleConfig(data.id, deepClone(data.config));
         }
         // 去除默认值属性
         this.formatConfig(data.config.cfgList, data.groupId);
@@ -88,7 +88,6 @@ class ModuleHandle {
                 log(`获取File表数据出错，${LOG_TYPE}`, LOG_TYPE.ERROR);
                 return -1;
             });
-
     }
 
     formatConfig(config, groupId) {
@@ -121,7 +120,7 @@ class ModuleHandle {
 
     cfgToCode(config, fileType) {
         let { cfgList, sortArray } = config;
-        let basePath = 'upload/download/',
+        let basePath = 'uploads/download/',
             fileName = cuid();
 
         let generateCode = this.createCode(cfgList, sortArray);

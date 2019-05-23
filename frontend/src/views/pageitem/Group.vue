@@ -62,6 +62,9 @@
             <div slot="tip" class="el-upload__tip">只能上传js文件，且不超过500kb</div>
           </el-upload>
         </el-form-item>
+        <el-form-item label="模板" prop="module_code">
+          <v-code :module-code="comForm.module_code" @setCode="setCode"></v-code>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogComVisible=false">取 消</el-button>
@@ -81,8 +84,14 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
+import vCode from "@/components/codeEditor.vue";
 
 const REF_FORM = "component";
+const codeModules = {
+  1: [/\{\{js\}\}/i, /\{\{html\}\}/i],
+  2: [/\{\{js\}\}/i],
+  3: [/\{\{js\}\}/i]
+};
 
 export default {
   data() {
@@ -102,6 +111,21 @@ export default {
       callback();
     };
 
+    let chekcCode = (rule, value, callback) => {
+      let check = codeModules[thid.comForm.dependence_id];
+      if (check) {
+        for (let i = 0, l = groups.length; i < l; i++) {
+          if (reg.test(groups[i].name)) {
+            if (isEdit && this.comForm.id === groups[i].id) {
+              return callback();
+            }
+            return callback(new Error("组件库名称不能重复"));
+          }
+        }
+      }
+      callback();
+    };
+
     return {
       dialogComVisible: false,
       dialogErrorVisible: false,
@@ -111,6 +135,7 @@ export default {
         name: "",
         file_id: "",
         description: "",
+        module_code: "",
         file_name: "",
         dependence_id: ""
       },
@@ -131,12 +156,18 @@ export default {
         description: [
           { min: 0, max: 50, message: "长度在 0 到 50 个字符", trigger: "blur" }
         ],
+        module_code: [
+          { required: true, message: "请填写模板", trigger: "blur" }
+        ],
         file_id: [
           { required: true, message: "请上传组件配置文件", trigger: "change" }
         ]
       },
       errors: []
     };
+  },
+  components: {
+    vCode
   },
   computed: {
     ...mapState({
@@ -151,6 +182,9 @@ export default {
     ...mapActions("framework", ["getFrameWorks"]),
     ...mapActions("components", ["getComponents"]),
     ...mapActions(["getGroups", "delGroups", "updateGroups", "createGroups"]),
+    setCode(value) {
+      this.comForm.module_code = value;
+    },
     submitForm() {
       this.$refs[REF_FORM].validate(valid => {
         if (valid) {
@@ -187,6 +221,7 @@ export default {
         this.comForm.description = data.description;
         this.comForm.dependence_id = data.dependence_id;
         this.comForm.file_id = data.file_id;
+        this.comForm.module_code = data.module_code;
         this.comForm.file_name = data.file_name;
       });
       this.dialogComVisible = true;
@@ -254,9 +289,6 @@ export default {
     download(id, fileName) {
       this.$http.download({ id, fileName, type: "plugin" });
     }
-    // download(url) {
-    //   window.open(url);
-    // }
   },
   created() {
     this.getGroups();

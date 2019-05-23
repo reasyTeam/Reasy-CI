@@ -76,6 +76,29 @@ function request(url, data = '', method = 'post', responseType = 'json') {
         .then(response => {
             let data = response.data;
 
+            if (response.config.responseType === 'blob') {
+                let blob = new Blob([data]);
+                if (window.navigator.msSaveOrOpenBlob) {
+                    navigator.msSaveBlob(blob, data.fileName);
+                } else {
+                    let link = document.createElement("a");
+                    let evt = document.createEvent("HTMLEvents");
+                    evt.initEvent("click", false, false);
+                    link.href = URL.createObjectURL(blob);
+                    link.download = data.fileName;
+                    if (!data.fileName) {
+                        let match = response.headers['content-disposition'].match(/filename=([\w\W]*)/);
+                        link.download = match ? match[1] : 'page.zip';
+                    }
+
+                    link.style.display = "none";
+                    document.body.appendChild(link);
+                    link.click();
+                    window.URL.revokeObjectURL(link.href);
+                }
+                return;
+            }
+
             if (data === -1 || data.error === -1) {
                 Vue.myMess({
                     message: '服务器错误，请稍后再试',

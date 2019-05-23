@@ -89,11 +89,19 @@ const api = {
     'createModule': function(models, req) {
         let data = req.body;
         data.url = data.url || `uploads/modules/${cuid()}.js`;
-        data.zip_url = data.zip_url || `uploads/download/${cuid()}.zip`;
+        // data.zip_url = data.zip_url || `uploads/download/${cuid()}.zip`;
         // todo by xc 将数据写入文件
         models.ModuleHandle.writeFile(data.url, data.config || {});
 
-        return models.Module.create(data);
+        return models.Group.query({
+            id: data.group_id
+        }).then(gdata => {
+            data.module_code = gdata[0].module_code;
+            return models.Module.create(data);
+        }).catch(err => {
+            data.module_code = '// error';
+            return models.Module.create(data);
+        });
     },
     // 更新
     'updateModule': function(models, req) {

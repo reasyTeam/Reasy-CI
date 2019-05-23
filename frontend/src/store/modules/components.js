@@ -21,7 +21,8 @@ export default {
         // 存储不同的组件包含的配置项
         attrList: {},
         // 用于存储fileid:{id:cfg}键值对存储组件的自定义配置
-        formConfig: { cfgList: {}, sortArray: [] }
+        formConfig: { cfgList: {}, sortArray: [] },
+        requireAttrs: {}
     },
     getters: {
         components: state => {
@@ -40,7 +41,8 @@ export default {
                 }
             };
 
-            let attrList = {};
+            let attrList = {},
+                requireAttrs = {};
             state.components.forEach(component => {
                 if (component.isDefault) {
                     res.default.list.push(component);
@@ -49,9 +51,17 @@ export default {
                 } else {
                     res.basic.list.push(component);
                 }
+                requireAttrs[component.name] = [];
                 attrList[component.name] = component.attrs;
+                for (let key in component.attrs) {
+                    let item = component.attrs[key];
+                    if (item.required) {
+                        requireAttrs[component.name].push(key);
+                    }
+                }
             });
 
+            state.requireAttrs = requireAttrs;
             state.attrList = attrList;
             return res;
         }
@@ -176,7 +186,13 @@ export default {
                 config: state.formConfig
             };
 
-            $http.getData("updateModuleConfig", data);
+            $http.getData("updateModuleConfig", data)
+                .then((data) => {
+                    Vue.myMess({
+                        type: "success",
+                        message: "保存成功!"
+                    })
+                });
         },
         generate({ state, rootState }, data) {
             data = {
@@ -185,7 +201,7 @@ export default {
                 config: state.formConfig
             };
 
-            $http.setData('generate', data);
+            $http.setData('generate', data, 'post', 'blob');
         }
     }
 }

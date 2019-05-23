@@ -47,7 +47,7 @@ const fo = {
 
     rmdir(src) {
         src = this.correctUrl(src);
-        fs.rmdir(src);
+        removeDir(src);
     },
     renameSync(oldPath, newPath) {
         oldPath = this.correctUrl(oldPath);
@@ -129,14 +129,28 @@ const fo = {
                 res.write(chunk, "binary");
             });
             fReadStream.on("end", function() {
-                cb && cb(url);
                 res.end();
+                cb && cb(url);
             });
         } catch (e) {
             cb && cb(url);
             res.status(404).end();
         }
     }
+}
+
+function removeDir(dir) {
+    let files = fs.readdirSync(dir)
+    for (var i = 0; i < files.length; i++) {
+        let newPath = path.join(dir, files[i]);
+        let stat = fs.statSync(newPath)
+        if (stat.isDirectory()) {
+            removeDir(newPath);
+        } else {
+            fs.unlinkSync(newPath);
+        }
+    }
+    fs.rmdirSync(dir) //如果文件夹是空的，就将自己删除掉
 }
 
 module.exports = fo;

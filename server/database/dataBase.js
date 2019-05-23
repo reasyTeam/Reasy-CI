@@ -94,6 +94,7 @@ class Database {
             dependence_id: { type: Sequelize.INTEGER, allowNull: false },
             name: { type: Sequelize.STRING, allowNull: false },
             file_id: { type: Sequelize.INTEGER, allowNull: false },
+            module_code: { type: Sequelize.TEXT, allowNull: false },
             description: { type: Sequelize.STRING, allowNull: true }
         }, {
             freezeTableName: true,
@@ -152,6 +153,7 @@ class Database {
             description: { type: Sequelize.STRING },
             // 模板文件地址，包括[目录结构]
             url: { type: Sequelize.STRING },
+            module_code: { type: Sequelize.TEXT, allowNull: false },
             zip_url: { type: Sequelize.STRING }
         }, {
             freezeTableName: true,
@@ -166,10 +168,11 @@ class Database {
                     }).then(data => {
                         if (data.length > 0) {
                             let url = data.map(item => item.url);
-
                             // 删除对应的配置文件
-                            url.forEach(item => fo.unlink(item));
-
+                            data.forEach(item => {
+                                fo.unlink(item.url);
+                                item.zip_url && fo.unlink(item.zip_url);
+                            });
                         };
                     }).catch(err => {
                         util.log('Module配置文件删除失败', util.LOG_TYPE.ERROR);

@@ -68,7 +68,6 @@ class ExpressModel {
         dbModel().then((data) => {
             this.tableModel = data;
             this.initMidware();
-            this.initDownloadMidware();
         }).then(() => {
             this.afterInit();
             // 处理接下来的逻辑
@@ -78,6 +77,8 @@ class ExpressModel {
 
     initMidware() {
         this.midware = new Midware(this.app, this.tableModel);
+        this.initDownloadMidware();
+        this.initGenerateMidware();
     }
 
     afterInit() {
@@ -187,9 +188,7 @@ class ExpressModel {
 
             switch (req.query.type) {
                 case 'module':
-                    promiseNext = this.tableModel.File.query({
-                        id: id
-                    })
+                    promiseNext = Promise.resolve(req.query.url);
                     break;
                 default:
                     promiseNext = this.tableModel.File.query({
@@ -205,7 +204,6 @@ class ExpressModel {
             }
 
             promiseNext.then(data => {
-                // fo.downloadFile(fileName, path.join(fo.cwd, data), res);
                 fo.downloadFile(fileName, data, res);
             }).catch(err => {
                 res.writeHead(200, { 'content-type': 'application/json' });
@@ -217,21 +215,31 @@ class ExpressModel {
     initGenerateMidware() {
         this.app.use(`${api}generate`, (req, res) => {
             let requestBody = req.body;
-            this.tableModel.ModuleHandle.generate(data)
+            this.tableModel.ModuleHandle.generate(requestBody)
                 .then(url => {
-                    fo.downloadFile(requestBody.fileName, url, res, function(url) {
-                        if (requestBody.id === 'default') {
+                    if (requestBody.id === 'default') {
+                        fo.downloadFile('page.zip', url, res, (url) => {
                             fo.unlink(url);
-                        } else {
-                            this.tableModel.Module.findAll({
-                                where: {
-                                    id: requestBody.id
+                        });
+                    } else {
+                        this.tableModel.Module.query({
+                            id: requestBody.id
+                        }).then(data => {
+                            if (data.length > 0) {
+                                fo.downloadFile((data[0]['name'] || 'page') + '.zip', url, res, (url) => {
+                                    fo.unlink(url);
+                                });
+                                if (data[0].zip_url) {
+                                    fo.renameSync(data[0].zip_url, url);
+                                } else {
+                                    this.tableModel.Module.update({
+                                        zip_url: path.relative(fo.cwd, url),
+                                        id: requestBody.id
+                                    });
                                 }
-                            }).then(data => {
-                                fo.renameSync(data[0].zip_url, url);
-                            })
-                        }
-                    });
+                            }
+                        })
+                    }
                 }).catch(err => {
                     res.writeHead(200, { 'content-type': 'application/json' });
                     res.end();

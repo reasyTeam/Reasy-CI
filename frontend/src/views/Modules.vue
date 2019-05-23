@@ -15,7 +15,12 @@
               size="small"
             >配置</el-button>
             <el-button type="danger" @click="deleteData(scope.row)" size="small">删除</el-button>
-            <el-button type="success" size="small">下载代码</el-button>
+            <el-button
+              type="success"
+              v-if="scope.row.zip_url"
+              size="small"
+              @click="download(scope.row.zip_url, scope.row.name)"
+            >下载代码</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -29,6 +34,9 @@
         <el-form-item label="描述" prop="description">
           <el-input v-model="frameForm.description"></el-input>
         </el-form-item>
+        <el-form-item label="模板" prop="module_code">
+          <v-code :module-code="frameForm.module_code" @setCode="setCode"></v-code>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFrameVisible=false">取 消</el-button>
@@ -40,6 +48,7 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
+import vCode from "@/components/codeEditor.vue";
 
 const REF_FORM = "modules";
 
@@ -69,6 +78,7 @@ export default {
         group_id: -1,
         name: "",
         url: "",
+        module_code: "",
         description: ""
       },
       frameRules: {
@@ -81,6 +91,9 @@ export default {
             trigger: "blur"
           },
           { validator: checkFrame, trigger: "blur" }
+        ],
+        module_code: [
+          { required: true, message: "请填写模板", trigger: "blur" }
         ],
         description: [
           { min: 0, max: 50, message: "长度在 0 到 50 个字符", trigger: "blur" }
@@ -116,6 +129,9 @@ export default {
         }
       });
     },
+    setCode(value) {
+      this.frameForm.module_code = value;
+    },
     resetForm() {
       if (!this.$refs[REF_FORM]) {
         return;
@@ -130,6 +146,7 @@ export default {
       this.$nextTick(function() {
         this.frameForm.id = data.id;
         this.frameForm.name = data.name;
+        this.frameForm.module_code = data.module_code;
         this.frameForm.url = data.url;
         this.frameForm.description = data.description;
       });
@@ -149,12 +166,18 @@ export default {
     },
     deleteData(data) {
       this.delModules({ id: data.id });
+    },
+    download(url, fileName) {
+      this.$http.download({ url, fileName: fileName + ".zip", type: "module" });
     }
   },
   created() {
     this.getModules({
       group_id: this.currentGroup
     });
+  },
+  components: {
+    vCode
   }
 };
 </script>
