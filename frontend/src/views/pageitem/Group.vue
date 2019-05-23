@@ -112,14 +112,11 @@ export default {
     };
 
     let chekcCode = (rule, value, callback) => {
-      let check = codeModules[thid.comForm.dependence_id];
+      let check = codeModules[this.comForm.dependence_id];
       if (check) {
-        for (let i = 0, l = groups.length; i < l; i++) {
-          if (reg.test(groups[i].name)) {
-            if (isEdit && this.comForm.id === groups[i].id) {
-              return callback();
-            }
-            return callback(new Error("组件库名称不能重复"));
+        for (let i = 0, l = check.length; i < l; i++) {
+          if (!check[i].test(value)) {
+            return callback(new Error("缺少代码插入标签{{js}}}/{{html}}"));
           }
         }
       }
@@ -157,7 +154,8 @@ export default {
           { min: 0, max: 50, message: "长度在 0 到 50 个字符", trigger: "blur" }
         ],
         module_code: [
-          { required: true, message: "请填写模板", trigger: "blur" }
+          { required: true, message: "请填写模板", trigger: "change" },
+          { validator: chekcCode }
         ],
         file_id: [
           { required: true, message: "请上传组件配置文件", trigger: "change" }

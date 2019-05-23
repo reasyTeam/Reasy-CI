@@ -50,6 +50,12 @@
 import { mapActions, mapState, mapGetters } from "vuex";
 import vCode from "@/components/codeEditor.vue";
 
+const codeModules = {
+  1: [/\{\{js\}\}/i, /\{\{html\}\}/i],
+  2: [/\{\{js\}\}/i],
+  3: [/\{\{js\}\}/i]
+};
+
 const REF_FORM = "modules";
 
 export default {
@@ -65,6 +71,17 @@ export default {
             return callback();
           }
           return callback(new Error("模板名称不能重复"));
+        }
+      }
+      callback();
+    };
+    let chekcCode = (rule, value, callback) => {
+      let check = codeModules[this.frameForm.dependence_id];
+      if (check) {
+        for (let i = 0, l = check.length; i < l; i++) {
+          if (!check[i].test(value)) {
+            return callback(new Error("缺少代码插入标签{{js}}}/{{html}}"));
+          }
         }
       }
       callback();
