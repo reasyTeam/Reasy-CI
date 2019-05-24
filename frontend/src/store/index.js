@@ -13,11 +13,12 @@ export default new Vuex.Store({
     modules: {
         framework,
         components,
-        // projects,
         modules
     },
     state: {
-        currentGroup: '',
+        currentGroup: -1,
+        groupTemplate: '',
+        dependence: -1,
         projectId: -1,
         groups: [],
         pathList: [{
@@ -66,12 +67,25 @@ export default new Vuex.Store({
     mutations: {
         [types.SET_CUR_GROUP](state, currentGroup) {
             state.currentGroup = currentGroup;
+            state.groups.some(item => {
+                if (item.id === currentGroup) {
+                    state.dependence = item.fileType;
+                    state.groupTemplate = item.template;
+                    return true;
+                }
+            });
+        },
+        [types.SET_DEPENDENCE](state, dependence) {
+            state.dependence = dependence;
         },
         [types.SET_GROUPS](state, data) {
             state.groups = data;
         },
         [types.SET_TITLE](state, title) {
             state.title = title;
+        },
+        [types.SET_TEMPLATE](state, template) {
+            state.groupTemplate = template;
         }
     },
     actions: {
@@ -79,9 +93,16 @@ export default new Vuex.Store({
             $http.getData("getGroups").then(data => {
                 commit(types.SET_GROUPS, data);
 
-                if (state.currentGroup === '' || !data.some(item => item.id === state.currentGroup)) {
+                if (state.currentGroup === -1 || !data.some(item => item.id === state.currentGroup)) {
                     commit(types.SET_CUR_GROUP, data.length > 0 ? data[0]['id'] : '');
+                } else {
+                    commit(types.SET_DEPENDENCE, data.length > 0 ? data[0]['fileType'] : '');
                 }
+            });
+        },
+        getModuleTemplate({ commit }, data) {
+            $http.getData("getGroups", data).then(data => {
+                commit(types.SET_TEMPLATE, data[0].template);
             });
         },
         delGroups({ dispatch }, data) {

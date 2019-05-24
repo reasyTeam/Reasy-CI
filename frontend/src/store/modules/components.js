@@ -181,10 +181,7 @@ export default {
             });
         },
         updateModuleConfig({ state }, data) {
-            data = {
-                id: data,
-                config: state.formConfig
-            };
+            data.config = state.formConfig;
 
             $http.getData("updateModuleConfig", data)
                 .then((data) => {

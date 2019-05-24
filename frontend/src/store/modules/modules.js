@@ -5,12 +5,19 @@ import $http from '@/plugins/axios.js'
 export default {
     namespaced: true,
     state: {
-        modules: []
+        modules: [],
+        template: ''
     },
     getters: {},
     mutations: {
         [types.SET_MODULES](state, modules) {
             state.modules = modules;
+        },
+        [types.SET_TEMPLATE](state, template) {
+            state.template = template;
+        },
+        [types.RESET_TEMPLATE](state) {
+            state.template = '';
         }
     },
     actions: {
@@ -38,6 +45,11 @@ export default {
                 dispatch('getModules', {
                     group_id: rootState.currentGroup
                 });
+            });
+        },
+        getTemplate({ commit }, data) {
+            $http.getData("getModules", data).then(data => {
+                commit(types.SET_TEMPLATE, data[0].template);
             });
         }
     }

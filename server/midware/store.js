@@ -4,7 +4,7 @@ const api = {
     // 组件库操作
     // 获取
     'getGroups': function(models) {
-        return models.sequelize.query('SELECT `group`.*, `file`.name as file_name, `file`.url as file_url, `dependence`.name as depedence_name FROM `group` LEFT JOIN `file` ON `file`.id = `group`.file_id LEFT JOIN `dependence` ON `dependence`.id = `group`.dependence_id', { type: models.sequelize.QueryTypes.SELECT }).then(data => {
+        return models.sequelize.query('SELECT `group`.*, `file`.name as file_name, `file`.url as file_url, `dependence`.name as depedence_name, `dependence`.fileType as fileType FROM `group` LEFT JOIN `file` ON `file`.id = `group`.file_id LEFT JOIN `dependence` ON `dependence`.id = `group`.dependence_id', { type: models.sequelize.QueryTypes.SELECT }).then(data => {
             return data;
         });
     },
@@ -96,10 +96,10 @@ const api = {
         return models.Group.query({
             id: data.group_id
         }).then(gdata => {
-            data.module_code = gdata[0].module_code;
+            data.template = gdata[0].template;
             return models.Module.create(data);
         }).catch(err => {
-            data.module_code = '// error';
+            data.template = '// error';
             return models.Module.create(data);
         });
     },

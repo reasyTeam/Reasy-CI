@@ -4,6 +4,7 @@ export const SET_FRAMEWORKS = 'SET_FRAMEWORKS';
 
 export const SET_CUR_GROUP = 'SET_CUR_GROUP';
 export const SET_GROUPS = 'SET_GROUPS';
+export const SET_DEPENDENCE = 'SET_DEPENDENCE';
 
 export const SET_COMPONENTS = 'SET_COMPONENTS';
 export const SET_SELECTED = 'SET_SELECTED';
@@ -22,3 +23,5 @@ export const RESET_DEFAULT_MODULE = 'RESET_DEFAULT_MODULE';
 export const SET_MODULES = 'SET_MODULES';
 export const SET_CUR_MODULE = 'SET_CUR_MODULE';
 export const SET_FILE_ID = 'SET_FILE_ID';
+export const SET_TEMPLATE = 'SET_TEMPLATE';
+export const RESET_TEMPLATE = 'RESET_TEMPLATE';

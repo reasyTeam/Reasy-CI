@@ -32,7 +32,8 @@ const components = {
   function: "fcode",
   array: "farray",
   datetime: "fdatetime",
-  object: "fcode"
+  object: "fcode",
+  code: "fcode"
 };
 // function：待定，代码编辑器
 // array：提供可添加的组件

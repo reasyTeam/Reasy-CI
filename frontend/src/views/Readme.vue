@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import showdown from "showdown";
 import md from "../../README.md";
 
 export default {
@@ -14,8 +13,7 @@ export default {
     };
   },
   mounted() {
-    let converter = new showdown.Converter();
-    this.html = converter.makeHtml(md);
+    this.html = md;
   }
 };
 </script>

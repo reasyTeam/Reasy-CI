@@ -123,3 +123,37 @@ var t = {
     sync: ['syncKey']
 }
 ```
+
+代码tag{{}}
+属性tag{{xxx|input}}
+
+```
+import FormPage from "@pages/FormPage";
+
+export default class Page extends FormPage {
+    constructor() {
+        super(...arguments);
+        this.getUrl = "/mock/xxx3";
+    }
+
+    init() {
+        this.initComponent();
+    }
+
+    dataLoaded(data) {
+        //自定义
+    }
+
+    beforeSubmit(data) {
+        //自定义
+    }
+
+    afterSubmit(res) {
+  		//自定义
+    }
+
+    initComponent() {
+      {{js}}
+    }
+}
+```

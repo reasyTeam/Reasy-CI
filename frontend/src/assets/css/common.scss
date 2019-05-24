@@ -24,6 +24,7 @@ li {
 /* 设置滚动条的样式 */
 ::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
 }
 
 /* 滚动槽 */
@@ -86,6 +87,12 @@ li {
   .el-select {
     width: 100%;
   }
+
+  .codeWrapper {
+    .el-form-item__content {
+      margin-right: 20px;
+    }
+  }
 }
 
 .float-r {
@@ -117,4 +124,22 @@ li {
   padding: 12px;
   text-align: center;
   border-bottom: 1px solid $border-color;
+}
+
+.title-tab {
+  font-size: 12px;
+
+  .el-tabs__header {
+    margin-bottom: 0;
+  }
+
+  .el-tabs__nav {
+    width: 100%;
+    border:  !important;
+
+    .el-tabs__item {
+      width: 50%;
+      text-align: center;
+    }
+  }
 }

@@ -62,8 +62,8 @@
             <div slot="tip" class="el-upload__tip">只能上传js文件，且不超过500kb</div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="模板" prop="module_code">
-          <v-code :module-code="comForm.module_code" @setCode="setCode"></v-code>
+        <el-form-item label="模板" prop="template" class="codeWrapper">
+          <v-code :module-code="comForm.template" @setCode="setCode"></v-code>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -83,8 +83,9 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from "vuex";
+import { mapActions, mapState, mapGetters, mapMutations } from "vuex";
 import vCode from "@/components/codeEditor.vue";
+import * as types from "@/store/types.js";
 
 const REF_FORM = "component";
 const codeModules = {
@@ -116,7 +117,9 @@ export default {
       if (check) {
         for (let i = 0, l = check.length; i < l; i++) {
           if (!check[i].test(value)) {
-            return callback(new Error("缺少代码插入标签{{js}}}/{{html}}"));
+            return callback(
+              new Error(`缺少代码插入标签{{js}}}${l === 2 ? ", {{html}}" : ""}`)
+            );
           }
         }
       }
@@ -132,7 +135,7 @@ export default {
         name: "",
         file_id: "",
         description: "",
-        module_code: "",
+        template: "",
         file_name: "",
         dependence_id: ""
       },
@@ -153,7 +156,7 @@ export default {
         description: [
           { min: 0, max: 50, message: "长度在 0 到 50 个字符", trigger: "blur" }
         ],
-        module_code: [
+        template: [
           { required: true, message: "请填写模板", trigger: "change" },
           { validator: chekcCode }
         ],
@@ -168,20 +171,16 @@ export default {
     vCode
   },
   computed: {
-    ...mapState({
-      groups: "groups",
-      currentGroup: "currentGroup"
-    }),
-    ...mapGetters("framework", {
-      frames: "frames"
-    })
+    ...mapState(["groups", "currentGroup", "dependence"]),
+    ...mapGetters("framework", ["frames"])
   },
   methods: {
+    ...mapMutations([types.SET_TEMPLATE]),
     ...mapActions("framework", ["getFrameWorks"]),
     ...mapActions("components", ["getComponents"]),
     ...mapActions(["getGroups", "delGroups", "updateGroups", "createGroups"]),
     setCode(value) {
-      this.comForm.module_code = value;
+      this.comForm.template = value;
     },
     submitForm() {
       this.$refs[REF_FORM].validate(valid => {
@@ -189,9 +188,15 @@ export default {
           this.comForm.id
             ? this.updateGroups(this.comForm).finally(() => {
                 this.getFrameWorks();
+                if (this.comForm.id === this.currentGroup) {
+                  this[types.SET_TEMPLATE](this.comForm.template);
+                }
               })
             : this.createGroups(this.comForm).finally(() => {
                 this.getFrameWorks();
+                if (this.currentGroup === -1) {
+                  this[types.SET_TEMPLATE](this.comForm.template);
+                }
               });
           this.dialogComVisible = false;
         } else {
@@ -219,7 +224,7 @@ export default {
         this.comForm.description = data.description;
         this.comForm.dependence_id = data.dependence_id;
         this.comForm.file_id = data.file_id;
-        this.comForm.module_code = data.module_code;
+        this.comForm.template = data.template;
         this.comForm.file_name = data.file_name;
       });
       this.dialogComVisible = true;

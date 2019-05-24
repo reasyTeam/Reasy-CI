@@ -99,7 +99,12 @@ export default {
     title() {
       return `配置[${this.option.title}][${this.option.valueType}]`;
     }
-    // defaultCode() {}
+  },
+  watch: {
+    value(newVal) {
+      this.code = newVal;
+      this.startCode = newVal;
+    }
   },
   components: {
     codemirror
@@ -132,10 +137,12 @@ export default {
       this.code = `{
     // 在此输入你的配置项
 }`;
-    } else {
+    } else if (this.option.valueType === "function") {
       this.code = `function(){
     // 在此输入你的回调，同时可以添加参数
 }`;
+    } else {
+      this.code = `// 在此输入你的模板配置`;
     }
     this.startCode = this.code;
   }

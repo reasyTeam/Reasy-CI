@@ -18,7 +18,30 @@ function deepClone(obj) {
     return data;
 }
 
+function getAttrs(template) {
+    let res = {};
+    if (!template) {
+        return res;
+    }
+
+    let match = template.match(/\{\{([^}]+)\}\}/ig);
+    if (match) {
+        match.map(item => {
+            item = item.slice(2, -2);
+            if (!/^js$|^html$/i.test(item)) {
+                item = item.split('|');
+                res[item[0]] = {
+                    title: item[0],
+                    valueType: item[1] || 'input',
+                    defaultValue: ''
+                }
+            }
+        });
+    }
+    return res;
+}
 
 export {
-    deepClone
+    deepClone,
+    getAttrs
 }

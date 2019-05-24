@@ -1,6 +1,3 @@
-const marked = require("marked");
-const renderer = new marked.Renderer();
-
 module.exports = {
     lintOnSave: undefined,
     configureWebpack: (config) => {
@@ -10,11 +7,7 @@ module.exports = {
                     loader: "html-loader"
                 },
                 {
-                    loader: "markdown-loader",
-                    options: {
-                        pedantic: true,
-                        renderer
-                    }
+                    loader: "markdown-loader"
                 }
             ]
         })

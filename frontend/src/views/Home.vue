@@ -49,6 +49,7 @@ export default {
       },
       set(value) {
         this.setCurGroup(value);
+        this.getModuleTemplate({ id: value });
       }
     },
     title() {
@@ -63,7 +64,7 @@ export default {
     ...mapMutations({
       setCurGroup: types.SET_CUR_GROUP
     }),
-    ...mapActions(["getGroups"]),
+    ...mapActions(["getGroups", "getModuleTemplate"]),
     ...mapActions("components", ["getComponents"])
   },
   watch: {

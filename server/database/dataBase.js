@@ -94,7 +94,7 @@ class Database {
             dependence_id: { type: Sequelize.INTEGER, allowNull: false },
             name: { type: Sequelize.STRING, allowNull: false },
             file_id: { type: Sequelize.INTEGER, allowNull: false },
-            module_code: { type: Sequelize.TEXT, allowNull: false },
+            template: { type: Sequelize.TEXT, allowNull: false },
             description: { type: Sequelize.STRING, allowNull: true }
         }, {
             freezeTableName: true,
@@ -153,7 +153,7 @@ class Database {
             description: { type: Sequelize.STRING },
             // 模板文件地址，包括[目录结构]
             url: { type: Sequelize.STRING },
-            module_code: { type: Sequelize.TEXT, allowNull: false },
+            template: { type: Sequelize.TEXT, allowNull: false },
             zip_url: { type: Sequelize.STRING }
         }, {
             freezeTableName: true,

@@ -34,8 +34,8 @@
         <el-form-item label="描述" prop="description">
           <el-input v-model="frameForm.description"></el-input>
         </el-form-item>
-        <el-form-item label="模板" prop="module_code">
-          <v-code :module-code="frameForm.module_code" @setCode="setCode"></v-code>
+        <el-form-item label="模板" prop="template" class="codeWrapper">
+          <v-code :module-code="frameForm.template" @setCode="setCode"></v-code>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -76,11 +76,13 @@ export default {
       callback();
     };
     let chekcCode = (rule, value, callback) => {
-      let check = codeModules[this.frameForm.dependence_id];
+      let check = codeModules[this.dependence];
       if (check) {
         for (let i = 0, l = check.length; i < l; i++) {
           if (!check[i].test(value)) {
-            return callback(new Error("缺少代码插入标签{{js}}}/{{html}}"));
+            return callback(
+              new Error(`缺少代码插入标签{{js}}}${l === 2 ? ", {{html}}" : ""}`)
+            );
           }
         }
       }
@@ -95,7 +97,7 @@ export default {
         group_id: -1,
         name: "",
         url: "",
-        module_code: "",
+        template: "",
         description: ""
       },
       frameRules: {
@@ -109,8 +111,9 @@ export default {
           },
           { validator: checkFrame, trigger: "blur" }
         ],
-        module_code: [
-          { required: true, message: "请填写模板", trigger: "blur" }
+        template: [
+          { required: true, message: "请填写模板", trigger: "blur" },
+          { validator: chekcCode }
         ],
         description: [
           { min: 0, max: 50, message: "长度在 0 到 50 个字符", trigger: "blur" }
@@ -119,8 +122,9 @@ export default {
     };
   },
   computed: {
+    ...mapState(["groupTemplate"]),
     ...mapState("modules", ["modules"]),
-    ...mapState(["currentGroup"])
+    ...mapState(["currentGroup", "dependence"])
   },
   methods: {
     ...mapActions("modules", [
@@ -147,7 +151,7 @@ export default {
       });
     },
     setCode(value) {
-      this.frameForm.module_code = value;
+      this.frameForm.template = value;
     },
     resetForm() {
       if (!this.$refs[REF_FORM]) {
@@ -163,13 +167,13 @@ export default {
       this.$nextTick(function() {
         this.frameForm.id = data.id;
         this.frameForm.name = data.name;
-        this.frameForm.module_code = data.module_code;
+        this.frameForm.template = data.template;
         this.frameForm.url = data.url;
         this.frameForm.description = data.description;
       });
     },
     openDialog() {
-      if (this.currentGroup === -1 || this.currentGroup === "") {
+      if (this.currentGroup === -1) {
         this.$message({
           message: "请先添加组件库",
           type: "warning"
@@ -179,6 +183,7 @@ export default {
       this.resetForm();
       this.title = "新增模板";
       this.frameForm.id = "";
+      this.frameForm.template = this.groupTemplate;
       this.dialogFrameVisible = true;
     },
     deleteData(data) {

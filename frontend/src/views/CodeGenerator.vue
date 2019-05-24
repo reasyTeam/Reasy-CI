@@ -22,7 +22,7 @@
           <cfg-list :group="group" ref="configList"></cfg-list>
         </div>
         <div class="config-aside right h-100">
-          <pro-list></pro-list>
+          <pro-list ref="proList"></pro-list>
         </div>
       </div>
     </div>
@@ -127,7 +127,7 @@ export default {
       return this.$route.params.id;
     },
     tipVisible() {
-      return this.currentGroup === "";
+      return this.currentGroup === -1;
     }
   },
   components: {
@@ -143,11 +143,12 @@ export default {
       "getModuleConfig",
       "generate"
     ]),
-    ...mapActions("modules", ["getModules"]),
+    ...mapActions("modules", ["getModules", "getTemplate"]),
     ...mapMutations("components", [
       types.RESET_CFG_LIST,
       types.RESET_DEFAULT_MODULE
     ]),
+    ...mapMutations("modules", [types.RESET_TEMPLATE]),
     reset() {
       this.$confirm("此操作将重置配置, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -184,7 +185,10 @@ export default {
       this.generate(this.id);
     },
     updateConfig() {
-      this.updateModuleConfig(this.id);
+      this.updateModuleConfig({
+        id: this.id,
+        template: this.$refs.proList.template
+      });
     },
     goToCom() {
       this.$router.push(`/components`);
@@ -224,15 +228,17 @@ export default {
             this.$refs.configList.getFormList();
           }
         });
+        this.getTemplate({ id: this.id });
       } else {
         this.id = "default";
         this[types.RESET_DEFAULT_MODULE]();
+        this[types.RESET_TEMPLATE]();
         this.$refs.configList.getFormList();
       }
     }
   },
   created() {
-    if (this.currentGroup === "") {
+    if (this.currentGroup === -1) {
       return;
     }
 
