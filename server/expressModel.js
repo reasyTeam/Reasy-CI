@@ -215,6 +215,12 @@ class ExpressModel {
     initGenerateMidware() {
         this.app.use(`${api}generate`, (req, res) => {
             let requestBody = req.body;
+            // 
+            // this.tableModel.Module.update({
+            //     id: requestBody.id,
+            //     template: requestBody.template
+            // });
+
             this.tableModel.ModuleHandle.generate(requestBody)
                 .then(url => {
                     if (requestBody.id === 'default') {

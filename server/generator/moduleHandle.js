@@ -47,17 +47,24 @@ class ModuleHandle {
                 return fo.readJs(data[0].url);
             }
             return [];
+        }).catch(err => {
+            return [];
         })
     }
 
-    updateModuleConfig(id, obj) {
+    updateModuleConfig(id, data) {
         return this.dataBase.tables.Module.findAll({
             where: {
                 id
             }
-        }).then(data => {
-            if (data.length > 0) {
-                fo.writeJs(obj, data[0].url);
+        }).then(qdata => {
+            if (qdata.length > 0) {
+                fo.writeJs(data.config, qdata[0].url);
+                this.dataBase.tables.Module.update({ template: data.template }, {
+                    where: {
+                        id
+                    }
+                });
             }
             return {}
         })
@@ -78,7 +85,7 @@ class ModuleHandle {
                 if (queryData.length > 0) {
                     let fileType = queryData[0]['fileType'];
                     // 数据处理
-                    return this.cfgToCode(data.config, fileType);
+                    return this.cfgToCode(data.config, fileType, data.template);
                 } else {
                     log(`file_id[${id}]找不到对应的文件数据`, LOG_TYPE.WARNING);
                     return -1;
@@ -118,7 +125,8 @@ class ModuleHandle {
         }
     }
 
-    cfgToCode(config, fileType) {
+    cfgToCode(config, fileType, template) {
+        // todo by xc 模版的数据已经被处理了再提交的
         let { cfgList, sortArray } = config;
         let basePath = 'uploads/download/',
             fileName = cuid();

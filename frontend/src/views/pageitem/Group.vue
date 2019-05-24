@@ -29,7 +29,7 @@
       </el-collapse-item>
     </el-collapse>
 
-    <el-dialog :title="title" :visible.sync="dialogComVisible" class="pop-dialog">
+    <el-dialog :title="title" :visible.sync="dialogComVisible" width="700px" class="pop-dialog">
       <el-form :model="comForm" :rules="comRules" ref="component" class="pop-form">
         <el-form-item label="框架名称" prop="name">
           <el-input v-model="comForm.name"></el-input>
@@ -113,7 +113,7 @@ export default {
     };
 
     let chekcCode = (rule, value, callback) => {
-      let check = codeModules[this.comForm.dependence_id];
+      let check = codeModules[this.idToType[this.comForm.dependence_id]];
       if (check) {
         for (let i = 0, l = check.length; i < l; i++) {
           if (!check[i].test(value)) {
@@ -172,7 +172,14 @@ export default {
   },
   computed: {
     ...mapState(["groups", "currentGroup", "dependence"]),
-    ...mapGetters("framework", ["frames"])
+    ...mapGetters("framework", ["frames"]),
+    idToType() {
+      let res = {};
+      this.frames.forEach(item => {
+        res[item.value] = item.fileType;
+      });
+      return res;
+    }
   },
   methods: {
     ...mapMutations([types.SET_TEMPLATE]),

@@ -192,11 +192,8 @@ export default {
                 });
         },
         generate({ state, rootState }, data) {
-            data = {
-                groupId: rootState.currentGroup,
-                id: data,
-                config: state.formConfig
-            };
+            data.groupId = rootState.currentGroup;
+            data.config = state.formConfig;
 
             $http.setData('generate', data, 'post', 'blob');
         }

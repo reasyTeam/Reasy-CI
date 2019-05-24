@@ -133,7 +133,7 @@ import FormPage from "@pages/FormPage";
 export default class Page extends FormPage {
     constructor() {
         super(...arguments);
-        this.getUrl = "/mock/xxx3";
+        this.getUrl = "{{url}}";
     }
 
     init() {
@@ -142,10 +142,12 @@ export default class Page extends FormPage {
 
     dataLoaded(data) {
         //自定义
+        {{data|function}}
     }
 
     beforeSubmit(data) {
         //自定义
+        {{key}}
     }
 
     afterSubmit(res) {

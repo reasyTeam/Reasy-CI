@@ -3,7 +3,12 @@
     <el-container style="height: 100%;">
       <el-aside class="nav" style="width: 220px;">
         <div class="nav-title">
-          <el-select v-model="currentGroup" class="nav-select" placeholder="请添加组件库">
+          <el-select
+            v-model="currentGroup"
+            v-if="currentGroup !== -1"
+            class="nav-select"
+            placeholder="请添加组件库"
+          >
             <el-option
               v-for="item in groupNames"
               :key="item.value"

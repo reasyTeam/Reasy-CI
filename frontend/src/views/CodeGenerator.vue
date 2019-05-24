@@ -182,7 +182,10 @@ export default {
     },
     generateCode() {
       this.$refs.configList.saveCfg();
-      this.generate(this.id);
+      this.generate({
+        id: this.id,
+        template: this.$refs.proList.template
+      });
     },
     updateConfig() {
       this.updateModuleConfig({

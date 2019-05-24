@@ -12,7 +12,8 @@ export default {
             return state.frameWorks.map((item) => {
                 return {
                     value: item.id,
-                    name: item.name
+                    name: item.name,
+                    fileType: item.fileType
                 }
             });
         }

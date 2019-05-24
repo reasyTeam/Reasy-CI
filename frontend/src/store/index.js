@@ -94,7 +94,7 @@ export default new Vuex.Store({
                 commit(types.SET_GROUPS, data);
 
                 if (state.currentGroup === -1 || !data.some(item => item.id === state.currentGroup)) {
-                    commit(types.SET_CUR_GROUP, data.length > 0 ? data[0]['id'] : '');
+                    commit(types.SET_CUR_GROUP, data.length > 0 ? data[0]['id'] : -1);
                 } else {
                     commit(types.SET_DEPENDENCE, data.length > 0 ? data[0]['fileType'] : '');
                 }

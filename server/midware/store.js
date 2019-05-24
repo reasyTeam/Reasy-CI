@@ -111,7 +111,7 @@ const api = {
     // 更新配置
     'updateModuleConfig': function(models, req) {
         let data = req.body;
-        return models.ModuleHandle.updateModuleConfig(+data.id, data.config);
+        return models.ModuleHandle.updateModuleConfig(+data.id, data);
     },
     // 删除模板
     'delModule': function(models, req) {
