@@ -1,6 +1,6 @@
 // 验证文件的正确性，同时修正参数
 // 支持的valueType类型
-const reg_valuetype = /^(enum|number|function|string|bool|array|regexp|sync|object)$/i
+const reg_valuetype = /^(enum|number|function|string|bool|array|regexp|sync|object|code)$/i
 const reg_showtype = /^(input|switch|datetime|select|checkbox|radio|slider|upload|table|layout|label)$/i
 const fo = require('../util/fileOperation');
 const { getType } = require('../util/lib');
@@ -37,7 +37,9 @@ const required = {
             }
         }
     },
-    generate: {}
+    generate: {
+        propertys: ['commonTemplate', 'commonScript']
+    }
 };
 
 class FileCheck {
@@ -188,8 +190,13 @@ class FileCheck {
         }
     }
 
-    checkGenerate(data) {
-        let generate = this.modules.generate;
+    checkGenerate() {
+        let data = this.modules.generate;
+        required.generate.forEach(item => {
+            if (data[item] === undefined || data[item] === null) {
+                this.addError('generate配置缺失', `generate配置文件必须提供[${item}]配置`);
+            }
+        });
     }
 
     format() {

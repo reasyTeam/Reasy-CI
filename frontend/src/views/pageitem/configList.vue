@@ -33,20 +33,20 @@ import { deepClone } from "@/assets/lib.js";
 export default {
   data() {
     return {
-      // formlist格式
-      a: [
-        {
-          attr: {
-            // 对应的是当前配置组件的id
-            formCfg: [[1, 2]]
-          },
-          id: "",
-          showOption: {
-            // list对应的组件
-            formList: "formCfg"
-          }
-        }
-      ],
+      // // formlist格式
+      // a: [
+      //   {
+      //     attr: {
+      //       // 对应的是当前配置组件的id
+      //       formCfg: [[1, 2]]
+      //     },
+      //     id: "",
+      //     showOption: {
+      //       // list对应的组件
+      //       formList: "formCfg"
+      //     }
+      //   }
+      // ],
       formList: []
     };
   },
@@ -98,13 +98,6 @@ export default {
           // check(itemCfg);
           this.formList.push(itemCfg);
         });
-    }
-  },
-  watch: {
-    selected(val) {
-      if (val === -1) {
-        this.formList = [];
-      }
     }
   }
 };

@@ -165,6 +165,7 @@ export default {
           message: "重置成功!"
         });
         this[types.RESET_CFG_LIST]();
+        this.$refs.configList.getFormList();
       });
     },
     save() {
