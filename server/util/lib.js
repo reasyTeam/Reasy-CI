@@ -72,11 +72,23 @@ function getType(obj) {
     return Object.prototype.toString.call(obj).slice(8, -1);
 }
 
+function formatCode(template, obj) {
+    if (!template) {
+        return res;
+    }
+
+    return template.replace(/\{\{([^\}]+)\}\}/ig, function($1, $2) {
+        let key = $2.split('|');
+        return obj[key[0]] || $1;
+    })
+}
+
 module.exports = {
     log,
     LOG_TYPE,
     arrayToObject,
     objectToArray,
     deepClone,
-    getType
+    getType,
+    formatCode
 }

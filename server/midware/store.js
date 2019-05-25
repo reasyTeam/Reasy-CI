@@ -111,17 +111,13 @@ const api = {
     // 更新配置
     'updateModuleConfig': function(models, req) {
         let data = req.body;
-        return models.ModuleHandle.updateModuleConfig(+data.id, data);
+        return models.ModuleHandle.updateModuleConfig(data);
     },
     // 删除模板
     'delModule': function(models, req) {
         let data = req.body;
         return models.Module.delete(data);
     }
-    // 'generate': function(models, req) {
-    //     let data = req.body;
-    //     return models.ModuleHandle.generate(data);
-    // }
 };
 
 module.exports = api;

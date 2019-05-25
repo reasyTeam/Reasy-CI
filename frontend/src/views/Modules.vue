@@ -66,7 +66,10 @@ export default {
         reg = new RegExp("^" + value + "$", "i");
 
       for (let i = 0, l = modules.length; i < l; i++) {
-        if (reg.test(modules[i].name)) {
+        if (
+          this.currentGroup === modules[i].group_id &&
+          reg.test(modules[i].name)
+        ) {
           if (isEdit && this.frameForm.id === modules[i].id) {
             return callback();
           }

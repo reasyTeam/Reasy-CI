@@ -70,6 +70,7 @@ import cfgList from "./pageitem/configList.vue";
 import proList from "./pageitem/propertyList.vue";
 import projects from "./pageitem/projects.vue";
 import * as types from "@/store/types.js";
+import { formatCode } from "@/assets/lib.js";
 const REF_FORM = "modules";
 
 export default {
@@ -80,7 +81,10 @@ export default {
         reg = new RegExp("^" + value + "$", "i");
 
       for (let i = 0, l = modules.length; i < l; i++) {
-        if (reg.test(modules[i].name)) {
+        if (
+          this.currentGroup === modules[i].group_id &&
+          reg.test(modules[i].name)
+        ) {
           if (isEdit && this.frameForm.id === modules[i].value) {
             return callback();
           }
@@ -143,12 +147,13 @@ export default {
       "getModuleConfig",
       "generate"
     ]),
-    ...mapActions("modules", ["getModules", "getTemplate"]),
+    ...mapActions("modules", ["getModules"]),
     ...mapMutations("components", [
       types.RESET_CFG_LIST,
       types.RESET_DEFAULT_MODULE
     ]),
-    ...mapMutations("modules", [types.RESET_TEMPLATE]),
+    ...mapMutations("modules", [types.RESET_TEMPLATE, types.SET_TEMPLATE]),
+    ...mapMutations([types.SET_CUR_GROUP]),
     reset() {
       this.$confirm("此操作将重置配置, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -168,7 +173,7 @@ export default {
 
       if (this.formConfig.sortArray.length === 0) {
         this.$message({
-          type: "success",
+          type: "warning",
           message: "无任何需要保存项!"
         });
         return;
@@ -182,9 +187,21 @@ export default {
     },
     generateCode() {
       this.$refs.configList.saveCfg();
+      if (this.formConfig.sortArray.length === 0) {
+        this.$message({
+          type: "warning",
+          message: "无任何配置项!"
+        });
+        return;
+      }
+
+      let template = formatCode(
+        this.$refs.proList.template,
+        this.$refs.proList.formCfg
+      );
       this.generate({
         id: this.id,
-        template: this.$refs.proList.template
+        template
       });
     },
     updateConfig() {
@@ -222,37 +239,47 @@ export default {
         }
       });
     },
-    changeRouter() {
+    changeRouter(firstIn) {
       this.id = this.$route.params.id;
       if (this.id !== "add") {
         this.getModuleConfig({
           id: this.id,
-          success: () => {
+          success: data => {
             this.$refs.configList.getFormList();
+            this[types.SET_TEMPLATE](data.template);
+
+            if (this.currentGroup === -1) {
+              return;
+            }
+            if (firstIn) {
+              this[types.SET_CUR_GROUP](data.groupId);
+              this.getComponents({
+                id: data.groupId
+              });
+
+              this.getModules();
+            }
           }
         });
-        this.getTemplate({ id: this.id });
       } else {
         this.id = "default";
         this[types.RESET_DEFAULT_MODULE]();
         this[types.RESET_TEMPLATE]();
         this.$refs.configList.getFormList();
+        if (this.currentGroup === -1) {
+          return;
+        }
+
+        this.getComponents({
+          id: this.currentGroup
+        });
+
+        this.getModules();
       }
     }
   },
-  created() {
-    if (this.currentGroup === -1) {
-      return;
-    }
-
-    this.getComponents({
-      id: this.currentGroup
-    });
-
-    this.getModules();
-  },
   mounted() {
-    this.changeRouter();
+    this.changeRouter(true);
   },
   watch: {
     $route: "changeRouter"

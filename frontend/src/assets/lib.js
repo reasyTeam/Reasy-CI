@@ -41,7 +41,19 @@ function getAttrs(template) {
     return res;
 }
 
+function formatCode(template, obj) {
+    if (!template) {
+        return res;
+    }
+
+    return template.replace(/\{\{([^\}]+)\}\}/ig, function($1, $2) {
+        let key = $2.split('|');
+        return obj[key[0]] || $1;
+    })
+}
+
 export {
     deepClone,
-    getAttrs
+    getAttrs,
+    formatCode
 }

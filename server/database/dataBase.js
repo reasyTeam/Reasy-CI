@@ -117,7 +117,14 @@ class Database {
                                 }
                             })
                         }
-                    })
+                    });
+
+                    // 删除对应的Module
+                    this.tables.Module.destroy({
+                        where: {
+                            group_id: id
+                        }
+                    });
                 }
             }
         });

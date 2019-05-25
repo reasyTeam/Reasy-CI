@@ -177,7 +177,7 @@ export default {
                 } else {
                     commit(types.RESET_DEFAULT_MODULE);
                 }
-                cb && cb();
+                cb && cb(data);
             });
         },
         updateModuleConfig({ state }, data) {

@@ -93,6 +93,10 @@ const fo = {
         let folder = path.dirname(src);
         this.mkdirSync(folder);
 
+        if (data === undefined) {
+            data = {};
+        }
+
         let outStream = JSON.stringify(data, null, 4);
 
         if (needModule) {

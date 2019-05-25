@@ -1,5 +1,5 @@
 const fo = require('../util/fileOperation');
-const { getType, deepClone } = require('../util/lib');
+const { formatCode, deepClone } = require('../util/lib');
 const cuid = require('cuid');
 const compressing = require('compressing');
 
@@ -44,25 +44,28 @@ class ModuleHandle {
             }
         }).then(data => {
             if (data.length > 0) {
-                return fo.readJs(data[0].url);
+                let res = fo.readJs(data[0].url);
+                res.groupId = data[0].group_id;
+                res.template = data[0].template;
+                return res;
             }
-            return [];
+            return {};
         }).catch(err => {
-            return [];
+            return {};
         })
     }
 
-    updateModuleConfig(id, data) {
+    updateModuleConfig(data) {
         return this.dataBase.tables.Module.findAll({
             where: {
-                id
+                id: data.id
             }
         }).then(qdata => {
             if (qdata.length > 0) {
                 fo.writeJs(data.config, qdata[0].url);
-                this.dataBase.tables.Module.update({ template: data.template }, {
+                data.template && this.dataBase.tables.Module.update({ template: data.template }, {
                     where: {
-                        id
+                        id: data.id
                     }
                 });
             }
@@ -70,22 +73,29 @@ class ModuleHandle {
         })
     }
 
-    // 生成真正的代码
+    // 生成真正的代码，生成代码不做保存模板的操作
     generate(data) {
+        let queryCmd = '';
+
         if (data.id !== 'default') {
-            this.updateModuleConfig(data.id, deepClone(data.config));
+            let cloneData = deepClone(data);
+            delete cloneData.template;
+            this.updateModuleConfig(cloneData);
+            queryCmd = 'SELECT fileType, `module`.name as moduleName FROM `group` JOIN `dependence`, `module` WHERE `group`.dependence_id = `dependence`.id AND `group`.id = ' + data.groupId + ' AND `group`.id = `module`.id AND `module`.id = ' + data.id;
+        } else {
+            queryCmd = 'SELECT fileType FROM `dependence` JOIN `group` WHERE `group`.dependence_id = `dependence`.id AND `group`.id = ' + data.groupId;
         }
         // 去除默认值属性
         this.formatConfig(data.config.cfgList, data.groupId);
         return this.dataBase.sequelize
-            .query('SELECT fileType FROM `dependence` JOIN `group` WHERE `group`.dependence_id = `dependence`.id AND `group`.id = ' + data.groupId, {
+            .query(queryCmd, {
                 type: this.dataBase.sequelize.QueryTypes.SELECT
             })
             .then(queryData => {
                 if (queryData.length > 0) {
-                    let fileType = queryData[0]['fileType'];
                     // 数据处理
-                    return this.cfgToCode(data.config, fileType, data.template);
+                    // return this.cfgToCode(data.config, queryData[0]['fileType'], data.template, queryData[0]['moduleName']);
+                    return this.cfgToCode(data, queryData[0]);
                 } else {
                     log(`file_id[${id}]找不到对应的文件数据`, LOG_TYPE.WARNING);
                     return -1;
@@ -125,32 +135,36 @@ class ModuleHandle {
         }
     }
 
-    cfgToCode(config, fileType, template) {
-        // todo by xc 模版的数据已经被处理了再提交的
-        let { cfgList, sortArray } = config;
-        let basePath = 'uploads/download/',
-            fileName = cuid();
+    cfgToCode(data, queryData) {
+        let { cfgList, sortArray } = data.config,
+            template = data.template,
+            fileType = queryData.fileType,
+            name = queryData.name || `page${data.id}`,
+            basePath = `uploads/download/${data.groupId}`;
 
         let generateCode = this.createCode(cfgList, sortArray);
+        let outCode = formatCode(template, generateCode);
         // 根据当前的组件库，确定文件类型
         switch (fileType) {
             case 1: // vue文件
+                fo.writeFile(outCode, `${basePath}/${name}.vue`);
                 break;
             case 2: // js和html文件
                 // 写入文件
-                fo.writeFile(generateCode.htmlCode, `${basePath}${fileName}/page.html`);
-                fo.writeFile(generateCode.jsCode, `${basePath}${fileName}/page.js`);
+                fo.writeFile(generateCode.html, `${basePath}${name}/${name}.html`);
+                fo.writeFile(outCode, `${basePath}${name}/${name}.js`);
                 break;
             case 3: // react js文件
+                fo.writeFile(outCode, `${basePath}${name}/${name}.js`);
                 break;
         }
-        let url = `${basePath}${fileName}.zip`;
-        return compressing.zip.compressDir(`${basePath}${fileName}`, url)
+        let url = `${basePath}${name}.zip`;
+        return compressing.zip.compressDir(`${basePath}${name}`, url)
             .then(() => {
-                fo.rmdir(`${basePath}${fileName}`);
+                fo.rmdir(`${basePath}${name}`);
                 return url;
             }).catch(err => {
-                fo.rmdir(`${basePath}${fileName}`);
+                fo.rmdir(`${basePath}${name}`);
             });
     }
 
@@ -175,8 +189,8 @@ class ModuleHandle {
         });
 
         return {
-            htmlCode,
-            jsCode
+            html: htmlCode,
+            js: jsCode
         }
     }
 

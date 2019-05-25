@@ -48,7 +48,7 @@ class ExpressModel {
             res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,CONFIG");
 
             let reqData = req.body;
-            util.log(`请求：${req.path}, 内容：${JSON.stringify(reqData, 2)}`);
+            util.log(`请求：${req.path}, 内容：${JSON.stringify(reqData, 2).slice(0,100)}`);
             next();
         });
 
