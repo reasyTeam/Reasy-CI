@@ -4,6 +4,9 @@ const generate = {
     FormInput: {
         template: '<input id="{elementId}" type="{type}" data-key="FormInput"/>'
     },
+    FormInputNum: {
+        template: '<input id="{elementId}" type="{type}" data-key="FormInput"/>'
+    },
     FormCalendar: {
         template: '<input id="{elementId}" type="text" data-key="FormCalendar"/>'
     },
