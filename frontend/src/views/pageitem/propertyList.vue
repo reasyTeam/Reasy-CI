@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pro-wrapper">
     <fcolumn></fcolumn>
     <!-- <div class="pro-title">组件属性</div> -->
     <el-tabs v-model="activeName" type="card" class="title-tab">
@@ -137,6 +137,8 @@ $padding-top: 8px;
 .cfg-content {
   padding: 0 $padding-left;
   font-size: 12px;
+  height: 100%;
+  overflow: auto;
 }
 
 .cfg-item {
@@ -155,6 +157,20 @@ $padding-top: 8px;
   padding: 34px 14px;
   text-align: center;
   color: $font-color;
+}
+
+.pro-wrapper {
+  position: relative;
+  padding-top: 40px;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.title-tab {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 </style>
 
