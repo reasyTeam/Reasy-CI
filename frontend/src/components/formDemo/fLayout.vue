@@ -49,8 +49,8 @@ export default {
   },
   props: ["option"],
   computed: {
-    ...mapState("components", ["selected"]),
-    ...mapGetters("components", ["curPageCfg"]),
+    ...mapState("components", ["selected", "formConfig"]),
+    // ...mapGetters("components", ["curPageCfg"]),
     spans() {
       let cols = this.option.cols,
         t = Math.floor(24 / cols),
@@ -84,13 +84,15 @@ export default {
   },
   watch: {
     formList(newVal) {
-      let list = newVal.map(item => item.map(t => t.id));
+      if (newVal) {
+        let list = newVal.map(item => item.map(t => t.id));
 
-      this[types.UPDATE_CFG_ATTR]({
-        id: this.option.id,
-        attr: this.option.showOption.formList,
-        value: list
-      });
+        this[types.UPDATE_CFG_ATTR]({
+          id: this.option.id,
+          attr: this.option.showOption.formList,
+          value: list
+        });
+      }
     }
   },
   methods: {
@@ -126,10 +128,14 @@ export default {
     let formList = this.option.formList;
     if (formList && formList.length > 0) {
       let list = [];
-      formList.forEach(index => {
-        let { cfgList } = this.curPageCfg;
-        let itemCfg = deepClone(cfgList[index]);
-        list.push(itemCfg);
+      formList.forEach(arrs => {
+        let { cfgList } = this.formConfig,
+          res = [];
+        arrs.map(index => {
+          res.push(deepClone(cfgList[index]));
+        });
+
+        list.push(res);
       });
       this.formList = list;
     }

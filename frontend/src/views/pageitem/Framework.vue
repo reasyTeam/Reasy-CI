@@ -92,7 +92,7 @@ export default {
       frameRules: {
         name: [
           { required: true, message: "请输入框架名称", trigger: "change" },
-          { validator: checkFrame, trigger: "blur" }
+          { validator: checkFrame, trigger: "change" }
         ],
         version: [
           { min: 0, max: 50, message: "长度在 0 到 50 个字符", trigger: "blur" }
@@ -126,6 +126,10 @@ export default {
               })
             : this.createFrameWorks(this.frameForm);
           this.dialogFrameVisible = false;
+          this.$message({
+            message: "保存成功",
+            type: "success"
+          });
         } else {
           this.$message({
             message: "请修正错误的项",
@@ -169,6 +173,10 @@ export default {
       }
 
       this.delFrameWorks({ id: data.id });
+      this.$message({
+        message: "删除成功",
+        type: "success"
+      });
     }
   },
   created() {

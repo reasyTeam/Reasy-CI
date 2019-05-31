@@ -1,5 +1,5 @@
 const fo = require('../util/fileOperation');
-const { formatCode, deepClone } = require('../util/lib');
+const { formatCode, deepClone, log, LOG_TYPE, getType } = require('../util/lib');
 const cuid = require('cuid');
 const compressing = require('compressing');
 
@@ -81,7 +81,7 @@ class ModuleHandle {
             let cloneData = deepClone(data);
             delete cloneData.template;
             this.updateModuleConfig(cloneData);
-            queryCmd = 'SELECT fileType, `module`.name as moduleName FROM `group` JOIN `dependence`, `module` WHERE `group`.dependence_id = `dependence`.id AND `group`.id = ' + data.groupId + ' AND `group`.id = `module`.id AND `module`.id = ' + data.id;
+            queryCmd = 'SELECT fileType, `module`.name as moduleName FROM `group` JOIN `dependence`, `module` WHERE `group`.dependence_id = `dependence`.id AND `group`.id = ' + data.groupId + ' AND `group`.id = `module`.group_id AND `module`.id = ' + data.id;
         } else {
             queryCmd = 'SELECT fileType FROM `dependence` JOIN `group` WHERE `group`.dependence_id = `dependence`.id AND `group`.id = ' + data.groupId;
         }
@@ -109,6 +109,9 @@ class ModuleHandle {
 
     formatConfig(config, groupId) {
         this.components = global.cacheData[groupId];
+        if (!this.components) {
+            // todo by xc 添加读取数据
+        }
         let nameIndex = this.components.nameIndex,
             cptCfg = this.components.components_list;
         for (let key in config) {
@@ -194,6 +197,22 @@ class ModuleHandle {
         }
     }
 
+    createComHtml(cfg, cfgList) {
+        let generate = this.components.generate,
+            template = generate[cfg.name].template;
+
+        if (typeof template === 'function') {
+            template = template.call(cfg);
+        } else {
+            template += '';
+        }
+
+        if (cfg) {
+            return this.createHtml(cfg, template, cfgList);
+        }
+        return '';
+    }
+
     createHtml(cfg, template, cfgList) {
         if (cfg.isContainer) {
             return template.replace(/\{([^\}]*)\}/g, (str, key) => {
@@ -209,14 +228,20 @@ class ModuleHandle {
                         param = matchE[2];
                     }
 
-                    let data = this.getText(express, cfg);
+                    let data = this.getText(express, cfg, true);
                     if (param) {
                         data = data[param];
                     }
 
                     switch (command) {
                         case 'for':
-                            return this.createHtml(cfgList, data);
+                            let outHtml = '';
+                            if (getType(data) === 'Array') {
+                                data.map(i => {
+                                    outHtml += this.createComHtml(cfgList[i], cfgList);
+                                });
+                            }
+                            return outHtml;
                             break;
                         default:
                             // 未完待续
@@ -235,9 +260,14 @@ class ModuleHandle {
 
     createJs(cfg, cfgList) {
         let generate = this.components.generate[cfg.name],
-            template = generate.script;
+            template = generate.script || '';
 
+        // todo by xc 修改
         if (cfg.isContainer) {
+            return '';
+        }
+
+        if (cfg.isContainer && generate.script) {
             let key = cfg.showOption.formList,
                 data = cfg.attrs[key],
                 obj = null;
@@ -274,7 +304,7 @@ class ModuleHandle {
         });
     }
 
-    getText(key, data) {
+    getText(key, data, isObj = false) {
         let res = key;
         if (data[key] !== undefined) {
             res = data[key]
@@ -284,7 +314,7 @@ class ModuleHandle {
             res = data.ignore[key];
         }
 
-        if (typeof res === 'object') {
+        if (!isObj && typeof res === 'object') {
             res = JSON.stringify(res, null, 4);
         }
         return res;

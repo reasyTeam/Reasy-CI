@@ -1,5 +1,5 @@
 const generate = {
-    commonTemplate: '<div id="{elementId}" data-key="{name}">',
+    commonTemplate: '<div id="{elementId}" data-key="{name}"></div>',
     commonScript: `let {elementId} = $('#{elementId}').Rcomponent({attrs});`,
     FormInput: {
         template: '<input id="{elementId}" type="{type}" data-key="FormInput"/>'
@@ -11,7 +11,7 @@ const generate = {
         template: '<input id="{elementId}" type="text" data-key="FormCalendar"/>'
     },
     FormTextarea: {
-        template: '<textarea id="{elementId}" data-key="FormTextarea"/>'
+        template: '<textarea id="{elementId}" data-key="FormTextarea"></textarea>'
     },
     FormTable: {
         single: true, // 需要单独处理

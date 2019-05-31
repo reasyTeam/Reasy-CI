@@ -224,6 +224,12 @@ class ExpressModel {
 
             this.tableModel.ModuleHandle.generate(requestBody)
                 .then(url => {
+                    if (url === -1) {
+                        res.writeHead(200, { 'content-type': 'application/json' });
+                        res.end();
+                        return;
+                    }
+
                     if (requestBody.id === 'default') {
                         fo.downloadFile('page.zip', url, res, (url) => {
                             fo.unlink(url);

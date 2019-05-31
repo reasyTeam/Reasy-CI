@@ -59,7 +59,7 @@ let generate = {
     },
     FormLayoutDEFAULT: {
         template: function() {
-            let cols = this.attrs.cols,
+            let cols = this.attrs.formList.length,
                 t = Math.floor(24 / cols),
                 sum = 24,
                 res = [];
@@ -74,7 +74,9 @@ let generate = {
 
             let htmlCode = `<div class="el-row">`;
             this.attrs.formList.forEach((item, index) => {
-                htmlCode += `<div class="el-col el-col-${res[index]}">{for:formList[${index}]}</div>`;
+                htmlCode += `<div class="el-col el-col-${res[index]}">`;
+                htmlCode += `{for:formList[${index}]}`;
+                htmlCode += `</div>`;
             });
             htmlCode += '</div>';
             return htmlCode;

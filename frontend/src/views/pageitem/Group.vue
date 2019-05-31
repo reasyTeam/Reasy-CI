@@ -206,6 +206,11 @@ export default {
                 }
               });
           this.dialogComVisible = false;
+
+          this.$message({
+            message: "保存成功",
+            type: "success"
+          });
         } else {
           this.$message({
             message: "请修正错误的项",
@@ -247,6 +252,10 @@ export default {
     deleteData(data) {
       this.delGroups({ id: data.id }).finally(() => {
         this.getFrameWorks();
+        this.$message({
+          message: "删除成功",
+          type: "success"
+        });
       });
     },
     onSuccess(res) {

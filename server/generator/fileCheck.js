@@ -192,7 +192,7 @@ class FileCheck {
 
     checkGenerate() {
         let data = this.modules.generate;
-        required.generate.forEach(item => {
+        required.generate.propertys.forEach(item => {
             if (data[item] === undefined || data[item] === null) {
                 this.addError('generate配置缺失', `generate配置文件必须提供[${item}]配置`);
             }
