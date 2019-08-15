@@ -1,0 +1,25 @@
+{
+  "name": "ci-server",
+  "version": "1.0.0",
+  "description": "ci for reasy frontend team to create pages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node index.js",
+    "start": "npm run serve"
+  },
+  "author": "moshang-xc",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "chalk": "^2.4.2",
+    "compressing": "^1.4.0",
+    "cuid": "^2.1.6",
+    "express": "^4.16.4",
+    "multiparty": "^4.2.1",
+    "mysql2": "^1.6.5",
+    "opn": "^6.0.0",
+    "ora": "^3.4.0",
+    "sequelize": "^4.41.2"
+  }
+}
